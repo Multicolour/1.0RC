@@ -42,6 +42,7 @@
     "eslint": "^4.11.0",
     "eslint-plugin-flowtype": "^2.39.1",
     "flow-bin": "^0.60.1",
+    "jest": "^21.2.1",
     "newman": "^3.8.3",
     "snyk": "^1.49.5"
   }
