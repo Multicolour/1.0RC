@@ -32,7 +32,9 @@
     "url": "https://github.com/Multicolour/multicolour/issues"
   },
   "homepage": "https://github.com/Multicolour/multicolour#readme",
-  "dependencies": {},
+  "dependencies": {
+    "ajv": "^5.5.1"
+  },
   "engine-strict": true,
   "engines": {
     "node": ">= 6.12.0"
