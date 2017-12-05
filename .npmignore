@@ -1,0 +1,9 @@
+coverage
+docs
+.git*
+.snyk
+.travis.yml
+README.md
+.eslintrc
+.github_changelog_generator
+tests

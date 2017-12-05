@@ -1,0 +1,95 @@
+{
+  "env": {
+    "node": true
+  },
+  "extends": [
+    "eslint:recommended",
+    "plugin:flowtype/recommended"
+  ],
+  "plugins": [
+    "flowtype"
+  ],
+  "rules": {
+    "no-console": "warn",
+    "comma-dangle": [
+      "error",
+      "always-multiline"
+    ],
+    "indent": [
+      2,
+      2
+    ],
+    "quotes": [
+      2,
+      "double"
+    ],
+    "linebreak-style": [
+      2,
+      "unix"
+    ],
+    "semi": [
+      2,
+      "never"
+    ],
+    "yoda": [
+      2,
+      "never"
+    ],
+    "func-style": [
+      0,
+      "declaration"
+    ],
+    "key-spacing": [
+      2,
+      {
+        "beforeColon": false,
+        "afterColon": true
+      }
+    ],
+    "max-nested-callbacks": [
+      2,
+      3
+    ],
+    "space-before-blocks": [
+      2,
+      "always"
+    ],
+    "space-before-function-paren": [
+      2,
+      "never"
+    ],
+    "object-curly-spacing": [
+      2,
+      "always"
+    ],
+    "space-in-parens": [
+      2,
+      "never"
+    ],
+    "space-infix-ops": 2,
+    "no-implicit-coercion": [
+      2
+    ],
+    "no-unused-vars": [
+      2
+    ],
+    "no-sync": [
+      2
+    ],
+    "func-names": [
+      1
+    ],
+    "one-var": [
+      2,
+      "never"
+    ],
+    "max-len": [
+      1,
+      121
+    ],
+    "max-depth": [
+      1,
+      4
+    ]
+  }
+}

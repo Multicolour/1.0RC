@@ -1,0 +1,21 @@
+language: node_js
+node_js:
+  - "9"
+  - "8"
+  - "7"
+  - "6.12.0"
+
+sudo: false
+
+env:
+  - NODE_ENV=development
+
+script:
+  - "npm test"
+
+after_script:
+  - "npm install coveralls@2 && cat ./coverage/lcov.info | ./node_modules/.bin/coveralls"
+
+addons:
+  code_climate:
+    repo_token: cbfd1ce2c7fdfb4d734f661d89fb7d492a976f6586cea6b1c5851ebc71dc8869

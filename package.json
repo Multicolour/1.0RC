@@ -1,0 +1,48 @@
+{
+  "name": "multicolour",
+  "version": "0.6.16",
+  "description": "Generate your REST API with JSON and use almost any SQL DB tech.",
+  "keywords": [
+    "Multicolour",
+    "REST API",
+    "generator",
+    "ORM",
+    "CQRS",
+    "microservice",
+    "event-stream"
+  ],
+  "main": "index.js",
+  "preferGlobal": true,
+  "bin": {
+    "multicolour": "cli.js"
+  },
+  "scripts": {
+    "linter": "eslint ./**/*.js",
+    "unit-tests": "jest tests/ --coverage",
+    "test": "npm run linter && npm run unit-tests",
+    "changelog": "github_changelog_generator -u Multicolour -p multicolour"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Multicolour/multicolour.git"
+  },
+  "author": "newworldcode <hello@newworld.codes> (https://newworld.codes)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Multicolour/multicolour/issues"
+  },
+  "homepage": "https://github.com/Multicolour/multicolour#readme",
+  "dependencies": {},
+  "engine-strict": true,
+  "engines": {
+    "node": ">= 6.12.0"
+  },
+  "devDependencies": {
+    "babel-eslint": "^8.0.3",
+    "eslint": "^4.11.0",
+    "eslint-plugin-flowtype": "^2.39.1",
+    "flow-bin": "^0.60.1",
+    "newman": "^3.8.3",
+    "snyk": "^1.49.5"
+  }
+}
