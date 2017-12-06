@@ -1,97 +1,83 @@
 {
   "type": "object",
-  "$schema": "http://json-schema.org/draft-03/schema",
+  "$schema": "http://json-schema.org/draft-06/schema#",
   "id": "config",
-  "required": true,
   "definitions": {
     "service_definition": {
       "type": "object",
       "id": "api/services/auth_service",
-      "required": false,
+      "required": ["port"],
       "properties": {
         "host": {
           "type": "string",
           "id": "api/services/auth_service/host",
           "description": "The hostname this server should bind to, optional and defaults to 0.0.0.0 (all network interfaces.)",
-          "required": false,
           "default": "0.0.0.0"
         },
         "port": {
           "type": "number",
           "id": "api/services/auth_service/port",
-          "description": "The port this service will listen on.",
-          "required": true
+          "description": "The port this service will listen on."
         },
         "root_uri": {
           "type": "string",
           "id": "api/services/auth_service/root",
-          "description": "This is the hostname that will appear in any kind of 'links' object. This should be whatever the public facing (authed or not) domain that this api will run on.",
-          "required": false
+          "description": "This is the hostname that will appear in any kind of 'links' object. This should be whatever the public facing (authed or not) domain that this api will run on. If not set, will be inferred by the server."
         },
         "security": {
           "type": "object",
           "id": "api/services/auth_service/security",
           "description": "Security options for this declared service. Configure CORS rules, OAuth config or JWT configuration and general security config. While we recommend this is always set and you share tokens with consumers of your app this is optional.",
-          "required": false,
           "properties": {
             "auth": {
               "type": "object",
               "id": "api/services/auth_service/security/auth",
               "description": "Configure the way consumers authenticate with your API(s).",
-              "required": false,
+              "required": ["master_key", "providers"],
               "properties": {
                 "master_key": {
                   "type": "string",
-                  "id": "api/services/auth_service/security/auth/master_key",
-                  "required": true
+                  "id": "api/services/auth_service/security/auth/master_key"
                 },
                 "providers": {
-                  "type": "array",
+                  "type": "object",
+                  "minItems": 1,
                   "id": "api/services/auth_service/security/auth/providers",
-                  "description": "Configure your OAuth providers here, if they're following the spec any OAuth 2 provider should work and will authenticate your consumers.",
-                  "required": true,
-                  "items": {
-                    "type": "object",
-                    "id": "api/services/auth_service/security/auth/providers/0",
-                    "required": true,
-                    "properties": {
-                      "client_id": {
-                        "type": "string",
-                        "id": "api/services/auth_service/security/auth/providers/0/client_id",
-                        "required": true
-                      },
-                      "client_secret": {
-                        "type": "string",
-                        "id": "api/services/auth_service/security/auth/providers/0/client_secret",
-                        "required": true
-                      },
-                      "provider": {
-                        "type": "string",
-                        "id": "api/services/auth_service/security/auth/providers/0/provider",
-                        "required": false
-                      },
-                      "redirect_urls": {
-                        "type": "array",
-                        "id": "api/services/auth_service/security/auth/providers/0/redirect_urls",
-                        "required": true,
-                        "items": {
+                  "description": "Configure your auth providers here, if they're following the spec any OAuth 2 provider should work and will authenticate your consumers.",
+                  "properties": {
+                    "^([a-zA-Z0-9-_]+)+$": {
+                      "type": "object",
+                      "id": "api/services/auth_service/security/auth/providers/0",
+                      "required": ["client_id", "client_secret", "redirect_urls", "technology"],
+                      "properties": {
+                        "client_id": {
                           "type": "string",
-                          "id": "api/services/auth_service/security/auth/providers/0/redirect_urls/0",
-                          "required": true
-                        }
-                      },
-                      "secure": {
-                        "type": "boolean",
-                        "id": "api/services/auth_service/security/auth/providers/0/secure",
-                        "required": false,
-                        "default": true
-                      },
-                      "technology": {
-                        "type": {
-                          "enum": ["oauth", "token"],
+                          "id": "api/services/auth_service/security/auth/providers/0/client_id",
+                          "description": ""
                         },
-                        "id": "api/services/auth_service/security/auth/providers/0/type",
-                        "required": true
+                        "client_secret": {
+                          "type": "string",
+                          "id": "api/services/auth_service/security/auth/providers/0/client_secret"
+                        },
+                        "redirect_urls": {
+                          "type": "array",
+                          "id": "api/services/auth_service/security/auth/providers/0/redirect_urls",
+                          "items": {
+                            "type": "string",
+                            "id": "api/services/auth_service/security/auth/providers/0/redirect_urls/0"
+                          }
+                        },
+                        "secure": {
+                          "type": "boolean",
+                          "id": "api/services/auth_service/security/auth/providers/0/secure",
+                          "default": true
+                        },
+                        "technology": {
+                          "id": "api/services/auth_service/security/auth/providers/0/type",
+                          "type": {
+                            "enum": ["oauth", "token"]
+                          }
+                        }
                       }
                     }
                   }
@@ -101,18 +87,16 @@
             "cors": {
               "type": "object",
               "id": "api/services/auth_service/security/cors",
-              "required": false,
+              "required": ["allowed_domains"],
               "description": "Configure cross origin resource sharing rules.",
               "properties": {
                 "allowed_domains": {
                   "type": "array",
                   "id": "api/services/auth_service/security/cors/domains",
                   "description": "Configure what domains are allowed to reach the API. This is checked before any authentication work, before any middleware is called.",
-                  "required": true,
                   "items": {
                     "type": "string",
-                    "id": "api/services/auth_service/security/cors/domains/0",
-                    "required": false
+                    "id": "api/services/auth_service/security/cors/domains/0"
                   }
                 }
               }
@@ -124,48 +108,44 @@
     "database_connection_config": {
       "type": "object",
       "id": "databases/production",
-      "required": true,
+      "required": ["adapter"],
       "properties": {
         "adapter": {
           "type": "string",
           "id": "databases/production/adapter",
-          "required": false
-        },
-        "eventstore": {
-          "type": "boolean",
-          "id": "databases/production/eventstore",
-          "required": false
+          "description": "Which adapter will this database connection use?"
         },
         "host": {
           "type": "string",
           "id": "databases/production/host",
-          "required": false
+          "description": "Optional hostname for this database connection. If not set, is inferred by the adapter."
         },
         "password": {
           "type": "string",
           "id": "databases/production/password",
-          "required": false
+          "description": "Optional password for this database connection."
         },
         "port": {
           "type": "number",
           "id": "databases/production/port",
-          "required": false
+          "description": "Optional port for this database connection. If not set, is inferred by the adapter."
         },
         "username": {
           "type": "string",
           "id": "databases/production/username",
-          "required": false
+          "description": "Optional username for this database connection. If not set, is inferred by the adapter."
         }
       }
     }
   },
   "properties": {
+    "required": ["api", "databases", "models"],
+    "additionalProperties": true,
     "api": {
       "type": "object",
       "title": "Config for API services",
       "description": "Configure each of your API's services here, they are internally routed to communicate with each other easily and automatically.",
       "id": "api",
-      "required": true,
       "additionalProperties": false,
       "properties": {
         "services": {
