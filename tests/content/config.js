@@ -5,6 +5,14 @@ const config: Multicolour$Config = {
   api: {
     my_service: {
       port: 1811,
+
+      security: {
+        cors: {
+          allowed_domains: [
+            "http://localhost:1811",
+          ],
+        },
+      },
     },
   },
   databases: {
