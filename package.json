@@ -34,6 +34,7 @@
   "homepage": "https://github.com/Multicolour/multicolour#readme",
   "dependencies": {
     "ajv": "^5.5.1",
+    "chalk": "^2.3.0",
     "cli-color": "^1.2.0"
   },
   "engine-strict": true,
