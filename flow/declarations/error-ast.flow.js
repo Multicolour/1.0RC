@@ -53,4 +53,11 @@ declare type Error$MessageAST = {
    * The stack from the error constructor.
    */
   stack: Array<Error$MessageFrameAST>,
+
+  /**
+   * The number of frames dropped fromm the 
+   * stack becuase they matches the ignored_packages
+   * filter.
+   */
+  frames_dropped?: number
 }
