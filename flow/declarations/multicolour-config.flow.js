@@ -1,6 +1,14 @@
 // @flow
 
-// Database config structure.
+/**
+ * Database config structure.
+ *
+ * This is passed into the Multicolour core
+ * and connections are configured and set up
+ * prior to services being setup and started.
+ *
+ * @type {Object}
+ */
 declare type Multicolour$SingleDatabaseConnectionConfig = {
   adapter: string,
   host?: string,
@@ -13,7 +21,12 @@ declare type Multicolour$DatabaseConnectionsConfig = {
   [name: string]: Multicolour$SingleDatabaseConnectionConfig,
 }
 
-// Service declaration structure.
+/**
+ * Service declaration structure.
+ *
+ * 
+ * @type {Object}
+ */
 declare type Multicolour$APIServiceDeclaration = {
   port: number,
   host?: string,

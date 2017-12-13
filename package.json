@@ -33,7 +33,8 @@
   },
   "homepage": "https://github.com/Multicolour/multicolour#readme",
   "dependencies": {
-    "ajv": "^5.5.1"
+    "ajv": "^5.5.1",
+    "cli-color": "^1.2.0"
   },
   "engine-strict": true,
   "engines": {
