@@ -59,5 +59,5 @@ declare type Error$MessageAST = {
    * stack becuase they matches the ignored_packages
    * filter.
    */
-  frames_dropped?: number
+  framesDropped?: number
 }

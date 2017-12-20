@@ -10,7 +10,7 @@
     "flowtype"
   ],
   "rules": {
-    "camel-case": "always",
+    "camelcase": 2,
     "no-console": "warn",
     "comma-dangle": [
       "error",

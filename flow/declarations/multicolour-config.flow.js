@@ -6,8 +6,6 @@
  * This is passed into the Multicolour core
  * and connections are configured and set up
  * prior to services being setup and started.
- *
- * @type {Object}
  */
 declare type Multicolour$SingleDatabaseConnectionConfig = {
   adapter: string,
@@ -23,15 +21,13 @@ declare type Multicolour$DatabaseConnectionsConfig = {
 
 /**
  * Service declaration structure.
- *
- * 
- * @type {Object}
  */
 declare type Multicolour$APIServiceDeclaration = {
   port: number,
   host?: string,
   root_uri?: string,
   security?: Multicolour$APIServiceSecurityDeclaration,
+  TLSOptions?: https$HTTPSOptions,
 }
 
 declare type Multicolour$APIServiceDeclarations = {
