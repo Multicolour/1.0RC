@@ -28,10 +28,19 @@
               "id": "api/services/service/port",
               "description": "The port this service will listen on."
             },
-            "root_uri": {
+            "rootUri": {
               "type": "string",
               "id": "api/services/service/root",
               "description": "This is the hostname that will appear in any kind of 'links' object. This should be whatever the public facing (authed or not) domain that this api will run on. If not set, will be inferred by the server."
+            },
+            "dependsOn": {
+              "type": "array",
+              "id": "api/services/service/dependsOn",
+              "description": "A list of other defined services this service depends on, alters the order of service creation and where in the network bridge they appear.",
+              "items": {
+                "type": "string",
+                "id": "api/services/service/dependsOn/0"
+              }
             },
             "security": {
               "type": "object",
@@ -42,11 +51,11 @@
                   "type": "object",
                   "id": "api/services/service/security/auth",
                   "description": "Configure the way consumers authenticate with your API(s).",
-                  "required": ["master_key", "providers"],
+                  "required": ["masterKey", "providers"],
                   "properties": {
-                    "master_key": {
+                    "masterKey": {
                       "type": "string",
-                      "id": "api/services/service/security/auth/master_key"
+                      "id": "api/services/service/security/auth/masterKey"
                     },
                     "providers": {
                       "type": "object",
@@ -57,23 +66,23 @@
                         "^([a-zA-Z0-9-_]+)+$": {
                           "type": "object",
                           "id": "api/services/service/security/auth/providers/0",
-                          "required": ["client_id", "client_secret", "redirect_urls", "technology"],
+                          "required": ["clientId", "clientSecret", "redirectUrls", "technology"],
                           "properties": {
-                            "client_id": {
+                            "clientId": {
                               "type": "string",
-                              "id": "api/services/service/security/auth/providers/0/client_id",
+                              "id": "api/services/service/security/auth/providers/0/clientId",
                               "description": ""
                             },
-                            "client_secret": {
+                            "clientSecret": {
                               "type": "string",
-                              "id": "api/services/service/security/auth/providers/0/client_secret"
+                              "id": "api/services/service/security/auth/providers/0/clientSecret"
                             },
-                            "redirect_urls": {
+                            "redirectUrls": {
                               "type": "array",
-                              "id": "api/services/service/security/auth/providers/0/redirect_urls",
+                              "id": "api/services/service/security/auth/providers/0/redirectUrls",
                               "items": {
                                 "type": "string",
-                                "id": "api/services/service/security/auth/providers/0/redirect_urls/0"
+                                "id": "api/services/service/security/auth/providers/0/redirectUrls/0"
                               }
                             },
                             "secure": {
@@ -94,10 +103,10 @@
                 "cors": {
                   "type": "object",
                   "id": "api/services/service/security/cors",
-                  "required": ["allowed_domains"],
+                  "required": ["allowedDomains"],
                   "description": "Configure cross origin resource sharing rules.",
                   "properties": {
-                    "allowed_domains": {
+                    "allowedDomains": {
                       "type": "array",
                       "id": "api/services/service/security/cors/domains",
                       "description": "Configure what domains are allowed to reach the API. This is checked before any authentication work, before any middleware is called.",

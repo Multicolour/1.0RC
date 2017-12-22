@@ -3,12 +3,12 @@
 const config: Multicolour$Config = {
   models: "./models",
   api: {
-    my_service: {
+    myService: {
       port: 1811,
 
       security: {
         cors: {
-          allowed_domains: [
+          allowedDomains: [
             "http://localhost:1811",
           ],
         },
