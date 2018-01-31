@@ -35,7 +35,7 @@
   },
   "homepage": "https://github.com/Multicolour/multicolour#readme",
   "dependencies": {
-    "ajv": "^5.5.1",
+    "ajv": "^6.1.1",
     "chalk": "^2.3.0",
     "cli-color": "^1.2.0",
     "knex": "^0.14.2"
@@ -48,8 +48,8 @@
     "babel-eslint": "^8.0.3",
     "eslint": "^4.11.0",
     "eslint-plugin-flowtype": "^2.39.1",
-    "flow-bin": "^0.60.1",
-    "jest": "^21.2.1",
+    "flow-bin": "^0.64.0",
+    "jest": "^22.1.4",
     "jest-flow-transform": "^1.0.1",
     "newman": "^3.8.3",
     "snyk": "^1.49.5"
