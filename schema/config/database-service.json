@@ -1,0 +1,31 @@
+{
+  "$id": "databaseService",
+  "type": "object",
+  "definitions": {},
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "properties": {
+    "adapter": {
+      "type": "string",
+      "description": "Which adapter will this database connection use?",
+      "enum": [
+        "pg", "sqlite3", "mysql"
+      ]
+    },
+    "host": {
+      "type": "string",
+      "description": "Optional hostname for this database connection. If not set, is inferred by the adapter."
+    },
+    "password": {
+      "type": "string",
+      "description": "Optional password for this database connection."
+    },
+    "port": {
+      "type": "number",
+      "description": "Optional port for this database connection. If not set, is inferred by the adapter."
+    },
+    "username": {
+      "type": "string",
+      "description": "Optional username for this database connection. If not set, is inferred by the adapter."
+    }
+  }
+}

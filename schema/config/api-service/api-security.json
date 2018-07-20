@@ -1,0 +1,44 @@
+{
+  "$id": "apiSecurity",
+  "type": "object",
+  "definitions": {},
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "properties": {
+    "auth": {
+      "type": "object",
+      "description": "Configure the way consumers authenticate with your API(s).",
+      "required": ["masterKey", "providers"],
+      "properties": {
+        "masterKey": {
+          "type": "string",
+          "description": "The master key to encrypt and decrypt keys and passwords."
+        },
+        "providers": {
+          "type": "object",
+          "minItems": 1,
+          "description": "Configure your auth providers here, if they're following the spec any OAuth 2 provider should work and will authenticate your consumers.",
+          "patternProperties": {
+            "^([a-zA-Z0-9-_]+)+$": {
+              "type": "object",
+              "$ref": "authProvider"
+            }
+          }
+        }
+      }
+    },
+    "cors": {
+      "type": "object",
+      "required": ["allowedDomains"],
+      "description": "Configure cross origin resource sharing rules.",
+      "properties": {
+        "allowedDomains": {
+          "type": "array",
+          "description": "Configure what domains are allowed to reach the API. This is checked before any authentication work, before any middleware is called.",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}

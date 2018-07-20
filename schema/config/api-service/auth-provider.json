@@ -1,0 +1,32 @@
+{
+  "$id": "authProvider",
+  "type": "object",
+  "definitions": {},
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "required": ["redirectUrls", "technology"],
+  "properties": {
+    "clientId": {
+      "type": "string",
+      "description": "Client ID from the auth provider."
+    },
+    "clientSecret": {
+      "type": "string",
+      "description": "Client secret from the auth provider."
+    },
+    "redirectUrls": {
+      "type": "array",
+      "description": "List of URLs trusted to redirect to.",
+      "items": {
+        "type": "string"
+      }
+    },
+    "secure": {
+      "type": "boolean",
+      "default": true
+    },
+    "type": {
+      "description": "The type of auth this provider... provides.",
+      "enum": ["oauth", "token"]
+    }
+  }
+}

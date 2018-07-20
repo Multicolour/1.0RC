@@ -1,0 +1,32 @@
+{
+  "title": "Multicolour Config",
+  "type": "object",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "required": ["services", "models"],
+  "additionalProperties": true,
+  "definitions": {},
+  "properties": {
+    "services": {
+      "type": "object",
+      "title": "Config for services",
+      "description": "Configure each of your services here, they are internally routed to communicate with each other easily and automatically.",
+      "additionalProperties": false,
+      "minItems": 1,
+      "patternProperties": {
+        "^([a-zA-Z0-9-_]+)+$": {
+          "anyOf": [
+            { "$ref": "apiService" },
+            { "$ref": "dbService" }
+          ]
+        }
+      }
+
+    },
+    
+    "models": {
+      "type": "string",
+      "description": "The directory where your model definitions are kept. Every file ending in .js is considered a model and unless configured otherwise will have a set of routes and a table created for it.",
+      "default": "./models/"
+    }
+  }
+}

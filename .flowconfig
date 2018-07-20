@@ -8,5 +8,6 @@ flow/declarations/
 [lints]
 
 [options]
+module.name_mapper='^\@flow\/\(.*\)$' -> '<PROJECT_ROOT>/flow/declarations/\1'
 
 [strict]

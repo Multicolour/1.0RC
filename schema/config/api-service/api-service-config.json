@@ -1,0 +1,29 @@
+{
+  "$id": "apiService",
+  "type": "object",
+  "definitions": {},
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "required": [
+    "security"
+  ],
+  "properties": {
+    "host": {
+      "type": "string",
+      "description": "The hostname this server should bind to, optional and defaults to 0.0.0.0 (all network interfaces.)",
+      "default": "0.0.0.0"
+    },
+    "port": {
+      "type": "number",
+      "description": "The port this service will listen on."
+    },
+    "rootUri": {
+      "type": "string",
+      "description": "This is the hostname that will appear in any kind of 'links' object. This should be whatever the public facing (authed or not) domain that this api will run on. If not set, will be inferred by the server."
+    },
+    "security": {
+      "type": "object",
+      "description": "Security options for this declared service. Configure CORS rules, OAuth config or JWT configuration and general security config. While we recommend this is always set and you share tokens with consumers of your app this is optional.",
+      "$ref": "apiSecurity"
+    }
+  }
+}
