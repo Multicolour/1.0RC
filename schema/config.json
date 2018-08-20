@@ -11,12 +11,22 @@
       "title": "Config for services",
       "description": "Configure each of your services here, they are internally routed to communicate with each other easily and automatically.",
       "additionalProperties": false,
-      "minItems": 1,
+      "minProperties": 1,
       "patternProperties": {
         "^([a-zA-Z0-9-_]+)+$": {
           "anyOf": [
-            { "$ref": "apiService" },
-            { "$ref": "dbService" }
+            {
+              "allOf": [
+                { "$ref": "serviceDeclaration" },
+                { "$ref": "apiService" }
+              ]
+            },
+            {
+              "allOf": [
+                { "$ref": "serviceDeclaration" },
+                { "$ref": "dbService" }
+              ]
+            }
           ]
         }
       }

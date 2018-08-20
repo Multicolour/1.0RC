@@ -3,8 +3,6 @@
 [include]
 
 [libs]
-flow/declarations/
-
 [lints]
 
 [options]

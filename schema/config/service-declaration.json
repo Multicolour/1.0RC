@@ -1,0 +1,17 @@
+{
+  "title": "Multicolour Service Declaration",
+  "type": "object",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "required": ["type"],
+  "additionalProperties": true,
+  "definitions": {},
+  "properties": {
+    "type": {
+      "type": "string",
+      "enum": [
+        "api", "database"
+      ],
+      "description": "The type of service this is: api or database."
+    }
+  }
+}

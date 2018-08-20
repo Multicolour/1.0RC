@@ -1,0 +1,12 @@
+version: '2.2'
+
+services:
+  postgres_db:
+    image: postgres:9.4-alpine
+    environment:
+      POSTGRES_PASSWORD: MulticolourPassword7357
+      POSTGRES_USER: multicolour-test
+      POSTGRES_DB: multicolour-test
+    ports:
+      - 5432:5432
+    restart: on-failure

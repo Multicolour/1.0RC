@@ -1,33 +1,5 @@
 // @flow
 
-/**
- * Each attribute has to have a type, here are the
- * types that Multicolour supports at the moment.
- * @type {string}
- */
-declare type Multicolour$ModelAttributeType = 
-  // Integers/floats/numbers.
-  "smallInt" // signed
-  | "mediumInt" | "integer" // signed
-  | "bigInt" // signed
-  | "numeric" // unsigned
-  | "double"
-  | "float"
-  | "bit"
-
-  | "boolean"
-  
-  // dates.
-  | "date"
-  | "time"
-  | "datetime"
-  | "timestamp" // includes a timezone
-
-  // Text/binary.
-  | "text"
-  | "blob"
-  | "bytearray"
-
 declare type Multicolour$ModelAttribute = {
   // The type of the database column.
   type: Multicolour$ModelAttributeType,

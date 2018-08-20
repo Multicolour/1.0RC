@@ -14,11 +14,13 @@
     },
     "port": {
       "type": "number",
-      "description": "The port this service will listen on."
+      "description": "The port this service will listen on.",
+      "default": 1811
     },
     "rootUri": {
       "type": "string",
-      "description": "This is the hostname that will appear in any kind of 'links' object. This should be whatever the public facing (authed or not) domain that this api will run on. If not set, will be inferred by the server."
+      "description": "This is the hostname that will appear in any kind of 'links' object. This should be whatever the public facing (authed or not) domain that this api will run on. If not set, will be inferred by the server.",
+      "default": "http://localhost:1811"
     },
     "security": {
       "type": "object",

@@ -3,7 +3,7 @@
   "type": "object",
   "definitions": {},
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "required": ["redirectUrls", "technology"],
+  "required": ["redirectUrls", "type"],
   "properties": {
     "clientId": {
       "type": "string",
@@ -18,7 +18,8 @@
       "description": "List of URLs trusted to redirect to.",
       "items": {
         "type": "string"
-      }
+      },
+      "default": ["http://localhost:1811"]
     },
     "secure": {
       "type": "boolean",
@@ -26,7 +27,7 @@
     },
     "type": {
       "description": "The type of auth this provider... provides.",
-      "enum": ["oauth", "token"]
+      "enum": ["basic", "oauth", "token"]
     }
   }
 }

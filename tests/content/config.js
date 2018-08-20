@@ -2,6 +2,7 @@
 
 const config: Multicolour$Config = {
   models: "./models",
+  services: {},
   api: {
     myService: {
       port: 1811,
