@@ -24,8 +24,8 @@ export type Multicolour$StateObject = {
 export type Multicolour = {
   state: Multicolour$StateObject,
 
-  new(configPathOrObject: Multicolour$Config): void,
+  new(configObject: Multicolour$Config): void,
 
-  registerService(service: Multicolour$RegisterServiceArg): Promise < Multicolour$Service > ,
+  registerService(service: Multicolour$RegisterServiceArg): Promise <Multicolour$Service>,
   registerServices(): void,
 }

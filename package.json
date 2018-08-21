@@ -37,14 +37,20 @@
   "dependencies": {
     "ajv": "^6.5.2",
     "bluebird": "^3.5.1",
+    "body-parser": "^1.18.3",
     "flow-typed": "^2.5.1",
-    "knex": "^0.15.2"
+    "knex": "^0.15.2",
+    "multiparty": "^4.2.1",
+    "qs": "^6.5.2"
   },
   "engine-strict": true,
   "engines": {
     "node": ">= 8.11.3"
   },
   "devDependencies": {
+    "babel-eslint": "^8.2.6",
+    "eslint": "^5.4.0",
+    "eslint-plugin-flowtype": "^2.50.0",
     "flow-bin": "^0.77.0",
     "jest": "^23.4.2",
     "jest-flow-transform": "^1.0.1",

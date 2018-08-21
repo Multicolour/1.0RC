@@ -1,7 +1,7 @@
 // @flow
 
 import type {
-  MulticolourConfig,
+  Multicolour$Config,
   ServiceDeclaration,
 } from "@flow/multicolour/config.flow"
 
@@ -17,6 +17,7 @@ const multicolour: Multicolour = {
   state: {
     config: null,
     services: null,
+    serviceStartOrder: new Set(),
   },
 
   async registerService(service: Multicolour$RegisterServiceArg): Promise < Multicolour$Service > {
@@ -36,12 +37,15 @@ const multicolour: Multicolour = {
     if (!configObject || !(configObject instanceof Object))
       throw new ReferenceError("No config or non-object passed into Multicolour.new(config: MulticolourConfig)")
 
-    this.state.config = configObject
+    this.state.config = { ...configObject }
+    this.state.config.models = require.resolve(this.state.config.models)
 
     this.registerServices()
+
+    return this
   }
 }
 
-multicolour.new(require("./tests/content/config"))
+console.log(multicolour.new(require("./tests/content/config")))
 
 module.exports = multicolour

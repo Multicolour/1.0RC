@@ -23,18 +23,18 @@ export type APIServiceSecurityConfig = {
 export type APIServiceConfig = {
   security: APIServiceSecurityConfig,
 
-  host ? : string,
-  port ? : 1811,
-  rootUri ? : string,
+  host?: string,
+  port?: 1811,
+  rootUri?: string,
 }
 
 export type DBServiceConfig = {
   adapter: "pg" | "sqlite3" | "mysql" | "mysql2" | "oracle" | "mssql",
 
-  host ? : string,
-  password ? : string,
-  port ? : number,
-  username ? : string,
+  host?: string,
+  password?: string,
+  port?: number,
+  username?: string,
 }
 
 export type BaseServiceDeclaration = {
@@ -42,24 +42,24 @@ export type BaseServiceDeclaration = {
   type: "api" | "database",
 
   // Other services this service depends on.
-  dependsOn ? : string,
+  dependsOn?: string,
 }
 
 export type APIServiceDeclaration = {
-  ...$Exact < BaseServiceDeclaration > ,
-  ...$Exact < APIServiceConfig > ,
+  ...$Exact<BaseServiceDeclaration>,
+  ...$Exact<APIServiceConfig>,
 }
 
 export type DatabaseServiceDeclaration = {
-  ...$Exact < BaseServiceDeclaration > ,
-  ...$Exact < DBServiceConfig > ,
+  ...$Exact<BaseServiceDeclaration>,
+  ...$Exact<DBServiceConfig>,
 }
 
 export type ServiceDeclaration = APIServiceDeclaration | DatabaseServiceDeclaration
 
 export type Multicolour$Config = {
   // The config version to use. Optional.
-  version ? : "1.0",
+  version?: "1.0",
 
   services: {
     [key: string]: ServiceDeclaration,
