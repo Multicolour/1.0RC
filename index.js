@@ -1,17 +1,20 @@
 // @flow
 
+const Config = require("./lib/config")
+
+import type { Multicolour$Config } from "./flow/declarations/multicolour/config.flow"
+
 Error.stackTraceLimit = Infinity
 
-// const Ajv = require("ajv")
+class Multicolour {
+  constructor(config: Multicolour$Config) {
+    try {
+      this.config = new Config(config)
+    }
+    catch (error) {
+      console.error(error.prettify())
+    }
+  }
+}
 
-// const schema = require("./schema/config.schema.json")
-// const data = require("./tests/content/config")
-
-// const ajv = new Ajv()
-// const valid = ajv.validate(schema, data)
-
-// console.log(valid, ajv.errors)
-
-const { PrettyErrorWithStack } = require("./lib/better-errors/better-errors")
-
-console.log(new PrettyErrorWithStack("Testing the error stack.").toString())
+module.exports = Multicolour

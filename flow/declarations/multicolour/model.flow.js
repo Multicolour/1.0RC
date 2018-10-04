@@ -26,6 +26,7 @@ declare type Multicolour$ModelAttributeType =
   // Text/binary.
   | "text"
   | "blob"
+  | "json"
   | "bytearray"
 
 declare type Multicolour$ModelAttribute = {

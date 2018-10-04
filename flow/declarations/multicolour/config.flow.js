@@ -7,7 +7,7 @@
  * and connections are configured and set up
  * prior to services being setup and started.
  */
-declare type Multicolour$SingleDatabaseConnectionConfig = {
+export type Multicolour$SingleDatabaseConnectionConfig = {
   adapter: string,
   host?: string,
   port?: number,
@@ -15,14 +15,14 @@ declare type Multicolour$SingleDatabaseConnectionConfig = {
   password?: string,
 }
 
-declare type Multicolour$DatabaseConnectionsConfig = {
+export type Multicolour$DatabaseConnectionsConfig = {
   [name: string]: Multicolour$SingleDatabaseConnectionConfig,
 }
 
 /**
  * Service declaration structure.
  */
-declare type Multicolour$APIServiceDeclaration = {
+export type Multicolour$APIServiceDeclaration = {
   port: number,
   host?: string,
   root_uri?: string,
@@ -30,11 +30,11 @@ declare type Multicolour$APIServiceDeclaration = {
   TLSOptions?: https$HTTPSOptions,
 }
 
-declare type Multicolour$APIServiceDeclarations = {
+export type Multicolour$APIServiceDeclarations = {
   [name: string]: Multicolour$APIServiceDeclaration,
 }
 
-declare type Multicolour$APIServiceSecurityAuthDeclaration = {
+export type Multicolour$APIServiceSecurityAuthDeclaration = {
   client_id: string,
   client_secret: string,
   redirect_urls: Array<string>,
@@ -42,21 +42,21 @@ declare type Multicolour$APIServiceSecurityAuthDeclaration = {
   secure?: boolean,
 }
 
-declare type Multicolour$APIServiceSecurityAuthDeclarations = {
+export type Multicolour$APIServiceSecurityAuthDeclarations = {
   [name: string]: Multicolour$APIServiceSecurityAuthDeclaration,
 }
 
-declare type Multicolour$APIServiceSecurityCORSDeclaration = {
+export type Multicolour$APIServiceSecurityCORSDeclaration = {
   allowed_domains: Array<string>,
 }
 
-declare type Multicolour$APIServiceSecurityDeclaration = {
+export type Multicolour$APIServiceSecurityDeclaration = {
   auth?: Multicolour$APIServiceSecurityAuthDeclarations,
   cors?: Multicolour$APIServiceSecurityCORSDeclaration
 }
 
 // Config structure.
-declare type Multicolour$Config = {
+export type Multicolour$Config = {
   models: string,
   api: Multicolour$APIServiceDeclarations,
   databases: Multicolour$DatabaseConnectionsConfig,
