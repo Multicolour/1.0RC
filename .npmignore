@@ -5,5 +5,4 @@ docs
 .travis.yml
 README.md
 .eslintrc
-.github_changelog_generator
 tests
