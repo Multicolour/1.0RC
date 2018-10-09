@@ -49,8 +49,7 @@
     "flow-bin": "^0.60.1",
     "jest": "^21.2.1",
     "jest-flow-transform": "^1.0.1",
-    "newman": "^3.8.3",
-    "snyk": "^1.49.5"
+    "newman": "^3.8.3"
   },
   "jest": {
     "transform": {
