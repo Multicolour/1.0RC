@@ -1,0 +1,113 @@
+{
+  "type": "object",
+  "title": "Config for API services",
+  "$schema": "http://json-schema.org/draft-06/schema#",
+  "description": "Configure each of your API's services here, they are internally routed to communicate with each other easily and automatically.",
+  "id": "/services/api-service",
+  "required": ["port"],
+  "additionalProperties": false,
+  "properties": {
+    "dependsOn": {
+      "type": "array",
+      "id": "api/services/service/dependsOn",
+      "description": "A list of other defined services this service depends on, alters the order of service creation and where in the network bridge they appear.",
+      "items": {
+        "type": "string",
+        "id": "api/services/service/dependsOn/0"
+      }
+    },
+    "host": {
+      "type": "string",
+      "id": "api/services/service/host",
+      "description": "The hostname this server should bind to, optional and defaults to 0.0.0.0 (all network interfaces.)",
+      "default": "0.0.0.0"
+    },
+    "port": {
+      "type": "number",
+      "id": "api/services/service/port",
+      "description": "The port this service will listen on."
+    },
+    "rootUri": {
+      "type": "string",
+      "id": "api/services/service/root",
+      "description": "This is the hostname that will appear in any kind of 'links' object. This should be whatever the public facing (authed or not) domain that this api will run on. If not set, will be inferred by the server."
+    },
+    "security": {
+      "type": "object",
+      "id": "api/services/service/security",
+      "description": "Security options for this declared service. Configure CORS rules, OAuth config or JWT configuration and general security config. While we recommend this is always set and you share tokens with consumers of your app this is optional.",
+      "properties": {
+        "auth": {
+          "type": "object",
+          "id": "api/services/service/security/auth",
+          "description": "Configure the way consumers authenticate with your API(s).",
+          "required": ["masterKey", "providers"],
+          "properties": {
+            "masterKey": {
+              "type": "string",
+              "id": "api/services/service/security/auth/masterKey"
+            },
+            "providers": {
+              "type": "object",
+              "minItems": 1,
+              "id": "api/services/service/security/auth/providers",
+              "description": "Configure your auth providers here, if they're following the spec any OAuth 2 provider should work and will authenticate your consumers.",
+              "patternProperties": {
+                "^([a-zA-Z0-9-_]+)+$": {
+                  "type": "object",
+                  "id": "api/services/service/security/auth/providers/0",
+                  "required": ["clientId", "clientSecret", "redirectUrls", "technology"],
+                  "properties": {
+                    "clientId": {
+                      "type": "string",
+                      "id": "api/services/service/security/auth/providers/0/clientId",
+                      "description": ""
+                    },
+                    "clientSecret": {
+                      "type": "string",
+                      "id": "api/services/service/security/auth/providers/0/clientSecret"
+                    },
+                    "redirectUrls": {
+                      "type": "array",
+                      "id": "api/services/service/security/auth/providers/0/redirectUrls",
+                      "items": {
+                        "type": "string",
+                        "id": "api/services/service/security/auth/providers/0/redirectUrls/0"
+                      }
+                    },
+                    "secure": {
+                      "type": "boolean",
+                      "id": "api/services/service/security/auth/providers/0/secure",
+                      "default": true
+                    },
+                    "technology": {
+                      "id": "api/services/service/security/auth/providers/0/type",
+                      "enum": ["oauth", "token"]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "cors": {
+          "type": "object",
+          "id": "api/services/service/security/cors",
+          "required": ["allowedDomains"],
+          "description": "Configure cross origin resource sharing rules.",
+          "properties": {
+            "allowedDomains": {
+              "type": "array",
+              "id": "api/services/service/security/cors/domains",
+              "description": "Configure what domains are allowed to reach the API. This is checked before any authentication work, before any middleware is called.",
+              "items": {
+                "type": "string",
+                "id": "api/services/service/security/cors/domains/0"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,5 +1,7 @@
 // @flow
 
+require("./lib/uncaught-error-handlers")
+
 const Config = require("./lib/config")
 
 import type { Multicolour$Config } from "./flow/declarations/multicolour/config.flow"
@@ -8,13 +10,21 @@ Error.stackTraceLimit = Infinity
 
 class Multicolour {
   constructor(config: Multicolour$Config) {
+    this.config = new Config(config)
+
     try {
-      this.config = new Config(config)
+      this.config.validate(config)
     }
     catch (error) {
-      console.error(error.prettify())
+      console.error(error.prettify()) // eslint-disable-line
+      process.exit(-1)
+    }
+    finally {
+      console.info("Config is good, nice work.") // eslint-disable-line
     }
   }
+
+  
 }
 
 module.exports = Multicolour

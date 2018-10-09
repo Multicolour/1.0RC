@@ -1,0 +1,39 @@
+{
+  "title": "Multicolour Config",
+  "type": "object",
+  "$schema": "http://json-schema.org/draft-06/schema#",
+  "required": ["services"],
+  "additionalProperties": true,
+  "properties": {
+    "services": {
+      "type": "object",
+      "id": "/services",
+      "minProperties": 1, 
+      "patternProperties": {
+        "^([a-zA-Z0-9-_]+)+$": {
+          "type": "object",
+          "anyOf": [
+            { "$ref": "/services/api-service" },
+            { "$ref": "/services/database-service" }
+          ]
+        }
+      }
+    },
+    
+    "models": {
+      "type": "string",
+      "id": "models",
+      "description": "The directory where your model definitions are kept. Every file ending in .js is considered a model and unless configured otherwise will have a set of routes and a table created for it.",
+      "default": "./models/"
+    },
+
+    "restart": {
+      "type": "string",
+      "enum": [
+        "unless-stopped",
+        "on-error",
+        "never"
+      ]
+    }
+  }
+}

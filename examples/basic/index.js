@@ -2,4 +2,10 @@
 
 const Multicolour = require("../../index")
 
-new Multicolour({})
+new Multicolour({
+  services: {
+    database: {
+      adapter: "pg",
+    },
+  },
+})
