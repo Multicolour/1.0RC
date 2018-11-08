@@ -4,8 +4,15 @@ const Multicolour = require("../../index")
 
 new Multicolour({
   services: {
-    database: {
-     // adapter: "pg",
+    myDatabase: {
+      type: "database",
+      adapter: "pg",
+    },
+
+    myAPI: {
+      type: "api",
+      dependsOn: [ "myDatabase" ],
+      bindPort: 1811,
     },
   },
 })

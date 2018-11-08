@@ -1,7 +1,7 @@
 {
   "title": "Multicolour Model",
   "type": "object",
-  "$schema": "http://json-schema.org/draft-06/schema#",
+  "$schema": "http://json-schema.org/draft-07/schema#",
   "required": [
     "attributes"
   ],
@@ -11,19 +11,19 @@
       "type": "object",
       "title": "Model attributes",
       "description": "The attributes to declare for this model, including types and any extra config.",
-      "id": "attributes",
+      "$id": "attributes",
       "additionalProperties": true,
       "patternProperties": {
         "^([a-zA-Z0-9-_]+)+$": {
           "type": "object",
-          "id": "model/attributes/attribute",
+          "$id": "model/attributes/attribute",
           "required": [
             "type"
           ],
           "properties": {
             "type": {
               "type": "string",
-              "id": "model/attributes/attribute/definition",
+              "$id": "model/attributes/attribute/definition",
               "description": "The type of column to define.",
               "enum": [
                 "integer",
@@ -47,12 +47,12 @@
             },
             "^(model|collection)$": {
               "type": "string",
-              "id": "model/attributes/attribute/related/model",
+              "$id": "model/attributes/attribute/related/model",
               "description": "A related model on this key. Will be set up as a foreign key"
             },
             "required": {
               "type": "boolean",
-              "id": "model/attributes/attribute/required",
+              "$id": "model/attributes/attribute/required",
               "description": "Whether or not this field is a NON-NULL and required property during validation."
             }
           }
@@ -61,44 +61,44 @@
     },
     "toJSON": {
       "title": "Model toJSON",
-      "id": "model/attributes/toJSON",
+      "$id": "model/attributes/toJSON",
       "instanceof": "Function",
       "description": "async toJSON() {} A callback function to be called before returning the row. A chance to update the data from the database and to remove sensitive keys."
     }
   },
   "beforeCreate": {
     "title": "beforeCreate callback",
-    "id": "model/beforeCreate",
+    "$id": "model/beforeCreate",
     "instanceof": "Function",
     "description": "async beforeCreate(row: Object). An async function to alter properties before they're written to the target table."
   },
   "afterCreate": {
     "title": "afterCreate callback",
-    "id": "model/afterCreate",
+    "$id": "model/afterCreate",
     "instanceof": "Function",
     "description": "async afterCreate(row: Object). An async function to perform work triggered by newly created rows."
   },
   "beforeUpdate": {
     "title": "beforeUpdate callback",
-    "id": "model/beforeUpdate",
+    "$id": "model/beforeUpdate",
     "instanceof": "Function",
     "description": "async beforeUpdate(row: Object). An async function to alter properties before they're written to the target table."
   },
   "afterUpdate": {
     "title": "afterUpdate callback",
-    "id": "model/afterUpdate",
+    "$id": "model/afterUpdate",
     "instanceof": "Function",
     "description": "async afterUpdate(row: Object). An async function to perform work triggered by updated rows"
   },
   "beforeDelete": {
     "title": "beforeDelete callback",
-    "id": "model/beforeDelete",
+    "$id": "model/beforeDelete",
     "instanceof": "Function",
     "description": "async beforeDelete(row: Object). An async function to alter properties before they're written to the target table."
   },
   "afterDelete": {
     "title": "afterDelete callback",
-    "id": "model/afterDelete",
+    "$id": "model/afterDelete",
     "instanceof": "Function",
     "description": "async afterDelete(). An async function to alter properties before they're written to the target table."
   }

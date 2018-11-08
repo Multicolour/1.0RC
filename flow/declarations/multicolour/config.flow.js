@@ -1,6 +1,12 @@
 // @flow
 
+export type Multicolour$ServiceBaseConfig = {
+  type: "database" | "api"
+  dependsOn: string[],
+}
+
 export type Multicolour$DatabaseConnectionConfig = {
+  ...$Exact<Multicolour$ServiceBaseConfig>,
   adapter: string,
   host?: string,
   port?: number,
@@ -9,7 +15,9 @@ export type Multicolour$DatabaseConnectionConfig = {
 }
 
 export type Multicolour$APIServiceConfig = {
-
+  ...$Exact<Multicolour$ServiceBaseConfig>,
+  bindHost: string,
+  bindPort: number,
 }
 
 export type Multicolour$ServiceGroup = {

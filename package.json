@@ -1,6 +1,6 @@
 {
   "name": "multicolour",
-  "version": "0.6.16",
+  "version": "1.0.0-pre-beta",
   "description": "Generate your REST API with JSON and use almost any SQL DB tech.",
   "keywords": [
     "Multicolour",
@@ -21,7 +21,7 @@
     "eslint": "eslint ./**/*.js",
     "flow": "flow",
     "unit-tests": "jest tests/*.js --coverage",
-    "test": "npm run linters && npm run unit-tests",
+    "test": "npm run unit-tests",
     "changelog": "github_changelog_generator -u Multicolour -p multicolour"
   },
   "repository": {
@@ -35,12 +35,13 @@
   },
   "homepage": "https://github.com/Multicolour/multicolour#readme",
   "dependencies": {
-    "ajv": "^5.5.1",
+    "ajv": "^6.5.5",
+    "flow-node": "^1.2.3",
     "knex": "^0.14.2"
   },
   "engine-strict": true,
   "engines": {
-    "node": ">= 6.12.0"
+    "node": ">= 11.1.0"
   },
   "devDependencies": {
     "babel-eslint": "^8.0.3",
