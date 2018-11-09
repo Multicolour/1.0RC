@@ -72,7 +72,7 @@
                       "type": "string",
                       "$id": "api/services/service/security/auth/providers/0/clientSecret"
                     },
-                    "redirectUrls": {
+                    "redirectURLs": {
                       "type": "array",
                       "$id": "api/services/service/security/auth/providers/0/redirectUrls",
                       "items": {

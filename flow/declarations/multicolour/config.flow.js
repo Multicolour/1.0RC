@@ -16,8 +16,9 @@ export type Multicolour$DatabaseConnectionConfig = {
 
 export type Multicolour$APIServiceConfig = {
   ...$Exact<Multicolour$ServiceBaseConfig>,
-  bindHost: string,
-  bindPort: number,
+  host: string,
+  port: number,
+  rootUri?: string,
 }
 
 export type Multicolour$ServiceGroup = {
@@ -29,4 +30,22 @@ export type Multicolour$Config = {
   models: string,
   
   services: Multicolour$ServiceGroup,
+}
+
+export type Multicolour$APIServiceSecurityConfig = {
+  auth: {
+    masterKey: string,
+    cors: {
+      allowedDomains: string[],
+    },
+    providers: {
+      [providerName: string]: {
+        clientId: string,
+        clientSecret: string,
+        redirectURLs: string[],
+        secure: boolean,
+        technology: string,
+      }
+    }
+  }
 }

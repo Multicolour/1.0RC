@@ -10,21 +10,23 @@ Error.stackTraceLimit = Infinity
 
 class Multicolour {
   constructor(config: Multicolour$Config) {
-    this.config = new Config(config)
-
+    // Get and validate the provided config.
     try {
-      this.config.validate(config)
+      this.config = new Config(config).validate(config)
     }
     catch (error) {
       console.error(error.prettify ? error.prettify() : error) // eslint-disable-line
       process.exit(-1)
     }
     finally {
-      console.info("Config is good, nice work.") // eslint-disable-line
+      console.info("Config looks good, nice work.") // eslint-disable-line
     }
   }
 
-  
+  async getUserDefinedModels() {
+    const { resolve } = require("path")
+    const path = resolve(this.config.models)
+  }
 }
 
 module.exports = Multicolour
