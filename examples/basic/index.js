@@ -12,7 +12,7 @@ new Multicolour({
     myAPI: {
       type: "api",
       dependsOn: [ "myDatabase" ],
-      bindPort: 1811,
+      port: 1811,
     },
   },
 })

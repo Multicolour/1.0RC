@@ -16,7 +16,7 @@ class Multicolour {
       this.config.validate(config)
     }
     catch (error) {
-      console.error(error.prettify()) // eslint-disable-line
+      console.error(error.prettify ? error.prettify() : error) // eslint-disable-line
       process.exit(-1)
     }
     finally {
