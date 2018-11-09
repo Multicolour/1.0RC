@@ -1,6 +1,7 @@
 // @flow
 
-export VERBS = "POST" 
+// @TODO: Grab these from an export and use typeof
+export type VERBS = "POST" 
   | "GET" 
   | "PATCH" 
   | "PUT" 

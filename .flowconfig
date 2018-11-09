@@ -1,12 +1,16 @@
 [ignore]
 
 [include]
+./flow/declarations/
 
 [libs]
-flow/declarations/
+./flow/declarations/
 
 [lints]
 
 [options]
+module.file_ext=.js
+module.file_ext=.json
+sharedmemory.hash_table_pow=21
 
 [strict]

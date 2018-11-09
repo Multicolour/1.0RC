@@ -1,7 +1,7 @@
 // @flow
 
 export type Multicolour$ServiceBaseConfig = {
-  type: "database" | "api"
+  type: "database" | "api",
   dependsOn: string[],
 }
 

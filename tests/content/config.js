@@ -2,7 +2,7 @@
 
 const config: Multicolour$Config = {
   models: "./models",
-  api: {
+  services: {
     myService: {
       port: 1811,
 
@@ -14,10 +14,10 @@ const config: Multicolour$Config = {
         },
       },
     },
-  },
-  databases: {
-    mysql: {
-      adapter: "mysql",
+    databases: {
+      mysql: {
+        adapter: "mysql",
+      },
     },
   },
 }

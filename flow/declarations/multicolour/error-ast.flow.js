@@ -1,6 +1,6 @@
 // @flow
 
-declare type Error$MessageFrameAST = {
+export type Error$MessageFrameAST = {
   /**
    * The file in the stack that had a caller
    * in it that led to this error being risen.
@@ -9,25 +9,25 @@ declare type Error$MessageFrameAST = {
    * that support clicable links in their terminal
    * emulator.
    */
-  file?: string,
+  file: string,
 
   /**
    * The calling function in the stack, will 
    * usually have a line with it too.
    */
-  caller?: string,
+  caller: string,
 
   /**
    * The line that this
    * caller is on to be traced back.
    */
-  line?: number,
+  line: number,
 
   /**
    * The column that this
    * caller is on to be traced back.
    */
-  column?: number,
+  column: number,
 
   /**
    * The module that this file is in, I.E
@@ -35,7 +35,7 @@ declare type Error$MessageFrameAST = {
    * discover whether or not it's your fault
    * or mine! <3
    */
-  module?: string,
+  module: string,
 }
 
 /**
@@ -43,7 +43,7 @@ declare type Error$MessageFrameAST = {
  * and even faster process into a helpful message 
  * for you, the developer.
  */
-declare type Error$MessageAST = {
+export type Error$MessageAST = {
   /**
    * The message passed into the *Error constructor.
    */
@@ -52,12 +52,12 @@ declare type Error$MessageAST = {
   /**
    * The stack from the error constructor.
    */
-  stack: Array<Error$MessageFrameAST>,
+  stack: Error$MessageFrameAST[],
 
   /**
    * The number of frames dropped fromm the 
    * stack becuase they matches the ignored_packages
    * filter.
    */
-  framesDropped?: number
+  framesDropped: number
 }
