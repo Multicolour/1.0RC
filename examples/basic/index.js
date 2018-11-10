@@ -4,7 +4,7 @@ const Multicolour = require("../../index")
 
 new Multicolour({
   services: {
-    myDatabase: {
+    myPGDatabase: {
       type: "database",
       adapter: "pg",
     },

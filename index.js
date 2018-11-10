@@ -1,10 +1,14 @@
 // @flow
 
+// Catch uncaught errors and promises to present them nicely.
 require("./lib/uncaught-error-handlers")
 
-const configValidator = require("./lib/config")
+import type { 
+  Multicolour$Config,
+} from "./flow/declarations/multicolour/config.flow"
 
-import type { Multicolour$Config } from "./flow/declarations/multicolour/config.flow"
+const configValidator = require("./lib/config")
+const Services = require("./lib/services/services")
 
 Error.stackTraceLimit = Infinity
 
@@ -21,8 +25,16 @@ class Multicolour {
       process.exit(-1)
     }
     finally {
-      console.info("Config looks good, nice work.") // eslint-disable-line
+      console.info("Config syntax looks good, nice work.\nOn to service dependency sortin and resolution.") // eslint-disable-line
     }
+
+    this.sortServicesAndPrepareWorkers()
+  }
+
+  async sortServicesAndPrepareWorkers() {
+    const servicesManager = new Services()
+
+    servicesManager.validateAndSortServicesByDependencies(this.config.services)
   }
 
   async getUserDefinedModels() {
