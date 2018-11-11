@@ -34,7 +34,13 @@ class Multicolour {
   async sortServicesAndPrepareWorkers() {
     const servicesManager = new Services()
 
-    servicesManager.validateAndSortServicesByDependencies(this.config.services)
+    const startOrder = servicesManager
+      .validateAndSortServicesByDependencies(this.config.services)
+      
+    const serviceBridge = servicesManager
+      .getServiceNetworkBridge(this.config.services, startOrder)
+
+    console.log(serviceBridge)
   }
 
   async getUserDefinedModels() {
