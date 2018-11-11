@@ -28,7 +28,16 @@ class Multicolour {
       console.info("Config syntax looks good, nice work.\nNow, on to service dependency sorting and resolution.") // eslint-disable-line
     }
 
-    this.sortServicesAndPrepareWorkers()
+    try {
+      this.sortServicesAndPrepareWorkers()
+    }
+    catch (error) {
+      console.error(error.prettify ? error.prettify() : error) // eslint-disable-line
+      process.exit(-1)
+    }
+    finally {
+      console.info("All services check out okay, dependencies all resolve and service workers are ready to be prepared.") // eslint-disable-line
+    }
   }
 
   async sortServicesAndPrepareWorkers() {

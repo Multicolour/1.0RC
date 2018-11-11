@@ -1,6 +1,6 @@
 // @flow
 
-const Multicolour = require("../../index")
+const Multicolour = require("../../dist/index")
 
 new Multicolour({
   services: {

@@ -20,9 +20,14 @@
     "linters": "npm run flow && npm run eslint",
     "eslint": "eslint ./**/*.js",
     "flow": "flow",
+    "strip-flow-types-lib": "flow-remove-types -p --out-dir ./dist/lib/ ./lib/",
+    "strip-flow-types-index": "flow-remove-types -p --out-dir ./dist/ ./index.js",
+    "strip-flow-types": "npm run strip-flow-types-lib && npm run strip-flow-types-index",
+    "package": "npm run strip-flow-types && npm run copy-schema",
+    "copy-schema": "cp -R schema dist/",
     "unit-tests": "jest tests/*.js --coverage",
     "test": "npm run unit-tests",
-    "changelog": "github_changelog_generator -u Multicolour -p multicolour"
+    "prepublish": "npm run package"
   },
   "repository": {
     "type": "git",
@@ -36,7 +41,6 @@
   "homepage": "https://github.com/Multicolour/multicolour#readme",
   "dependencies": {
     "ajv": "^6.5.5",
-    "flow-node": "^1.2.3",
     "knex": "^0.14.2",
     "toposort": "^2.0.2"
   },
@@ -49,6 +53,7 @@
     "eslint": "^4.11.0",
     "eslint-plugin-flowtype": "^2.39.1",
     "flow-bin": "^0.60.1",
+    "flow-node": "^1.2.3",
     "jest": "^21.2.1",
     "jest-flow-transform": "^1.0.1",
     "newman": "^3.8.3"
