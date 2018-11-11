@@ -9,10 +9,22 @@ new Multicolour({
       adapter: "pg",
     },
 
-    myAPI: {
+    myAuthAPI: {
       type: "api",
-      dependsOn: [ "myDatabase" ],
+      dependsOn: [ "myPGDatabase" ],
       port: 1811,
+    },
+
+    myUserAPI: {
+      type: "api",
+      dependsOn: [ "myAuthAPI" ],
+      port: 1812,
+    },
+
+    myPublicAPI: {
+      type: "api",
+      dependsOn: [ "myPGDatabase" ],
+      port: 1813,
     },
   },
 })

@@ -25,7 +25,7 @@ class Multicolour {
       process.exit(-1)
     }
     finally {
-      console.info("Config syntax looks good, nice work.\nOn to service dependency sortin and resolution.") // eslint-disable-line
+      console.info("Config syntax looks good, nice work.\nNow, on to service dependency sorting and resolution.") // eslint-disable-line
     }
 
     this.sortServicesAndPrepareWorkers()
