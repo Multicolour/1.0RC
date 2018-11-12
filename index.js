@@ -14,6 +14,7 @@ Error.stackTraceLimit = Infinity
 
 class Multicolour {
   config: Multicolour$Config
+  serviceBridge: ServiceNetworkBridge
 
   constructor(config: Multicolour$Config) {
     // Get and validate the provided config.
@@ -46,10 +47,8 @@ class Multicolour {
     const startOrder = servicesManager
       .validateAndSortServicesByDependencies(this.config.services)
       
-    const serviceBridge = servicesManager
+    this.serviceBridge = servicesManager
       .getServiceNetworkBridge(this.config.services, startOrder)
-
-    console.log(serviceBridge)
   }
 
   async getUserDefinedModels() {
@@ -58,7 +57,7 @@ class Multicolour {
   }
 
   async start() {
-
+    return this.serviceBridge.startServices()
   }
 
   async stop() {
