@@ -25,7 +25,7 @@
     "strip-flow-types": "npm run strip-flow-types-lib && npm run strip-flow-types-index",
     "package": "npm run strip-flow-types && npm run copy-schema",
     "copy-schema": "cp -R schema dist/",
-    "unit-tests": "jest tests/*.js --coverage",
+    "unit-tests": "jest tests/*.js --coverage --maxWorkers=2",
     "test": "npm run unit-tests",
     "prepublish": "npm run package",
     "dev": "nodemon --ignore dist/ --exec \"npm run package\""
@@ -42,6 +42,7 @@
   "homepage": "https://github.com/Multicolour/multicolour#readme",
   "dependencies": {
     "ajv": "^6.5.5",
+    "debug": "^4.1.0",
     "knex": "^0.14.2",
     "toposort": "^2.0.2"
   },
@@ -55,7 +56,7 @@
     "eslint-plugin-flowtype": "^2.39.1",
     "flow-bin": "^0.60.1",
     "flow-node": "^1.2.3",
-    "jest": "^21.2.1",
+    "jest": "^23.6.0",
     "jest-flow-transform": "^1.0.1",
     "newman": "^3.8.3",
     "nodemon": "^1.18.6"
