@@ -18,6 +18,10 @@ test("Radix tree generator", () => {
       path: "/user/settings/account",
       handler: () => {},
     },
+    {
+      path: "/user/password/:token",
+      handler: () => {},
+    },
   ]
 
   const expectedRadixTrie = {
@@ -47,6 +51,11 @@ test("Radix tree generator", () => {
               },
             ],
           },
+          {
+            path: ":token",
+            handler: () => {},
+            children: [],
+          }
         ],
       },
     ],
