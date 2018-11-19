@@ -33,22 +33,40 @@ test("Radix tree generator", () => {
   ]
 
   const expectedRadixTrie = {
-    user: {
-      password: {
-        ":token": {
-          handler: async() => {},
-        },
+    branches: [
+      {
+        path: "login",
+        children: [],
+        handler: () => {},
       },
-    },
-    product: {
-      ":productId": {
-        categories: {
-          ":categoryId": {
-            handler: async() => {},
+      {
+        path: "user",
+        handler: () => {},
+        children: [
+          {
+            path: "catalog",
+            handler: () => {},
+            children: [],
           },
-        },
+          {
+            path: "settings",
+            handler: null,
+            children: [
+              {
+                path: "account",
+                handler: () => {},
+                children: [],
+              },
+            ],
+          },
+          {
+            path: ":token",
+            handler: () => {},
+            children: [],
+          },
+        ],
       },
-    },
+    ],
   }
 
   const multicolourRadix = new RadixTrie(routes)
