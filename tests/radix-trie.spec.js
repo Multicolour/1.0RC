@@ -3,37 +3,29 @@ const RadixTrie = require("../lib/server/radix-trie")
 test("Radix tree generator", () => {
   const routes = [
     {
-      path: "/user",
-      handler: async() => {},
+      path: "/login",
+      handler: () => {},
     },
     {
-      path: "/product",
-      handler: async() => {},
+      path: "/user",
+      handler: () => {},
+    },
+    {
+      path: "/user/catalog",
+      handler: () => {},
     },
     {
       path: "/user/settings/account",
-      handler: async() => {},
-    },
-    {
-      path: "/product/:productId",
-      handler: async() => {},
-    },
-    {
-      path: "/product/:productId/categories",
-      handler: async() => {},
-    },
-    {
-      path: "/product/:productId/categories/:categoryId",
-      handler: async() => {},
+      handler: () => {},
     },
     {
       path: "/user/password/:token",
-      handler: async() => {},
+      handler: () => {},
     },
   ]
 
-  const expectedRadixTrie = {
-    branches: [
+  const expectedRadixTrie =
+    [
       {
         path: "login",
         children: [],
@@ -66,8 +58,7 @@ test("Radix tree generator", () => {
           },
         ],
       },
-    ],
-  }
+    ]
 
   const multicolourRadix = new RadixTrie(routes)
 
