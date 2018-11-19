@@ -3,62 +3,53 @@ const RadixTrie = require("../lib/server/radix-trie")
 test("Radix tree generator", () => {
   const routes = [
     {
-      path: "/login",
-      handler: () => {},
-    },
-    {
       path: "/user",
-      handler: () => {},
+      handler: async() => {},
     },
     {
-      path: "/user/catalog",
-      handler: () => {},
+      path: "/product",
+      handler: async() => {},
     },
     {
       path: "/user/settings/account",
-      handler: () => {},
+      handler: async() => {},
+    },
+    {
+      path: "/product/:productId",
+      handler: async() => {},
+    },
+    {
+      path: "/product/:productId/categories",
+      handler: async() => {},
+    },
+    {
+      path: "/product/:productId/categories/:categoryId",
+      handler: async() => {},
     },
     {
       path: "/user/password/:token",
-      handler: () => {},
+      handler: async() => {},
     },
   ]
 
-  const expectedRadixTrie =
-    [
-      {
-        path: "login",
-        children: [],
-        handler: () => {},
+  const expectedRadixTrie = {
+    user: {
+      password: {
+        ":token": {
+          handler: async() => {},
+        },
       },
-      {
-        path: "user",
-        handler: () => {},
-        children: [
-          {
-            path: "catalog",
-            handler: () => {},
-            children: [],
+    },
+    product: {
+      ":productId": {
+        categories: {
+          ":categoryId": {
+            handler: async() => {},
           },
-          {
-            path: "settings",
-            handler: null,
-            children: [
-              {
-                path: "account",
-                handler: () => {},
-                children: [],
-              },
-            ],
-          },
-          {
-            path: ":token",
-            handler: () => {},
-            children: [],
-          },
-        ],
+        },
       },
-    ]
+    },
+  }
 
   const multicolourRadix = new RadixTrie(routes)
 
