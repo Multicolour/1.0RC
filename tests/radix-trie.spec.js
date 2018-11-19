@@ -24,8 +24,8 @@ test("Radix tree generator", () => {
     },
   ]
 
-  const expectedRadixTrie = {
-    branches: [
+  const expectedRadixTrie =
+    [
       {
         path: "login",
         children: [],
@@ -55,11 +55,10 @@ test("Radix tree generator", () => {
             path: ":token",
             handler: () => {},
             children: [],
-          }
+          },
         ],
       },
-    ],
-  }
+    ]
 
   const multicolourRadix = new RadixTrie(routes)
 
