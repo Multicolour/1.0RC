@@ -3,24 +3,24 @@ const RadixTrie = require("../lib/server/radix-trie")
 test("Radix tree generator", () => {
   const routes = [
     {
-      path: "/login",
-      handler: () => {},
-    },
-    {
       path: "/user",
-      handler: () => {},
+      handler: async() => {},
     },
     {
-      path: "/user/catalog",
-      handler: () => {},
+      path: "/usable",
+      handler: async() => {},
+    },
+    {
+      path: "/usurper",
+      handler: async() => {},
     },
     {
       path: "/user/settings/account",
-      handler: () => {},
+      handler: async() => {},
     },
     {
       path: "/user/password/:token",
-      handler: () => {},
+      handler: async() => {},
     },
   ]
 
@@ -29,31 +29,46 @@ test("Radix tree generator", () => {
       {
         path: "login",
         children: [],
-        handler: () => {},
+        handler: async() => {},
       },
       {
-        path: "user",
-        handler: () => {},
+        path: "us",
+        handler: null,
         children: [
           {
-            path: "catalog",
-            handler: () => {},
-            children: [],
-          },
-          {
-            path: "settings",
-            handler: null,
+            path: "er",
+            handler: async() => {},
             children: [
               {
-                path: "account",
-                handler: () => {},
-                children: [],
+                path: "settings",
+                handler: null,
+                children: {
+                  path: "account",
+                  handler: async() => {},
+                  children: [],
+                },
+              },
+              {
+                path: "password",
+                handler: null,
+                children: [
+                  {
+                    path: ":token",
+                    handler: async() => {},
+                    children: [],
+                  },
+                ],
               },
             ],
           },
           {
-            path: ":token",
-            handler: () => {},
+            path: "urper",
+            handler: async() => {},
+            children: [],
+          },
+          {
+            path: "able",
+            handler: async() => {},
             children: [],
           },
         ],

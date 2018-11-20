@@ -7,12 +7,6 @@ import type {
 
 const { METHODS } = require("http")
 
-export type Multicolour$StaticRouteDictionary = {
-  [method: $Keys<METHODS>]: {
-    [pathName: string]: Multicolour$Route,
-  }
-}
-
 export type Multicolour$RouteAuthConfig = {
   type: string,
   roles: string[],
