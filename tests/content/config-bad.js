@@ -16,7 +16,6 @@ const config: Multicolour$Config = {
     },
     databases: {
       mysql: {
-        adapter: "mysql",
       },
     },
   },

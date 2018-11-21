@@ -61,7 +61,7 @@ class Multicolour {
   }
 
   async stop() {
-    
+    return this.serviceBridge.stopServices()   
   }
 }
 
