@@ -42,6 +42,7 @@
   "homepage": "https://github.com/Multicolour/multicolour#readme",
   "dependencies": {
     "ajv": "^6.5.5",
+    "bluebird": "^3.5.3",
     "debug": "^4.1.0",
     "knex": "^0.14.2",
     "toposort": "^2.0.2"
