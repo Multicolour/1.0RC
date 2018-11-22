@@ -7,5 +7,5 @@ test("Pretty error parser parses error stacks properly", () => {
   expect(test1ErrorAST).toBeTruthy()
   expect(test1ErrorAST.message).toEqual("test 1")
   expect(test1ErrorAST.stack.length).toBeGreaterThan(0)
-  expect(typeof test1Error.prettify()).toEqual("string")  
+  expect(typeof test1Error.prettify()).toEqual("string")
 })

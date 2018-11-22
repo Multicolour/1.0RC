@@ -75,8 +75,7 @@ const testData = [
 
 testData.forEach(data => {
   test(data.route, () => {
-    const { handle } = tree.search(data.route)
-    console.log("ANDLE", handle)
+    const handle = tree.search(data.route)
     if (data.found) {
       expect(handle).toBeTruthy()
     } 
