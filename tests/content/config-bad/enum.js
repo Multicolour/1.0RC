@@ -4,6 +4,7 @@ const config: Multicolour$Config = {
   models: "./models",
   services: {
     myService: {
+      type: "a bad type of unknown unknowness",
       port: 1811,
 
       security: {
@@ -12,10 +13,6 @@ const config: Multicolour$Config = {
             "http://localhost:1811",
           ],
         },
-      },
-    },
-    databases: {
-      mysql: {
       },
     },
   },

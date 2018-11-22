@@ -25,7 +25,7 @@
     "strip-flow-types": "npm run strip-flow-types-lib && npm run strip-flow-types-index",
     "package": "npm run strip-flow-types && npm run copy-schema",
     "copy-schema": "cp -R schema dist/",
-    "unit-tests": "jest tests/*.js --coverage --maxWorkers=2",
+    "unit-tests": "jest tests/*.js --coverage --maxWorkers=4",
     "test": "npm run unit-tests",
     "prepublish": "npm run package",
     "dev": "nodemon --ignore dist/ --exec \"npm run package\""
