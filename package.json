@@ -65,6 +65,10 @@
   "jest": {
     "transform": {
       "^.+\\.js(?:\\.flow)?$": "jest-flow-transform"
-    }
+    },
+    "coveragePathIgnorePatterns": [
+      "/node_modules/",
+      "<rootDir>/lib/better-errors/ajv-syntax-or-reference-error.js"
+    ]
   }
 }
