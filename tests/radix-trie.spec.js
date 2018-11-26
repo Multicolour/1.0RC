@@ -1,7 +1,7 @@
 /**
  * This code is MIT licensed and belongs to this repo. 
  * https://github.com/steambap/koa-tree-router/blob/master/test/tree-spec.js
- * Modified for purpose.
+ * Modified for purpose, structural and for coverage.
  */
 
 const Tree = require("../lib/server/radix-trie")
@@ -20,6 +20,8 @@ let routes = [
   "/doc/node1.html",
   "/α",
   "/β",
+  "/a/:named",
+  "/ab/*wildcard",
 ]
 
 routes.forEach(route => {
