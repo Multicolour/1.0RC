@@ -1,8 +1,9 @@
-const MulticolourServer = require("../lib/server/server")
 const {
   ClientRequest, 
   ServerResponse,
 } = require("http")
+
+const MulticolourServer = require("../lib/server/server")
 
 test("Multicolour server instantiation", () => {
   expect(new MulticolourServer()).toBeTruthy()
@@ -26,13 +27,15 @@ test("Multicolour server headers", () => {
 
 test("Multicolour server routing", () => {
   const server = new MulticolourServer()
-  const response = new ServerResponse({})
   const request = new ClientRequest({})
+  const response = new ServerResponse({
+    req: request,
+  })
 
   server.route({
     method: "get",
     path: "/test",
-    handler: async() => {},
+    handle: async() => {},
   })
 
   request.url = "/test"

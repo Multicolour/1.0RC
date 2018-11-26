@@ -70,7 +70,11 @@
       "/node_modules/",
       "<rootDir>/lib/better-errors/ajv-syntax-or-reference-error.js"
     ],
-    "coverageReporters": ["json", "html", "text"],
+    "coverageReporters": [
+      "json",
+      "html",
+      "text"
+    ],
     "coverageThreshold": {
       "global": {
         "branches": 80,
