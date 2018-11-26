@@ -1,11 +1,9 @@
 // @flow
 
 import type {
-  Request,
-  Response,
+  ClientRequest,
+  ServerResponse,
 } from "http"
-
-const { METHODS } = require("http")
 
 export type Multicolour$RouteAuthConfig = {
   type: string,
@@ -19,10 +17,10 @@ export type Multicolour$RouteValidations = {
   response: Object,
 }
 
-export type Multicolour$RouteHandler = (request: Request, response: Response) => Promise<any>
+export type Multicolour$RouteHandler = (request: ClientRequest, response: ServerResponse) => Promise<any>
 
 export type Multicolour$Route = {
-  method: $Keys<METHODS>,
+  method: "get" | "post" | "put" | "patch" | "delete" | "options" | "head",
   path: string,
   handler: Multicolour$RouteHandler,
 
