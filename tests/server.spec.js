@@ -13,18 +13,6 @@ test("Multicolour server instantiation", () => {
   })).toBeTruthy()
 })
 
-test("Multicolour server headers", () => {
-  const server = new MulticolourServer()
-  const response = new ServerResponse({})
-
-  server.writeHeaders(response, {
-    "X-Test-Header": 123,
-  })
-
-  expect(response.hasHeader("x-test-header")).toBe(true)
-  expect(response.getHeader("x-test-header")).toBe(123)
-})
-
 test("Multicolour server routing", () => {
   const server = new MulticolourServer()
   const request = new ClientRequest({
@@ -41,5 +29,5 @@ test("Multicolour server routing", () => {
 
   server.onRequest(request, response)
 
-  console.log(response)
+  expect(response.statusCode).not.toBe(404)
 })

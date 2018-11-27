@@ -5,7 +5,7 @@
  */
 
 const Tree = require("../lib/server/radix-trie")
-const noOp = [function() {}]
+const noOp = [() => {}]
 
 let tree = new Tree()
 let routes = [
@@ -168,9 +168,9 @@ const foundData = [
 
 foundData.forEach(data => {
   test(data.route, () => {
-    const { handle, params } = tree.search(data.route)
-    expect(handle).toBeTruthy()
-    expect(params).toMatchObject(data.params)
+    const route = tree.search(data.route)
+    expect(route).toBeTruthy()
+    expect(route.params).toMatchObject(data.params)
   })
 })
 
@@ -187,9 +187,9 @@ const noHandlerData = [
 
 noHandlerData.forEach(data => {
   test(data.route, () => {
-    const { handle, params } = tree.search(data.route)
-    expect(handle).toBeNull()
-    expect(params).toMatchObject(data.params)
+    const route = tree.search(data.route)
+    expect(route.handler).toBeFalsy()
+    expect(route.params).toMatchObject(data.params)
   })
 })
 

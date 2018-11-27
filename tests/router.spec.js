@@ -40,10 +40,8 @@ test("Router starts and radix trie searches are performant", () => {
 
   // Test some of the parametric uris
   expect(router.match("GET", "/user/123")).toEqual({
-    handle: {
-      path: "/user/:userId",
-      handler: noOp,
-    },
+    path: "/user/:userId",
+    handler: noOp,
     params: [
       {
         key: "userId",
@@ -53,10 +51,8 @@ test("Router starts and radix trie searches are performant", () => {
   })
   
   expect(router.match("GET", "/usurper/dave-mackintosh")).toEqual({
-    handle: {
-      path: "/usurper/*name",
-      handler: noOp,
-    },
+    path: "/usurper/*name",
+    handler: noOp,
     params: [
       {
         key: "name",
