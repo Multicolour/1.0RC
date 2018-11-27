@@ -1,7 +1,7 @@
 const {
-  ClientRequest, 
-  ServerResponse,
-} = require("http")
+  ClientRequest,
+  ServerResponse, 
+} = require("./mocks/http")
 
 const MulticolourServer = require("../lib/server/server")
 
@@ -27,19 +27,18 @@ test("Multicolour server headers", () => {
 
 test("Multicolour server routing", () => {
   const server = new MulticolourServer()
-  const request = new ClientRequest({})
-  const response = new ServerResponse({
-    req: request,
+  const request = new ClientRequest({
+    url: "/test",
+    method: "GET",
   })
+  const response = new ServerResponse()
 
   server.route({
     method: "get",
     path: "/test",
-    handle: async() => {},
+    handler: async() => {},
   })
 
-  request.url = "/test"
-  request.method = "GET"
   server.onRequest(request, response)
 
   console.log(response)

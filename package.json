@@ -68,6 +68,7 @@
     },
     "coveragePathIgnorePatterns": [
       "/node_modules/",
+      "/tests/mocks",
       "<rootDir>/lib/better-errors/ajv-syntax-or-reference-error.js"
     ],
     "coverageReporters": [
