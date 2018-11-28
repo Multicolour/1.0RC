@@ -1,5 +1,6 @@
 const Router = require("../lib/server/router")
 const { METHODS } = require("http")
+const RouterError = require("../lib/better-errors/router-error")
 
 test("Router starts and radix trie searches are performant", () => {
   const router = new Router()
@@ -60,4 +61,15 @@ test("Router starts and radix trie searches are performant", () => {
       },
     ],
   })
+
+  expect(() => {
+    router.get({
+      path: "/*conflict",
+      handler: noOp,
+    })
+    router.get({
+      path: "/*conflict",
+      handler: noOp,
+    })
+  }).toThrow(RouterError)
 })

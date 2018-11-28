@@ -15,19 +15,54 @@ test("Multicolour server instantiation", () => {
 
 test("Multicolour server routing", () => {
   const server = new MulticolourServer()
-  const request = new ClientRequest({
+  const response = new ServerResponse()
+  const mock = jest.fn()
+
+  server
+    .route({
+      method: "get",
+      path: "/test",
+      handler: async() => mock(),
+    })
+    .route({
+      method: "get",
+      path: "/text",
+      handler: async() => "Text",
+    })
+    .route({
+      method: "get",
+      path: "/json",
+      handler: async() => ({ json: true }),
+    })
+
+  server.onRequest(new ClientRequest({
     url: "/test",
     method: "GET",
-  })
-  const response = new ServerResponse()
-
-  server.route({
-    method: "get",
-    path: "/test",
-    handler: async() => {},
-  })
-
-  server.onRequest(request, response)
+  }), response)
 
   expect(response.statusCode).not.toBe(404)
+  expect(mock).toHaveBeenCalled()
+
+  server.onRequest(new ClientRequest({
+    url: "/text",
+    method: "GET",
+  }), response)
+
+  expect(response.statusCode).not.toBe(404)
+  expect(mock).toHaveBeenCalled()
+
+  server.onRequest(new ClientRequest({
+    url: "/json",
+    method: "GET",
+  }), response)
+
+  expect(response.statusCode).not.toBe(404)
+  expect(mock).toHaveBeenCalled()
+
+  server.onRequest(new ClientRequest({
+    url: "/nope",
+    method: "GET",
+  }), response)
+
+  expect(response.statusCode).toBe(404)
 })
