@@ -11,5 +11,5 @@ script:
   - "npm test"
 
 after_script:
-  - "npm install coveralls@2 && cat ./coverage/lcov.info | ./node_modules/.bin/coveralls"
+  - "npm install coveralls && cat ./coverage/lcov.info | ./node_modules/.bin/coveralls"
 

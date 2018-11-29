@@ -128,7 +128,22 @@ test("Router starts and routing", () => {
       path: "/*test",
     })
   }).toThrow(RouterError)
-  
+
+  expect((() => {
+    const router = new Router()
+    let string = ""
+
+    try {
+      router.get({ path: "/test" })
+      router.get({ path: "/test" })
+    }
+    catch(error) {
+      string = error.prettify()
+    }
+
+    return string
+  })()).toContain("A handle is already registered for path '/test'")
+
   // This appears to be an internal method but it's 
   // ran here because of test coverage... 
   expect(router.tries.GET.addPriority(1)).toBe(0)
