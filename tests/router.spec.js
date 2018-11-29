@@ -2,7 +2,7 @@ const Router = require("../lib/server/router")
 const { METHODS } = require("http")
 const RouterError = require("../lib/better-errors/router-error")
 
-test("Router starts and radix trie searches are performant", () => {
+test("Router starts and routing", () => {
   const router = new Router()
   const noOp = async() => {}
 
@@ -50,7 +50,7 @@ test("Router starts and radix trie searches are performant", () => {
       },
     ],
   })
-  
+
   expect(router.match("GET", "/usurper/dave-mackintosh")).toEqual({
     path: "/usurper/*name",
     handler: noOp,
@@ -62,7 +62,9 @@ test("Router starts and radix trie searches are performant", () => {
     ],
   })
 
+  // Conflicting paths
   expect(() => {
+    const router = new Router()
     router.get({
       path: "/*conflict",
       handler: noOp,
@@ -72,4 +74,62 @@ test("Router starts and radix trie searches are performant", () => {
       handler: noOp,
     })
   }).toThrow(RouterError)
+
+  // Conflicting wildcard and static paths
+  expect(() => {
+    const router = new Router()
+    router.get({
+      path: "/*/errorPlease",
+    })
+    router.get({
+      path: "/cant/do/error",
+    })
+  }).toThrow(RouterError)
+  
+  // The "what are you tryna do"
+  expect(() => {
+    const router = new Router()
+    router.get({
+      path: "/*/cant*/do/this",
+    })
+  }).toThrow(RouterError)
+  
+  // This isn't glob.
+  expect(() => {
+    const router = new Router()
+    router.get({
+      path: "/**",
+    })
+  }).toThrow(RouterError)
+  
+  // Param without a name...
+  expect(() => {
+    const router = new Router()
+    router.get({
+      path: "/:",
+    })
+  }).toThrow(RouterError)
+  
+  // Wildcard without a name
+  expect(() => {
+    const router = new Router()
+    router.get({
+      path: "*",
+    })
+  }).toThrow(RouterError)
+  
+  // Conflicting param and wildcard paths.
+  expect(() => {
+    const router = new Router()
+    router.get({
+      path: "/:param",
+    })
+    router.get({
+      path: "/*test",
+    })
+  }).toThrow(RouterError)
+  
+  // This appears to be an internal method but it's 
+  // ran here because of test coverage... 
+  expect(router.tries.GET.addPriority(1)).toBe(0)
 })
