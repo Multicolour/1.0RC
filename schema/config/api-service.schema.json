@@ -48,6 +48,11 @@
           "description": "Configure the way consumers authenticate with your API(s).",
           "required": ["masterKey", "providers"],
           "properties": {
+            "maxBodySize": {
+              "type": "number",
+              "$id": "api/services/service/security/auth/maxBodySize",
+              "default": "2e7"
+            },
             "masterKey": {
               "type": "string",
               "$id": "api/services/service/security/auth/masterKey"
