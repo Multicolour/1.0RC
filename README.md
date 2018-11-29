@@ -1,6 +1,7 @@
 <img src="https://getmulticolour.com/images/MC_Icon_PurpleRain_Logotype.png" width="100%">
 
 [![Join the chat at https://slack.getmulticolour.com](https://slack.getmulticolour.com/badge.svg)](https://slack.getmulticolour.com)
+[![codecov](https://codecov.io/gh/Multicolour/1.0RC/branch/core-RC/graph/badge.svg)](https://codecov.io/gh/Multicolour/1.0RC)
 
 The overall mission of this library is to make CRUD API generation fast (instant), easy and cost efficient by simplifying the work involved in creating RESTful services and API powered apps, websites & games.
 
