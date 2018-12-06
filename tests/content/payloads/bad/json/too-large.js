@@ -1,6 +1,7 @@
-let payload = "{a: '"
+const size = 21e6
+const buff = new Buffer(size)
 
-for (let i = 0, max = 1e4; i <= max; i++)
-  payload += ("a").repeat(1e5)
+while (buff.length < size)
+  buff.write("\u00bd")
 
-module.exports = payload + "'}"
+module.exports = `{a: "${buff.toString("utf8")}"}`

@@ -1,23 +1,12 @@
 const JsonParser = require("../lib/server/body-parser/parsers/json")
 
-const badEntryCharBody = require("./content/payloads/bad/json/bad-entry-char")
-const containsFunctionBody = require("./content/payloads/bad/json/contains-function")
-const tooLargeBody = require("./content/payloads/bad/json/too-large")
+const badPayloads = [ 
+  require("./content/payloads/bad/json/bad-entry-char"),
+  require("./content/payloads/bad/json/syntax-error"),
+]
 
 test("JSON body parser", () => {
-  JsonParser(badEntryCharBody)
-    .catch(error => {
-      expect(error.statusCode).toBe(400)
-    })
-  
-  JsonParser(containsFunctionBody)
-    .catch(error => {
-      expect(error.statusCode).toBe(400)
-    })
-
-  JsonParser(tooLargeBody)
-    .catch(error => {
-      expect(error.statusCode).toBe(400)
-    })
+  Promise.all(badPayloads.map(payload => JsonParser(payload).catch(({ statusCode }) => statusCode)))
+    .then(results => expect(results.every(code => code === 400)).toBe(true))
 })
 
