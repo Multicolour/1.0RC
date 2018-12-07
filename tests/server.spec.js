@@ -56,8 +56,8 @@ test("Multicolour server routing", () => {
   expect(typeof new HttpError({
     statusCode: 400,
     error: {
-      message: "Test"
-    }
+      message: "Test",
+    },
   }).prettify()).toEqual("string")
 
   expect(server.onRequest(new ClientRequest({
