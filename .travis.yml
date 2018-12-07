@@ -8,5 +8,5 @@ env:
   - NODE_ENV=development
 
 script:
-  - "npm test && codecov"
+  - "npm test && cat ./coverage/lcov.info | codacy-coverage"
 
