@@ -6,14 +6,18 @@ class ServerResponse extends EventEmitter {
   headers: {
     [name: string]: any,
   }
+  body: string | Buffer
+  statusCode: number
 
   constructor() {
     super()
 
+    this.body = ""
     this.headers = {}
   }
 
   end(data: string | Buffer) {
+    this.body = data
     return data
   }
 

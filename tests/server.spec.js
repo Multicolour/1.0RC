@@ -4,6 +4,7 @@ const {
 } = require("./mocks/http")
 
 const MulticolourServer = require("../lib/server/server")
+const HttpError = require("../lib/better-errors/http-error")
 
 test("Multicolour server instantiation", () => {
   expect(new MulticolourServer()).toBeTruthy()
@@ -34,6 +35,44 @@ test("Multicolour server routing", () => {
       path: "/json",
       handler: async() => ({ json: true }),
     })
+    .route({
+      method: "get",
+      path: "/not-a-function",
+      handler: 123,
+    })
+    .route({
+      method: "get",
+      path: "/throws-http-error",
+      handler: async() => {
+        throw new HttpError({
+          statusCode: 418,
+          error: {
+            message: "Some kind of error.",
+          },
+        })
+      },
+    })
+
+  expect(typeof new HttpError({
+    statusCode: 400,
+    error: {
+      message: "Test"
+    }
+  }).prettify()).toEqual("string")
+
+  expect(server.onRequest(new ClientRequest({
+    url: "/throws-http-error",
+    method: "GET",
+  }), response)).rejects.toEqual(expect.objectContaining({
+    statusCode: 418,
+  }))
+  
+  server.onRequest(new ClientRequest({
+    url: "/not-a-function",
+    method: "GET",
+  }), response)
+
+  expect(response.statusCode).toEqual(500)
 
   server.onRequest(new ClientRequest({
     url: "/test",
