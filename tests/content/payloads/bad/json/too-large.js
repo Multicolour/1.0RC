@@ -1,4 +1,4 @@
-const size = 21e6
+const size = 21000000
 const buff = new Buffer(size)
 
 while (buff.length < size)
