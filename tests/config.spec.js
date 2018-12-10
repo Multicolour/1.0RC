@@ -54,7 +54,7 @@ test("Config validates and throws expected errors", () => {
   }
   finally {
     expect(typeof error).toEqual("string")
-    expect(error).toContain("Property \"config.services['myService'].type\" has an incorrect value, expected a value matching one of 'api', 'database")
+    expect(error).toContain("Property \"config.services['myService'].type\" has an incorrect value, expected a value matching one of 'api', 'database") // eslint-disable-line max-len
   }
 
   // Test enum properties error message
