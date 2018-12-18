@@ -8,7 +8,7 @@ test("Body parser", () => {
     method: "POST",
   })
 
-  const parser = bodyParser(request)
+  const parser = bodyParser({ request })
 
   request.emit("data", Buffer.from("1234", "utf-8"))
   request.emit("end")
@@ -23,7 +23,7 @@ test("Body parser max size", () => {
     method: "POST",
   })
 
-  const parser = bodyParser(request, 1)
+  const parser = bodyParser({ request, maxBodySize: 1 })
 
   request.emit("data", Buffer.from("1234", "utf-8"))
   request.emit("end")

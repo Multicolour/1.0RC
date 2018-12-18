@@ -1,6 +1,6 @@
 // @flow
 
-const EventEmitter = require('events')
+const EventEmitter = require("events")
 
 class ClientRequest extends EventEmitter {
   url: string

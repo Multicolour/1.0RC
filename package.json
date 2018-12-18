@@ -53,6 +53,7 @@
   },
   "devDependencies": {
     "babel-eslint": "^8.0.3",
+    "big-list-of-naughty-strings": "^1.0.0",
     "codacy-coverage": "^3.3.0",
     "eslint": "^4.11.0",
     "eslint-plugin-flowtype": "^2.39.1",
