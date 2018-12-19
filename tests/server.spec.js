@@ -105,3 +105,12 @@ test("Multicolour server routing", () => {
 
   expect(response.statusCode).toBe(404)
 })
+
+test("Server content negotiator", () => {
+  const server = new MulticolourServer()
+  const JsonNegotiator = require("../lib/server/body-parser/parsers/json")
+
+  server.addContentNegotiator(JsonNegotiator)
+
+  expect(server.negotiators["application/json"]).toBeTruthy()
+})
