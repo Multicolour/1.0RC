@@ -3,9 +3,7 @@
 // Catch uncaught errors and promises to present them nicely.
 require("./lib/uncaught-error-handlers")
 
-import type { 
-  Multicolour$Config,
-} from "./flow/declarations/multicolour/config.flow"
+import type { Multicolour$Config } from "./flow/declarations/multicolour/config.flow"
 
 const configValidator = require("./lib/config")
 const Services = require("./lib/services/services")
@@ -49,11 +47,6 @@ class Multicolour {
       
     this.serviceBridge = servicesManager
       .getServiceNetworkBridge(this.config.services, startOrder)
-  }
-
-  async getUserDefinedModels() {
-    const { resolve } = require("path")
-    const path = resolve(this.config.models)
   }
 
   async start() {

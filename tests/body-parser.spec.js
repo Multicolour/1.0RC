@@ -29,5 +29,5 @@ test("Body parser max size", () => {
   request.emit("end")
 
   parser
-    .catch(error => expect(error.messageAST.message).toEqual("Body size exceeded the maximum body size allowed on this server. Please try again with a smaller payload."))
+    .catch(error => expect(error.messageAST.message).toEqual("Body size exceeded the maximum body size allowed on this server. Please try again with a smaller payload.")) //eslint-disable-line max-len
 })

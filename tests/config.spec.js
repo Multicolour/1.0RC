@@ -41,7 +41,7 @@ test("Config validates and throws expected errors", () => {
   }
   finally {
     expect(typeof error).toEqual("string")
-    expect(error).toContain("Data path config.services['myService'] shouldn't have the property \"myRandomPropertyOutOfPlace\"")
+    expect(error).toContain("Data path config.services['myService'] shouldn't have the property \"myRandomPropertyOutOfPlace\"") // eslint-disable-line max-len
   }
   
   // Test enum properties error message
