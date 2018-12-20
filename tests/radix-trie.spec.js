@@ -82,7 +82,7 @@ testData.forEach(data => {
       expect(handle).toBeTruthy()
     } 
     else {
-      expect(handle).toBeNull
+      expect(handle).toBeNull()
     }
   })
 })

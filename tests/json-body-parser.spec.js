@@ -1,5 +1,4 @@
-
-const Promise = require("bluebird")
+const { ClientRequest } = require("./mocks/http")
 
 const JsonParser = require("../lib/server/body-parser/parsers/json")
 
@@ -13,11 +12,17 @@ const goodPayloads = [
   require("./content/payloads/good/json/object"),
 ]
 
-test("JSON body parser", () => {
-  Promise.all(badPayloads.map(payload => JsonParser(payload).catch(({ statusCode }) => statusCode)))
-    .then(results => expect(results.every(code => code === 400)).toBe(true))
-  
-  Promise.all(goodPayloads.map(payload => JsonParser(payload).catch(({ statusCode }) => statusCode)))
-    .then(results => expect(results.every(code => code === 200)).toBe(true))
+test("JSON body parser with known bad payloads", () => {
+  expect.assertions(badPayloads.length)
+  badPayloads.forEach(payload => {
+    const request = new ClientRequest()
+
+    const parser = JsonParser(request)
+
+    request.emit("data", payload)
+    request.emit("end")
+
+    expect(parser).rejects.toEqual(expect.objectContaining({ statusCode: 400 }))
+  })
 })
 
