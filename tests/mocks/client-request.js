@@ -12,6 +12,7 @@ class ClientRequest extends EventEmitter {
     this.url = options.url
     this.method = options.method
     this.body = options.body
+    this.headers = options.headers
   }
 }
 
