@@ -76,6 +76,9 @@
       "/tests/mocks",
       "<rootDir>/lib/better-errors/ajv-syntax-or-reference-error.js"
     ],
+    "setupFiles": [
+      "./tests/content/uncaught-error-handlers"
+    ],
     "coverageReporters": [
       "lcov",
       "json",

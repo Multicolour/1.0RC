@@ -18,7 +18,6 @@ const { ClientRequest } = require("./mocks/http")
 const MultipartNegotiator = require("../lib/server/body-parser/parsers/multipart")
 
 test("Multipart negotiator", () => {
-  
   const request = new ClientRequest({
     headers: {
       "content-type": "multipart/form-data; boundary=boundery",
@@ -27,11 +26,13 @@ test("Multipart negotiator", () => {
   })
   const parser = MultipartNegotiator(request)
 
-  request.emit("data", payload)
+  request.emit("data", Buffer.from(payload, "utf-8"))
+
   // Don't close the request too fast. Formidable needs to parse the form body.
-  setTimeout(() => request.emit("end"), 1000)
+  setTimeout(() => request.emit("end"), 500)
 
   parser
     .then(console.log.bind(console, "success"))
     .catch(console.error.bind(console, "fail"))
+  expect.assertions(1)
 })
