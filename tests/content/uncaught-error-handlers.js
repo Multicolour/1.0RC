@@ -1,11 +1,12 @@
 // @flow
 
+const debug = require("debug")("Multicolour:tests")
 process
   .on("uncaughtException", (error: Error) => {
-    console.error(error)
-    console.error(error.stack)
+    debug(error)
+    debug(error.stack)
   })
   .on("unhandledRejection", (error: Error) => {
-    console.error(error)
-    console.error(error.stack)
+    debug(error)
+    debug(error.stack)
   })

@@ -60,12 +60,14 @@ test("Multicolour server routing", () => {
     },
   }).prettify()).toEqual("string")
 
-  expect(server.onRequest(new ClientRequest({
+  server.onRequest(new ClientRequest({
     url: "/throws-http-error",
     method: "GET",
-  }), response)).rejects.toEqual(expect.objectContaining({
-    statusCode: 418,
-  }))
+  }), response)
+    .catch(error => 
+      expect(error).toEqual(expect.objectContaining({
+        statusCode: 418,
+      })))
   
   server.onRequest(new ClientRequest({
     url: "/not-a-function",
