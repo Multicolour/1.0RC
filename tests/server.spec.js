@@ -77,19 +77,20 @@ test("Multicolour server routing", () => {
   expect(response.statusCode).toEqual(500)
 
   server.onRequest(new ClientRequest({
-    url: "/test",
-    method: "GET",
-  }), response)
-
-  expect(response.statusCode).not.toBe(404)
-  expect(mock).toHaveBeenCalled()
-
-  server.onRequest(new ClientRequest({
     url: "/text",
     method: "GET",
   }), response)
 
   expect(response.statusCode).not.toBe(404)
+  expect(response.statusCode).not.toBe(500)
+  
+  server.onRequest(new ClientRequest({
+    url: "/test",
+    method: "GET",
+  }), response)
+
+  expect(response.statusCode).not.toBe(404)
+  expect(response.statusCode).not.toBe(500)
   expect(mock).toHaveBeenCalled()
 
   server.onRequest(new ClientRequest({
@@ -98,6 +99,7 @@ test("Multicolour server routing", () => {
   }), response)
 
   expect(response.statusCode).not.toBe(404)
+  expect(response.statusCode).not.toBe(500)
   expect(mock).toHaveBeenCalled()
 
   server.onRequest(new ClientRequest({
@@ -106,6 +108,7 @@ test("Multicolour server routing", () => {
   }), response)
 
   expect(response.statusCode).toBe(404)
+  expect(response.statusCode).not.toBe(500)
 })
 
 test("Server content negotiator", () => {
