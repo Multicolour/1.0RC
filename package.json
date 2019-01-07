@@ -44,7 +44,6 @@
     "ajv": "^6.5.5",
     "bluebird": "^3.5.3",
     "debug": "^4.1.0",
-    "formidable": "^1.2.1",
     "knex": "^0.14.2",
     "toposort": "^2.0.2"
   },
@@ -74,7 +73,8 @@
     "coveragePathIgnorePatterns": [
       "/node_modules/",
       "/tests/mocks",
-      "<rootDir>/lib/better-errors/ajv-syntax-or-reference-error.js"
+      "<rootDir>/lib/better-errors/ajv-syntax-or-reference-error.js",
+      "tests/content/uncaught-error-handlers.js"
     ],
     "setupFiles": [
       "./tests/content/uncaught-error-handlers"
