@@ -1,4 +1,4 @@
-const bodyParser = require("../lib/server/body-parser/body-parser")
+const bodyParser = require("../lib/server/request-parsers/body-parser")
 
 const { ClientRequest } = require("./mocks/http")
 

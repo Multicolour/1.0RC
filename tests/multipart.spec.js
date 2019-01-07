@@ -15,7 +15,7 @@ value2
 `
 const { ClientRequest } = require("./mocks/http")
 
-const MultipartNegotiator = require("../lib/server/body-parser/parsers/multipart")
+const MultipartNegotiator = require("../lib/server/request-parsers/parsers/multipart")
 
 test("Multipart negotiator", () => {
   expect.assertions(1)

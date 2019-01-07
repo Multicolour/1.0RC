@@ -1,6 +1,6 @@
 const { ClientRequest } = require("./mocks/http")
 
-const JsonParser = require("../lib/server/body-parser/parsers/json")
+const JsonParser = require("../lib/server/request-parsers/parsers/json")
 
 const badPayloads = [ 
   require("./content/payloads/bad/json/bad-entry-char"),

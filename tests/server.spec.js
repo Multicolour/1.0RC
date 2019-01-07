@@ -110,7 +110,7 @@ test("Multicolour server routing", () => {
 
 test("Server content negotiator", () => {
   const server = new MulticolourServer()
-  const JsonNegotiator = require("../lib/server/body-parser/parsers/json")
+  const JsonNegotiator = require("../lib/server/request-parsers/parsers/json")
   const classNegotiator = class {
     static get negotiationAccept() { return "text/html" }
     async parseBody() {}
