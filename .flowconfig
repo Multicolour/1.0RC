@@ -1,10 +1,8 @@
 [ignore]
 
 [include]
-./flow/declarations/
 
 [libs]
-./flow/declarations/
 
 [lints]
 

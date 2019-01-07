@@ -25,13 +25,16 @@ test("Multipart negotiator", () => {
       "content-length": payload.length,
     },
   })
-  const parser = MultipartNegotiator(request)
+  const parser = MultipartNegotiator({ request })
 
   request.emit("data", Buffer.from(payload, "utf-8"))
-
   request.emit("end")
 
-  return parser
-    .then(console.log.bind(console, "success"))
-    .catch(error => console.error("Err", error))
+  return expect(parser).resolves.toEqual({
+    field1: "value1",
+    field2: {
+      filename: "example.txt",
+      contents: "value2",
+    },
+  })
 })
