@@ -7,11 +7,11 @@ const MulticolourServer = require("../lib/server/server")
 const HttpError = require("../lib/better-errors/http-error")
 
 test("Multicolour server instantiation", () => {
-  expect(new MulticolourServer()).toBeTruthy()
+  expect(new MulticolourServer()).toNotThrow()
   expect(new MulticolourServer({
     serverOptions: {},
     secure: true,
-  })).toBeTruthy()
+  })).toNotThrow()
 })
 
 test("Multicolour server routing", () => {
@@ -81,6 +81,7 @@ test("Multicolour server routing", () => {
     method: "GET",
   }), response)
 
+  console.log(response)
   expect(response.statusCode).not.toBe(404)
   expect(response.statusCode).not.toBe(500)
   
