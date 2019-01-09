@@ -6,41 +6,31 @@ const {
 const MulticolourServer = require("../lib/server/server")
 const HttpError = require("../lib/better-errors/http-error")
 
-test("Multicolour server instantiation", () => {
-  expect(new MulticolourServer()).toNotThrow()
-  expect(new MulticolourServer({
-    serverOptions: {},
-    secure: true,
-  })).toNotThrow()
-})
-
-test("Multicolour server routing", () => {
-  const server = new MulticolourServer()
-  const response = new ServerResponse()
-  const mock = jest.fn()
-
-  server
-    .route({
-      method: "get",
-      path: "/test",
-      handler: async() => mock(),
-    })
-    .route({
+const testableRoutes = [
+  {
+    route: {
       method: "get",
       path: "/text",
       handler: async() => "Text",
-    })
-    .route({
+    },
+    expected: (reply, response) => {
+      expect(reply).toBe("Text")
+      expect(response.headers["content-type"]).toBe("text/plain")
+    },
+  },
+  {
+    route: {
       method: "get",
       path: "/json",
       handler: async() => ({ json: true }),
-    })
-    .route({
-      method: "get",
-      path: "/not-a-function",
-      handler: 123,
-    })
-    .route({
+    },
+    expected: (reply, response) => {
+      expect(reply).toEqual({ json: true })
+      expect(response.headers["content-type"]).toBe("application/json")
+    },
+  },
+  {
+    route: {
       method: "get",
       path: "/throws-http-error",
       handler: async() => {
@@ -51,58 +41,48 @@ test("Multicolour server routing", () => {
           },
         })
       },
+    },
+    expected: (reply, response) => {
+      expect(reply).toEqual({
+        statusCode: 418,
+        error: {
+          message: "Some kind of error.",
+        },
+      })
+      expect(response.statusCode).toBe(418)
+      expect(response.headers["content-type"]).toBe("application/json")
+    },
+  },
+]
+
+test("Multicolour server instantiation", () => {
+  expect(() => new MulticolourServer()).not.toThrow()
+  expect(() => new MulticolourServer({
+    serverOptions: {},
+    secure: true,
+  })).not.toThrow()
+})
+
+test("Multicolour server routing", () => {
+  const server = new MulticolourServer()
+
+  testableRoutes.forEach(async(testableRoute) => {
+    server.route(testableRoute)
+    const response = new ServerResponse()
+    const request = new ClientRequest({
+      url: testableRoute.route.path,
+      method: testableRoute.route.method.toUppercase(),
+      headers: {
+        accept: "*/*",
+      },
     })
 
-  expect(typeof new HttpError({
-    statusCode: 400,
-    error: {
-      message: "Test",
-    },
-  }).prettify()).toEqual("string")
-
-  server.onRequest(new ClientRequest({
-    url: "/throws-http-error",
-    method: "GET",
-  }), response)
-    .catch(error => 
-      expect(error).toEqual(expect.objectContaining({
-        statusCode: 418,
-      })))
+    const reply = await server.onRequest(request, response)
   
-  server.onRequest(new ClientRequest({
-    url: "/not-a-function",
-    method: "GET",
-  }), response)
-
-  expect(response.statusCode).toEqual(500)
-
-  server.onRequest(new ClientRequest({
-    url: "/text",
-    method: "GET",
-  }), response)
-
-  console.log(response)
-  expect(response.statusCode).not.toBe(404)
-  expect(response.statusCode).not.toBe(500)
+    testableRoute.expected(reply, response)
+  })
   
-  server.onRequest(new ClientRequest({
-    url: "/test",
-    method: "GET",
-  }), response)
-
-  expect(response.statusCode).not.toBe(404)
-  expect(response.statusCode).not.toBe(500)
-  expect(mock).toHaveBeenCalled()
-
-  server.onRequest(new ClientRequest({
-    url: "/json",
-    method: "GET",
-  }), response)
-
-  expect(response.statusCode).not.toBe(404)
-  expect(response.statusCode).not.toBe(500)
-  expect(mock).toHaveBeenCalled()
-
+  const response = new ServerResponse()
   server.onRequest(new ClientRequest({
     url: "/nope",
     method: "GET",
