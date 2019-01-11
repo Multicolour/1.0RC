@@ -16,7 +16,8 @@ export type Multicolour$ParsedBody= {
   [key: string]: string,
 }
 
-export type Multicolour$IncomingMessage = IncomingMessage & {
+export type Multicolour$IncomingMessage = {
+  ...$Exact<IncomingMessage>,
   parsedHeaders: Multicolour$ParsedHeaders,
   parsedBody: Multicolour$ParsedBody,
 }

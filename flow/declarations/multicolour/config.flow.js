@@ -2,7 +2,7 @@
 
 export type Multicolour$ServiceBaseConfig = {
   type: "database" | "api",
-  dependsOn: string[],
+  dependsOn?: string[],
 }
 
 export type Multicolour$DatabaseConnectionConfig = {
@@ -16,19 +16,24 @@ export type Multicolour$DatabaseConnectionConfig = {
 
 export type Multicolour$APIServiceConfig = {
   ...$Exact<Multicolour$ServiceBaseConfig>,
-  host: string,
-  port: number,
+  host?: string,
+  port?: number,
   rootUri?: string,
+  secureServerOptions?: {
+    key?: string,
+    cert?: string,
+    pfx?: string,
+    passphrase?: string,
+  }
 }
 
 export type Multicolour$ServiceGroup = {
-  [key: string]: Multicolour$SingleDatabaseConnectionConfig | Multicolour$APIServiceConfig,
+  [key: string]: Multicolour$DatabaseConnectionConfig| Multicolour$APIServiceConfig,
 }
 
 // Config structure.
 export type Multicolour$Config = {
   models: string,
-  
   services: Multicolour$ServiceGroup,
 }
 
@@ -49,3 +54,4 @@ export type Multicolour$APIServiceSecurityConfig = {
     }
   }
 }
+
