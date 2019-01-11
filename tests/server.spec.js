@@ -8,17 +8,24 @@ const HttpError = require("../lib/better-errors/http-error")
 
 const testableRoutes = [
   {
+    headers: {
+      accept: "text/plain",
+    },
     route: {
       method: "get",
       path: "/text",
       handler: async() => "Text",
     },
     expected: (reply, response) => {
+      console.log(response)
       expect(reply).toBe("Text")
       expect(response.headers["content-type"]).toBe("text/plain")
     },
   },
   {
+    headers: {
+      accept: "application/json",
+    },
     route: {
       method: "get",
       path: "/json",
@@ -30,6 +37,9 @@ const testableRoutes = [
     },
   },
   {
+    headers: {
+      accept: "application/json",
+    },
     route: {
       method: "get",
       path: "/throws-http-error",
@@ -63,33 +73,32 @@ test("Multicolour server instantiation", () => {
   })).not.toThrow()
 })
 
-test("Multicolour server routing", () => {
+test("Multicolour server routing", async() => {
   const server = new MulticolourServer()
 
-  testableRoutes.forEach(async(testableRoute) => {
-    server.route(testableRoute)
+  for await (const testableRoute of testableRoutes) {
+    server.route(testableRoute.route)
     const response = new ServerResponse()
     const request = new ClientRequest({
       url: testableRoute.route.path,
-      method: testableRoute.route.method.toUppercase(),
-      headers: {
-        accept: "*/*",
-      },
+      method: testableRoute.route.method.toUpperCase(),
+      headers: testableRoute.headers,
     })
 
     const reply = await server.onRequest(request, response)
   
-    testableRoute.expected(reply, response)
-  })
+    await testableRoute.expected(reply, response)
+  }
   
   const response = new ServerResponse()
   server.onRequest(new ClientRequest({
     url: "/nope",
     method: "GET",
   }), response)
-
-  expect(response.statusCode).toBe(404)
-  expect(response.statusCode).not.toBe(500)
+    .then(() => {
+      expect(response.statusCode).toBe(404)
+      expect(response.statusCode).not.toBe(500)
+    })
 })
 
 test("Server content negotiator", () => {
