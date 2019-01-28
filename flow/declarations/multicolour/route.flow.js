@@ -5,7 +5,14 @@ import type {
   ServerResponse,
 } from "http"
 
-export type Multicolour$RouteVerbs = "get" | "post" | "put" | "patch" | "delete" | "options" | "head"
+export type Multicolour$RouteVerbs = 
+  "GET" 
+  | "POST" 
+  | "PUT" 
+  | "PATCH" 
+  | "DELETE" 
+  | "OPTIONS" 
+  | "HEAD"
 
 export type Multicolour$RouteAuthConfig = {
   type: string,

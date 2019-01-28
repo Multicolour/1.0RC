@@ -4,6 +4,7 @@
 require("./lib/uncaught-error-handlers")
 
 import type { Multicolour$Config } from "./flow/declarations/multicolour/config.flow"
+import type ServiceNetworkBridge from "./lib/services/service-bridge"
 
 const configValidator = require("./lib/config")
 const Services = require("./lib/services/services")

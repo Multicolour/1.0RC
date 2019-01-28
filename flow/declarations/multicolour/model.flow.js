@@ -1,11 +1,13 @@
 // @flow
 
+import type { Multicolour$RouteVerbs } from "@flow/multicolour/route.flow"
+
 /**
  * Each attribute has to have a type, here are the
  * types that Multicolour supports at the moment.
  * @type {string}
  */
-declare type Multicolour$ModelAttributeType = 
+export type Multicolour$ModelAttributeType = 
   // Integers/floats/numbers.
   "smallInt" // signed
   | "mediumInt" | "integer" // signed
@@ -29,7 +31,7 @@ declare type Multicolour$ModelAttributeType =
   | "json"
   | "bytearray"
 
-declare type Multicolour$ModelAttribute = {
+export type Multicolour$ModelAttribute = {
   // The type of the database column.
   type: Multicolour$ModelAttributeType,
 
@@ -45,11 +47,11 @@ declare type Multicolour$ModelAttribute = {
   tags?: Array<string>
 }
 
-declare type Multicolour$ModelConstraint = {
+export type Multicolour$ModelConstraint = {
   // The verbs this constraint has an affect on.
-  verbs: Array<Multicolour$HTTPVerb>,
+  verbs: Multicolour$RouteVerbs[],
 }
 
-declare type Multicolour$Model = {
+export type Multicolour$Model = {
   [attribute: string]: Multicolour$ModelAttribute,
 }
