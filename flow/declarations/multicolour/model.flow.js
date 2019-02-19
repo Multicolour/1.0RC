@@ -1,5 +1,6 @@
 // @flow
 
+import type { IncomingMessage } from "http"
 import type { Multicolour$RouteVerbs } from "@flow/multicolour/route.flow"
 
 /**
@@ -49,7 +50,8 @@ export type Multicolour$ModelAttribute = {
 
 export type Multicolour$ConstraintTarget = string
   | number
-  | async (request: IncomingMessage) => Promise<string | number>,
+  | boolean
+  | (request: IncomingMessage) => Promise<string | number | boolean>
 
 export type Multicolour$ConstraintDefinition = {
   // The verbs this constraint has an affect on.
@@ -66,5 +68,5 @@ export type Multicolour$Model<ModelAttributes = Object> = {
   constraints: {
     [column: string]: Multicolour$ConstraintDefinition
   },
-  toJSON: async (row: ModelAttributes) => Promise<{ ...ModelAttributes }>
+  toJSON: (row: ModelAttributes) => Promise<{ ...ModelAttributes }>
 }
