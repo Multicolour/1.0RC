@@ -44,14 +44,27 @@ export type Multicolour$ModelAttribute = {
 
   // Tags to be used in the documentation to help with filtering
   // certain endpoints and categories together.
-  tags?: Array<string>
+  tags?: string[],
 }
 
-export type Multicolour$ModelConstraint = {
+export type Multicolour$ConstraintTarget = string
+  | number
+  | async (request: IncomingMessage) => Promise<string | number>,
+
+export type Multicolour$ConstraintDefinition = {
   // The verbs this constraint has an affect on.
   verbs: Multicolour$RouteVerbs[],
+
+  // The constraint target which is added to the query overriding any incoming vales.
+  constraint: Multicolour$ConstraintTarget,
 }
 
-export type Multicolour$Model = {
-  [attribute: string]: Multicolour$ModelAttribute,
+export type Multicolour$Model<ModelAttributes = Object> = {
+  columns: {  
+    [attribute: string]: Multicolour$ModelAttribute,
+  },
+  constraints: {
+    [column: string]: Multicolour$ConstraintDefinition
+  },
+  toJSON: async (row: ModelAttributes) => Promise<{ ...ModelAttributes }>
 }
