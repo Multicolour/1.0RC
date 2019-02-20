@@ -1,6 +1,6 @@
 
 module.exports = {
-  attributes: {
+  columns: {
     name: {
       type: "string",
       required: true,

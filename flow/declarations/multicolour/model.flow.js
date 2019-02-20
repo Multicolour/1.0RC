@@ -70,3 +70,7 @@ export type Multicolour$Model<ModelAttributes = Object> = {
   },
   toJSON: (row: ModelAttributes) => Promise<{ ...ModelAttributes }>
 }
+
+export type Multicolour$ModelsObject = {
+  [modelName: string]: Multicolour$Model<*>,
+}
