@@ -42,6 +42,7 @@ class Multicolour {
       console.info("Models syntax checked and set up, now service dependency sorting and resolution.") // eslint-disable-line no-console
     }
 
+    console.log(this.models)
     try {
       this.sortServicesAndPrepareWorkers()
     }

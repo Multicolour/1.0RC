@@ -1,0 +1,37 @@
+{
+  "title": "Multicolour Model Constraint",
+  "type": "object",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "patternProperties": {
+    "^([a-zA-Z0-9-_]+)+$": {
+      "type": "object",
+      "title": "Constraint column",
+      "description": "The column this constraint enforces on",
+      "$id": "model/constraints/constraint",
+      "properties": {
+        "verbs": {
+          "type": "array",
+          "$id": "model/constraints/constraint/verb",
+          "description": "The verbs this constraint will enforce on.",
+          "items": {
+            "type": "string",
+            "enum": [ "GET", "POST", "PUT", "PATCH", "DELETE", "HEAD" ]
+          },
+          "constraint": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "number"
+              },
+              {
+                "instanceof": "function"
+              }
+            ]
+          }
+        }
+      }
+    }
+  }
+}
