@@ -66,40 +66,16 @@
       "description": "async toJSON() {} A callback function to be called before returning the row. A chance to update the data from the database and to remove sensitive keys."
     }
   },
-  "beforeCreate": {
+  "beforeWrite": {
     "title": "beforeCreate callback",
     "$id": "model/beforeCreate",
     "instanceof": "Function",
     "description": "async beforeCreate(row: Object). An async function to alter properties before they're written to the target table."
   },
-  "afterCreate": {
+  "afterWrite": {
     "title": "afterCreate callback",
     "$id": "model/afterCreate",
     "instanceof": "Function",
     "description": "async afterCreate(row: Object). An async function to perform work triggered by newly created rows."
-  },
-  "beforeUpdate": {
-    "title": "beforeUpdate callback",
-    "$id": "model/beforeUpdate",
-    "instanceof": "Function",
-    "description": "async beforeUpdate(row: Object). An async function to alter properties before they're written to the target table."
-  },
-  "afterUpdate": {
-    "title": "afterUpdate callback",
-    "$id": "model/afterUpdate",
-    "instanceof": "Function",
-    "description": "async afterUpdate(row: Object). An async function to perform work triggered by updated rows"
-  },
-  "beforeDelete": {
-    "title": "beforeDelete callback",
-    "$id": "model/beforeDelete",
-    "instanceof": "Function",
-    "description": "async beforeDelete(row: Object). An async function to alter properties before they're written to the target table."
-  },
-  "afterDelete": {
-    "title": "afterDelete callback",
-    "$id": "model/afterDelete",
-    "instanceof": "Function",
-    "description": "async afterDelete(). An async function to alter properties before they're written to the target table."
   }
 }

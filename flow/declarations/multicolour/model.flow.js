@@ -68,7 +68,7 @@ export type Multicolour$Model<ModelAttributes = Object> = {
   constraints: {
     [column: string]: Multicolour$ConstraintDefinition
   },
-  toJSON: (row: ModelAttributes) => Promise<{ ...ModelAttributes }>
+  toJSON: (row: ModelAttributes) => Promise<{ ...ModelAttributes }>,
 }
 
 export type Multicolour$ModelsObject = {
