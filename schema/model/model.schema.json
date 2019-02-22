@@ -62,7 +62,7 @@
     "toJSON": {
       "title": "Model toJSON",
       "$id": "model/attributes/toJSON",
-      "instanceof": "Function",
+      "instanceof": "function",
       "description": "async toJSON() {} A callback function to be called before returning the row. A chance to update the data from the database and to remove sensitive keys."
     }
   },
@@ -77,5 +77,8 @@
     "$id": "model/afterCreate",
     "instanceof": "Function",
     "description": "async afterCreate(row: Object). An async function to perform work triggered by newly created rows."
+  },
+  "constraints": {
+    "$ref": "model/constraint"
   }
 }

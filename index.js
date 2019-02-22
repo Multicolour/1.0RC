@@ -27,9 +27,8 @@ class Multicolour {
       console.error(error.prettify ? error.prettify() : error) // eslint-disable-line no-console
       process.exit(-1)
     }
-    finally {
-      console.info("Config syntax looks good, nice work.\nNow, on to resolving, compiling and setting up your models") // eslint-disable-line no-console
-    }
+      
+    console.info("Config syntax looks good, nice work.\nNow, on to resolving, compiling and setting up your models") // eslint-disable-line 
 
     try {
       this.models = this.getModels()
@@ -38,11 +37,9 @@ class Multicolour {
       console.error(error.prettify ? error.prettify() : error) // eslint-disable-line no-console
       process.exit(-1)
     }
-    finally {
-      console.info("Models syntax checked and set up, now service dependency sorting and resolution.") // eslint-disable-line no-console
-    }
+      
+    console.info("Models syntax checked and set up, now service dependency sorting and resolution.") // eslint-disable-line 
 
-    console.log(this.models)
     try {
       this.sortServicesAndPrepareWorkers()
     }
@@ -50,16 +47,15 @@ class Multicolour {
       console.error(error.prettify ? error.prettify() : error) // eslint-disable-line no-console
       process.exit(-1)
     }
-    finally {
-      console.info("All services check out okay, dependencies all resolve and service workers are ready to be prepared.") // eslint-disable-line no-console
-    }
+
+    console.info("All services check out okay, dependencies all resolve and service workers are ready to be prepared.") // eslint-disable-line 
   }
 
   getModels(): Multicolour$ModelsObject {
     return getModels(this.config.models)
   }
 
-  async sortServicesAndPrepareWorkers() {
+  sortServicesAndPrepareWorkers() {
     const servicesManager = new Services()
 
     const startOrder = servicesManager
@@ -79,3 +75,4 @@ class Multicolour {
 }
 
 module.exports = Multicolour
+

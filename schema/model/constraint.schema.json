@@ -7,17 +7,18 @@
       "type": "object",
       "title": "Constraint column",
       "description": "The column this constraint enforces on",
-      "$id": "model/constraints/constraint",
+      "$id": "model/constraint",
       "properties": {
         "verbs": {
           "type": "array",
-          "$id": "model/constraints/constraint/verb",
+          "$id": "model/constraint/verb",
           "description": "The verbs this constraint will enforce on.",
           "items": {
             "type": "string",
             "enum": [ "GET", "POST", "PUT", "PATCH", "DELETE", "HEAD" ]
           },
           "constraint": {
+            "id": "model/constraint/constraint",
             "anyOf": [
               {
                 "type": "string"
