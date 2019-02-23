@@ -3,11 +3,11 @@
   "type": "object",
   "$schema": "http://json-schema.org/draft-07/schema#",
   "required": [
-    "attributes"
+    "columns"
   ],
   "additionalProperties": true,
   "properties": {
-    "attributes": {
+    "columns": {
       "type": "object",
       "title": "Model attributes",
       "description": "The attributes to declare for this model, including types and any extra config.",
