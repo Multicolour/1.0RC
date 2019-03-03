@@ -1,12 +1,10 @@
-// @flow
+import { Multicolour$Config } from "../../types/multicolour/config"
 
 const configSchema = require("../../schema/config/config.schema.json")
 const databaseConfigSchema = require("../../schema/config/database-service.schema.json")
 const apiConfigSchema = require("../../schema/config/api-service.schema.json")
 const defaultConfig = require("./default-config")
 const { ConfigValidationError } = require("../better-errors/better-errors")
-
-import type { Multicolour$Config } from "../../flow/declarations/multicolour/config.flow"
 
 function configValidator(config: Multicolour$Config): Multicolour$Config {
   const ajv = new (require("ajv"))
@@ -27,4 +25,4 @@ function configValidator(config: Multicolour$Config): Multicolour$Config {
   return target
 }
 
-module.exports = configValidator
+export default configValidator

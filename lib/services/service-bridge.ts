@@ -67,5 +67,5 @@ class ServiceNetworkBridge {
   }
 }
 
-module.exports = ServiceNetworkBridge
+export default ServiceNetworkBridge
 
