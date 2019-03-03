@@ -1,9 +1,7 @@
-// @flow
+import { Multicolour$ServiceGroup } from "../../types/multicolour/config"
 
-import type { Multicolour$ServiceGroup } from "../../flow/declarations/multicolour/config.flow"
-
-const ServiceDeclarationError = require("../better-errors/service-declaration-error")
-const ServiceBridge = require("./service-bridge")
+import ServiceDeclarationError from "../better-errors/service-declaration-error"
+import ServiceBridge from "./service-bridge"
 
 class Services {
   getServiceNetworkBridge(services: Multicolour$ServiceGroup, startOrder: string[]) {
@@ -66,4 +64,4 @@ class Services {
   }
 }
 
-module.exports = Services
+export default Services

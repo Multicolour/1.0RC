@@ -1,6 +1,4 @@
-// @flow
-
-const PrettyErrorWithStack = require("./pretty-error-with-stack")
+import PrettyErrorWithStack from "./pretty-error-with-stack"
 
 class ClientRequestError extends PrettyErrorWithStack {
   constructor(error: Error) {
@@ -16,5 +14,5 @@ class ClientRequestError extends PrettyErrorWithStack {
   }
 }
 
-module.exports = ClientRequestError
+export default ClientRequestError
 

@@ -25,7 +25,8 @@
       "./types"
     ],
     "types": [
-      "node"
+      "node",
+      "bluebird"
     ],
     "esModuleInterop": true 
   }

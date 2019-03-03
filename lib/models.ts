@@ -1,20 +1,18 @@
-// @flow
+import { Multicolour$Model } from "../types/multicolour/model"
 
-import type { Multicolour$Model } from "../flow/declarations/multicolour/model.flow"
+import ModelValidationError from "./better-errors/model-error"
 
-const ModelValidationError = require("./better-errors/model-error")
-
-type Multicolour$ModelObject = {
-  [modelName: string]: Multicolour$Model<*>,
+interface Multicolour$ModelObject {
+  [modelName: string]: Multicolour$Model<any>,
 }
 
-type IntermediaryModelFileResult = {
+interface IntermediaryModelFileResult {
   path: string,
   name: string,
   extension: string,
 }
 
-type ModelFileResult = {
+interface ModelFileResult {
   modelName: string,
   modelConfiguration: string,
 }
@@ -67,7 +65,7 @@ function getModels(path: string): Multicolour$ModelObject {
     }, {})
 }
 
-module.exports = {
+export {
   getModels,
   validateModelAgainstSchema,
 }

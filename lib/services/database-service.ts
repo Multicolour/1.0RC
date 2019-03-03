@@ -1,8 +1,6 @@
-// @flow
+import { Multicolour$ModelObject } from "../../types/multicolour/model.flow"
 
-import type { Multicolour$ModelObject } from "../../flow/declarations/multicolour/model.flow"
-
-const Database = require("../database")
+import Database from "../database"
 
 class DatabaseService {
   models: Multicolour$ModelObject 
@@ -13,4 +11,4 @@ class DatabaseService {
   }
 }
 
-module.exports = DatabaseService
+export default DatabaseService

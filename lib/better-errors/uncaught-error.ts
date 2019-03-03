@@ -1,7 +1,5 @@
-// @flow
-
-import type { Error$MessageAST } from "../../flow/declarations/error-ast.flow"
-const PrettyErrorWithStack = require("./pretty-error-with-stack")
+import { Error$MessageAST } from "../../types/error-ast"
+import PrettyErrorWithStack from "./pretty-error-with-stack"
 
 class UncaughtError extends PrettyErrorWithStack {
   originalErrorMessage: string
@@ -34,4 +32,4 @@ class UncaughtError extends PrettyErrorWithStack {
   }
 }
 
-module.exports = UncaughtError
+export default UncaughtError

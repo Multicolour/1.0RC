@@ -1,5 +1,3 @@
-// @flow
-
 export interface Multicolour$ServiceBaseConfig {
   type: "database" | "api",
   dependsOn?: string[],

@@ -1,11 +1,9 @@
-// @flow
+import { IncomingMessage } from "http"
+import { Multicolour$Route } from "./route"
 
-import type { ClientRequest } from "http"
-import type { Multicolour$Route } from "./route.flow"
-
-export type Multicolour$ThreadMessage = {
-  +type: "dependency-request",
-  +serviceName: string,
-  +route: Multicolour$Route,
-  +request: ClientRequest,
+export interface Multicolour$ThreadMessage {
+  readonly type: "dependency-request",
+  readonly serviceName: string,
+  readonly route: Multicolour$Route,
+  readonly request: IncomingMessage,
 }

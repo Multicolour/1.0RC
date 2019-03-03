@@ -1,9 +1,9 @@
 // @flow
 
-import type {
+import {
   Error$MessageAST,
   Error$MessageFrameAST,
-} from "../../flow/declarations/error-ast.flow"
+} from "../../types/error-ast"
 
 class PrettyErrorWithStack extends Error {
   messageAST: Error$MessageAST
@@ -151,4 +151,4 @@ class PrettyErrorWithStack extends Error {
  */
 PrettyErrorWithStack.ignoredPackages = /(^internal\/process\/|module.js|flow-node|bootstrap_node.js|node_modules\/flow-remove-types|next_tick.js|node_modules\/jest-jasmine2|^events.js$|internal\/(bootstrap|modules)\/.*$)/ // eslint-disable-line max-len
 
-module.exports = PrettyErrorWithStack
+export default PrettyErrorWithStack

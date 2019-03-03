@@ -1,5 +1,3 @@
-// @flow
-
 import { IncomingMessage } from "http"
 
 import {

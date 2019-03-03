@@ -1,12 +1,9 @@
-// @flow
-
-import type {
+import {
   ClientRequest,
   ServerResponse,
 } from "http"
 
-export type Multicolour$RouteVerbs = 
-  "GET" 
+export type Multicolour$RouteVerbs = "GET" 
   | "POST" 
   | "PUT" 
   | "PATCH" 
@@ -14,7 +11,7 @@ export type Multicolour$RouteVerbs =
   | "OPTIONS" 
   | "HEAD"
 
-export type Multicolour$RouteAuthConfig = {
+export interface Multicolour$RouteAuthConfig {
   type: "oauth" | "jwt" | "none",
   roles: string[],
   provider?: "google"
@@ -23,20 +20,20 @@ export type Multicolour$RouteAuthConfig = {
     | "twitter"
 }
 
-export type Multicolour$RouteValidations = {
+export interface Multicolour$RouteValidations {
   params: Object,
   queryString: Object,
   body: Object,
   response: Object,
 }
 
-export type Multicolour$RouteSpecificsConfig = {
+export interface Multicolour$RouteSpecificsConfig {
   auth?: Multicolour$RouteAuthConfig,
 }
 
 export type Multicolour$RouteHandler = (request: ClientRequest, response: ServerResponse) => Promise<any>
 
-export type Multicolour$Route = {
+export interface Multicolour$Route {
   method: Multicolour$RouteVerbs,
   path: string,
   handler: Multicolour$RouteHandler,

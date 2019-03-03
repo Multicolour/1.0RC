@@ -1,5 +1,3 @@
-// @flow
-
 export class Multicolour$ContentNegotiatorClass<NegotiatorReturnType> {
   parseBody: (body: string) => Promise<NegotiatorReturnType>;
 }

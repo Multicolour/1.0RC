@@ -1,6 +1,4 @@
-// @flow
-
-export type Multicolour$ReplyContext = {
+export interface Multicolour$ReplyContext = {
   contentType: string,
   statusCode: number,
 }

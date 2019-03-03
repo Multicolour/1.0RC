@@ -1,12 +1,10 @@
-// @flow
-
-import type {
+import {
   Multicolour$SingleDatabaseConnectionConfig,
   Multicolour$APIServiceConfig,
-} from "../../flow/declarations/multicolour/config.flow"
+} from "../../types/multicolour/config.flow"
 
-const MulticolourServer = require("../server/server")
-const Promise = require("bluebird")
+import MulticolourServer from "../server/server"
+import * as Promise from "bluebird"
 
 class APIServer {
   server: MulticolourServer
@@ -28,4 +26,4 @@ class APIServer {
   }
 }
 
-module.exports = APIServer
+export default APIServer

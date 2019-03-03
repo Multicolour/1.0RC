@@ -1,8 +1,6 @@
-// @flow
+import { ErrorObject } from "ajv"
 
-import type { ErrorObject } from "ajv"
-
-const PrettyErrorWithStack = require("./pretty-error-with-stack")
+import PrettyErrorWithStack from "./pretty-error-with-stack"
 
 class AJVValidationError extends PrettyErrorWithStack {
   constructor(message: string, object: string, errors: ErrorObject[] = []) {
@@ -64,4 +62,4 @@ class AJVValidationError extends PrettyErrorWithStack {
   }
 }
 
-module.exports = AJVValidationError
+export default AJVValidationError

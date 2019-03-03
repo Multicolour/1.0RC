@@ -1,6 +1,4 @@
-// @flow
-
-import type { ErrorObject } from "ajv"
+import { ErrorObject } from "ajv"
 
 const PrettyErrorWithStack = require("./pretty-error-with-stack")
 
@@ -31,4 +29,4 @@ class AJVSyntaxOrReferenceError extends PrettyErrorWithStack {
   }
 }
 
-module.exports = AJVSyntaxOrReferenceError
+export default AJVSyntaxOrReferenceError

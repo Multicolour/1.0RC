@@ -1,10 +1,8 @@
-// @flow
+import PrettyErrorWithStack from "./pretty-error-with-stack"
 
-const PrettyErrorWithStack = require("./pretty-error-with-stack")
-
-export type HttpErrorMessage = {
+export interface HttpErrorMessage {
   statusCode: number,
-  headers?: Object,
+  headers?: object,
   error: {
     message: string,
   },
@@ -30,4 +28,4 @@ class HttpError extends PrettyErrorWithStack {
 
 }
 
-module.exports = HttpError
+export default HttpError

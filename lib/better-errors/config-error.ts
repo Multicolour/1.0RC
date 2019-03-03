@@ -1,8 +1,8 @@
 // @flow
 
-import type { ErrorObject } from "ajv"
+import { ErrorObject } from "ajv"
 
-const AJVValidationError = require("./ajv-error")
+import AJVValidationError from "./ajv-error"
 
 class ConfigValidationError extends AJVValidationError {
   constructor(message: string, ajvErrors: ErrorObject[] = []) {
@@ -10,4 +10,4 @@ class ConfigValidationError extends AJVValidationError {
   }
 }
 
-module.exports = ConfigValidationError
+export default ConfigValidationError

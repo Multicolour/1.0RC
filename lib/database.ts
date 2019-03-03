@@ -1,10 +1,8 @@
-// @flow
-
-import type {
+import {
   Multicolour$SingleDatabaseConnectionConfig,
-} from "../flow/declarations/multicolour/config.flow"
+} from "../types/multicolour/config"
 
-const knex = require("knex")
+import knex from "knex"
 
 class Database {
   constructor(config: Multicolour$SingleDatabaseConnectionConfig) {
@@ -12,5 +10,5 @@ class Database {
   }
 }
 
-module.exports = Database
+export default Database
 

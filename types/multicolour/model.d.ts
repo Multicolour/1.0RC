@@ -1,5 +1,3 @@
-// @flow
-
 import type { IncomingMessage } from "http"
 import type { 
   Multicolour$RouteVerbs,

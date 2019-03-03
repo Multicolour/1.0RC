@@ -1,6 +1,4 @@
-// @flow
-
-const PrettyErrorWithStack = require("./pretty-error-with-stack")
+import PrettyErrorWithStack from "./pretty-error-with-stack"
 
 class RouterError extends PrettyErrorWithStack {
   constructor(error: Error) {
@@ -16,5 +14,5 @@ class RouterError extends PrettyErrorWithStack {
   }
 }
 
-module.exports = RouterError
+export default RouterError
 

@@ -1,8 +1,6 @@
-// @flow
+import { ServiceDeclarationErrorType } from "../../types/multicolour/service-declaration-error"
 
-import type { ServiceDeclarationErrorType } from "../../flow/declarations/multicolour/service-declaration-error.flow"
-
-const PrettyErrorWithStack = require("./pretty-error-with-stack")
+import PrettyErrorWithStack from "./pretty-error-with-stack"
 
 class ServiceBridgeError extends PrettyErrorWithStack {
   constructor(message: string, errors: ServiceBridgeError[] = []) {
@@ -48,4 +46,4 @@ class ServiceBridgeError extends PrettyErrorWithStack {
   }
 }
 
-module.exports = ServiceBridgeError
+export default ServiceBridgeError

@@ -1,5 +1,3 @@
-// @flow
-
 export interface Error$MessageFrameAST {
   /**
    * The file in the stack that had a caller

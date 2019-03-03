@@ -1,15 +1,14 @@
-// @flow
+import * as Promise from "bluebird"
 
-import type { Multicolour$ServiceGroup } from "../../flow/declarations/multicolour/config.flow"
-import type { Multicolour$ThreadMessage } from "../../flow/declarations/multicolour/thread-message.flow"
+import { Multicolour$ServiceGroup } from "../../types/multicolour/config"
+import { Multicolour$ThreadMessage } from "../../types/multicolour/thread-message"
 
-const ServiceBridgeError = require("../better-errors/service-declaration-error")
+import ServiceBridgeError from "../better-errors/service-declaration-error"
 
-const Promise = require("bluebird")
-const {
+import {
   Worker,
   isMainThread,
-} = require("worker_threads")
+} from "worker_threads"
 
 class ServiceNetworkBridge {
   services: {

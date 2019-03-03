@@ -1,12 +1,10 @@
-// @flow
-
-import type {
+import {
   Multicolour$SingleDatabaseConnectionConfig,
   Multicolour$APIServiceConfig,
-} from "../../flow/declarations/multicolour/config.flow"
+} from "../../types/multicolour/config"
 
-const { workerData } = require("worker_threads")
-const APIServer = require("./api-server")
+import { workerData } from "worker_threads"
+import APIServer from "./api-server"
 
 class Service {
   constructor(serviceDeclaration: Multicolour$SingleDatabaseConnectionConfig | Multicolour$APIServiceConfig) {

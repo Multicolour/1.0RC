@@ -1,10 +1,8 @@
-// @flow
+import PrettyErrorWithStack from "./pretty-error-with-stack"
+import ConfigValidationError from "./config-error"
+import AJVSyntaxOrReferenceError from "./ajv-syntax-or-reference-error"
 
-const PrettyErrorWithStack = require("./pretty-error-with-stack")
-const ConfigValidationError = require("./config-error")
-const AJVSyntaxOrReferenceError = require("./ajv-syntax-or-reference-error")
-
-module.exports = {
+export {
   PrettyErrorWithStack,
   ConfigValidationError,
   AJVSyntaxOrReferenceError,
