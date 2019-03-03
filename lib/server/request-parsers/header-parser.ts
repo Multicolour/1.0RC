@@ -1,11 +1,9 @@
-// @flow
+import { IncomingMessage } from "http"
+import { Multicolour$ReplyContext } from "@flow/reply.flow"
 
-const HttpError = require("../../better-errors/http-error")
+import HttpError from "../../better-errors/http-error"
 
-import type { IncomingMessage } from "http"
-import type { Multicolour$ReplyContext } from "@flow/reply.flow"
-
-export type AcceptHeaderValue = {
+export interface AcceptHeaderValue {
   contentType: string,
   quality: number,
 }

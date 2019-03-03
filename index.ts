@@ -1,17 +1,14 @@
-// @flow
-
 // Catch uncaught errors and promises to present them nicely.
-require("./lib/uncaught-error-handlers")
+import "./lib/uncaught-error-handlers"
 
-import type { Multicolour$Config } from "./flow/declarations/multicolour/config.flow"
-import type { Multicolour$ModelsObject } from "./flow/declarations/multicolour/models.flow"
-import type ServiceNetworkBridge from "./lib/services/service-bridge"
+import { Multicolour$Config } from "./types/multicolour/config"
+import { Multicolour$ModelsObject } from "./types/multicolour/model"
+import ServiceNetworkBridge from "./lib/services/service-bridge"
 
-const configValidator = require("./lib/config")
-const Services = require("./lib/services/services")
-const { getModels } = require("./lib/models")
+import configValidator from "./lib/config"
+import Services from "./lib/services/services"
+import { getModels } from "./lib/models"
 
-Error.stackTraceLimit = Infinity
 
 class Multicolour {
   config: Multicolour$Config

@@ -1,7 +1,10 @@
 // @flow
 
 import type { IncomingMessage } from "http"
-import type { Multicolour$RouteVerbs } from "@flow/multicolour/route.flow"
+import type { 
+  Multicolour$RouteVerbs,
+  Multicolour$RouteSpecificsConfig,
+} from "@flow/multicolour/route.flow"
 
 /**
  * Each attribute has to have a type, here are the
@@ -11,7 +14,8 @@ import type { Multicolour$RouteVerbs } from "@flow/multicolour/route.flow"
 export type Multicolour$ModelAttributeType = 
   // Integers/floats/numbers.
   "smallInt" // signed
-  | "mediumInt" | "integer" // signed
+  | "mediumInt" // signed
+  | "integer" // signed
   | "bigInt" // signed
   | "numeric" // unsigned
   | "double"
@@ -32,6 +36,11 @@ export type Multicolour$ModelAttributeType =
   | "json"
   | "bytearray"
 
+/**
+ * Each model has at least one column
+ * and each column can be configured for
+ * requirement, docs and etcetera.
+ */
 export type Multicolour$ModelAttribute = {
   // The type of the database column.
   type: Multicolour$ModelAttributeType,
@@ -61,14 +70,21 @@ export type Multicolour$ConstraintDefinition = {
   constraint: Multicolour$ConstraintTarget,
 }
 
+export type Multicolour$ModelRouteConfig = {
+  [verb: Multicolour$RouteVerbs]: Multicolour$RouteSpecificsConfig,
+}
+
 export type Multicolour$Model<ModelAttributes = Object> = {
   columns: {  
     [attribute: string]: Multicolour$ModelAttribute,
   },
-  constraints: {
+  services?: string[],
+  database?: string,
+  routeConfig?: Multicolour$ModelRouteConfig,
+  constraints?: {
     [column: string]: Multicolour$ConstraintDefinition
   },
-  toJSON: (row: ModelAttributes) => Promise<{ ...ModelAttributes }>,
+  toJSON?: (row: ModelAttributes) => Promise<{ ...ModelAttributes }>,
 }
 
 export type Multicolour$ModelsObject = {

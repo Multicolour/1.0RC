@@ -1,7 +1,8 @@
 // @flow
 
-import type { IncomingMessage } from "http"
-import type {
+import { IncomingMessage } from "http"
+
+import {
   AcceptHeader,
   ContentTypeHeader,
 } from "../../../lib/server/request-parsers/header-parser"

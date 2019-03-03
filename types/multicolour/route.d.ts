@@ -15,8 +15,12 @@ export type Multicolour$RouteVerbs =
   | "HEAD"
 
 export type Multicolour$RouteAuthConfig = {
-  type: string,
+  type: "oauth" | "jwt" | "none",
   roles: string[],
+  provider?: "google"
+    | "github"
+    | "facebook"
+    | "twitter"
 }
 
 export type Multicolour$RouteValidations = {
@@ -26,14 +30,17 @@ export type Multicolour$RouteValidations = {
   response: Object,
 }
 
+export type Multicolour$RouteSpecificsConfig = {
+  auth?: Multicolour$RouteAuthConfig,
+}
+
 export type Multicolour$RouteHandler = (request: ClientRequest, response: ServerResponse) => Promise<any>
 
 export type Multicolour$Route = {
   method: Multicolour$RouteVerbs,
   path: string,
   handler: Multicolour$RouteHandler,
-
-  auth?: Multicolour$RouteAuthConfig,
+  config?: Multicolour$RouteSpecificsConfig,
   validate?: Multicolour$RouteValidations,
 }
 

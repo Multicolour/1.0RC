@@ -1,9 +1,11 @@
 // @flow
 
+import type { Multicolour$ModelObject } from "../../flow/declarations/multicolour/model.flow"
+
 const Database = require("../database")
 
 class DatabaseService {
-  models: ModelObject
+  models: Multicolour$ModelObject 
   connection: Database
 
   constructor() {

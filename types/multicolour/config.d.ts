@@ -1,11 +1,11 @@
 // @flow
 
-export type Multicolour$ServiceBaseConfig = {
+export interface Multicolour$ServiceBaseConfig {
   type: "database" | "api",
   dependsOn?: string[],
 }
 
-export type Multicolour$APIServiceSecurityConfig = {
+export interface Multicolour$APIServiceSecurityConfig {
   auth: {
     masterKey: string,
     providers: {
@@ -23,10 +23,8 @@ export type Multicolour$APIServiceSecurityConfig = {
   }
 }
 
-export type Multicolour$DatabaseServiceConfig = {
-  ...$Exact<Multicolour$ServiceBaseConfig>,
-  adapter: 
-    "pg"
+export interface Multicolour$DatabaseServiceConfig extends Multicolour$ServiceBaseConfig {
+  adapter: "pg"
     | "sqlite3"
     | "mysql"
     | "mysql2"
@@ -38,8 +36,7 @@ export type Multicolour$DatabaseServiceConfig = {
   password?: string,
 }
 
-export type Multicolour$APIServiceConfig = {
-  ...$Exact<Multicolour$ServiceBaseConfig>,
+export interface Multicolour$APIServiceConfig extends Multicolour$ServiceBaseConfig {
   host?: string,
   port?: number,
   rootUri?: string,
@@ -52,9 +49,8 @@ export type Multicolour$APIServiceConfig = {
   }
 }
 
-export type Multicolour$ServiceGroup = {
-  [key: string]: 
-    Multicolour$DatabaseServiceConfig
+export interface Multicolour$ServiceGroup {
+  [key: string]: Multicolour$DatabaseServiceConfig
     | Multicolour$APIServiceConfig,
 }
 
@@ -62,11 +58,10 @@ export type Multicolour$ServiceGroup = {
  * The Multicolour config object,
  * restart defaults to "never".
  */
-export type Multicolour$Config = {
+export interface Multicolour$Config {
   models: string,
   services: Multicolour$ServiceGroup,
-  restart?:
-    "unless-stopped"
+  restart?: "unless-stopped"
     | "on-error"
     | "never"
 }

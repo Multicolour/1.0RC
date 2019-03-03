@@ -1,6 +1,6 @@
-// @flow
+Error.stackTraceLimit = Infinity
 
-const UncaughtError = require("./better-errors/uncaught-error")
+import UncaughtError from "./better-errors/uncaught-error"
 
 process
   .on("uncaughtException", (error: Error) => {

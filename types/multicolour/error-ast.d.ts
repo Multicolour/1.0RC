@@ -1,6 +1,6 @@
 // @flow
 
-export type Error$MessageFrameAST = {
+export interface Error$MessageFrameAST {
   /**
    * The file in the stack that had a caller
    * in it that led to this error being risen.
@@ -43,7 +43,7 @@ export type Error$MessageFrameAST = {
  * and even faster process into a helpful message 
  * for you, the developer.
  */
-export type Error$MessageAST = {
+export interface Error$MessageAST {
   /**
    * The message passed into the *Error constructor.
    */
@@ -61,3 +61,4 @@ export type Error$MessageAST = {
    */
   framesDropped: number
 }
+
