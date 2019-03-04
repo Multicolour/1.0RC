@@ -1,6 +1,4 @@
-// @flow
-
-const { EventEmitter } = require("events")
+import { EventEmitter } from "events"
 
 class ServerResponse extends EventEmitter {
   headers: {
@@ -45,4 +43,4 @@ class ServerResponse extends EventEmitter {
   }
 }
 
-module.exports = ServerResponse
+export default ServerResponse

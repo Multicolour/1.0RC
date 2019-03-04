@@ -1,33 +1,34 @@
-const bodyParser = require("../lib/server/request-parsers/body-parser")
+import bodyParser from "../lib/server/request-parsers/body-parser"
+import { ClientRequest } from "./mocks/http"
 
-const { ClientRequest } = require("./mocks/http")
+{
+  test("Body parser", () => {
+    const request = new ClientRequest({
+      url: "/body-parser",
+      method: "POST",
+    })
 
-test("Body parser", () => {
-  const request = new ClientRequest({
-    url: "/body-parser",
-    method: "POST",
+    const parser = bodyParser({ request })
+
+    request.emit("data", Buffer.from("1234", "utf-8"))
+    request.emit("end")
+
+    parser
+      .then(value => expect(value).toEqual("1234"))
   })
 
-  const parser = bodyParser({ request })
+  test("Body parser max size", () => {
+    const request = new ClientRequest({
+      url: "/body-parser",
+      method: "POST",
+    })
 
-  request.emit("data", Buffer.from("1234", "utf-8"))
-  request.emit("end")
+    const parser = bodyParser({ request, maxBodySize: 1 })
 
-  parser
-    .then(value => expect(value).toEqual("1234"))
-})
+    request.emit("data", Buffer.from("1234", "utf-8"))
+    request.emit("end")
 
-test("Body parser max size", () => {
-  const request = new ClientRequest({
-    url: "/body-parser",
-    method: "POST",
+    parser
+      .catch((error: Error) => expect(error.messageAST.message).toEqual("Body size exceeded the maximum body size allowed on this server. Please try again with a smaller payload.")) //eslint-disable-line max-len
   })
-
-  const parser = bodyParser({ request, maxBodySize: 1 })
-
-  request.emit("data", Buffer.from("1234", "utf-8"))
-  request.emit("end")
-
-  parser
-    .catch(error => expect(error.messageAST.message).toEqual("Body size exceeded the maximum body size allowed on this server. Please try again with a smaller payload.")) //eslint-disable-line max-len
-})
+}

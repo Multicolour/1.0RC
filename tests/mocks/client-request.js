@@ -1,6 +1,4 @@
-// @flow
-
-const EventEmitter = require("events")
+import EventEmitter from "events"
 
 class ClientRequest extends EventEmitter {
   url: string
@@ -16,4 +14,4 @@ class ClientRequest extends EventEmitter {
   }
 }
 
-module.exports = ClientRequest
+export default ClientRequest
