@@ -4,5 +4,5 @@
 declare namespace NodeJS {
   interface Process extends EventEmitter {
     on(event: string, callback: (...args: any[]) => void): this;
-	}
+  }
 }

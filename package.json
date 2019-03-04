@@ -21,7 +21,7 @@
     "eslint": "eslint ./**/*.js",
     "unit-tests": "jest tests/*.js --maxWorkers=4",
     "test": "npm run unit-tests",
-    "dev": "ts-node index.ts"
+    "dev": "ts-node index.ts --watch"
   },
   "repository": {
     "type": "git",

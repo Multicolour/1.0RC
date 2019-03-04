@@ -11,9 +11,9 @@ import { getModels } from "./lib/models"
 
 
 class Multicolour {
-  config: Multicolour$Config
-  serviceBridge: ServiceNetworkBridge
-  models: Multicolour$ModelsObject
+  config!: Multicolour$Config
+  serviceBridge!: ServiceNetworkBridge
+  models!: Multicolour$ModelsObject
 
   constructor(config: Multicolour$Config) {
     // Get and validate the provided config.
