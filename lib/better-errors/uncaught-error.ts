@@ -1,4 +1,4 @@
-import { Error$MessageAST } from "../../types/error-ast"
+import { Error$MessageAST } from "@types/error-ast"
 import PrettyErrorWithStack from "./pretty-error-with-stack"
 
 class UncaughtError extends PrettyErrorWithStack {

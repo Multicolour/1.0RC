@@ -3,9 +3,9 @@ import { IncomingMessage } from "http"
 import {
   AcceptHeader,
   ContentTypeHeader,
-} from "../../../lib/server/request-parsers/header-parser"
+} from "@lib/server/request-parsers/header-parser"
 
-export type Multicolour$ParsedHeaders = {
+export interface Multicolour$ParsedHeaders {
     accept: AcceptHeader,
     "content-type"?: ContentTypeHeader,
     [header: string]: string,
