@@ -1,3 +1,5 @@
+import * as https from "https"
+
 export interface Multicolour$ServiceBaseConfig {
   /**
    * The type of service this config describes.
@@ -143,16 +145,24 @@ export interface Multicolour$APIServiceConfig extends Multicolour$ServiceBaseCon
    * @default ""
    */
   rootUri?: string,
+
+  /**
+   * The security config this API service requests.
+   */
   security?: Multicolour$APIServiceSecurityConfig,
-  secureServerOptions?: {
-    key?: string,
-    cert?: string,
-    pfx?: string,
-    passphrase?: string,
-  }
+
+  /**
+   * All API services in production should
+   * run a secure server, this is where you 
+   * configure the NodeJS https module.
+   */
+  secureServerOptions?: https.ServerOptions,
 }
 
 export interface Multicolour$ServiceGroup {
+  /**
+   * Your service's definitions.
+   */
   [key: string]: Multicolour$DatabaseServiceConfig
     | Multicolour$APIServiceConfig,
 }
@@ -162,8 +172,29 @@ export interface Multicolour$ServiceGroup {
  * restart defaults to "never".
  */
 export interface Multicolour$Config {
-  models: string,
+  /**
+   * Your service's configurations.
+   */
   services: Multicolour$ServiceGroup,
+
+  /**
+   * The path to your models if not the same as your config.
+   *
+   * @default "./models"
+   */
+  models?: string,
+
+  /**
+   * When an uncaught error occurs or the service
+   * unexpectedly stops the restart policy is 
+   * checked. 
+   *
+   * Unless stopped will restart services for any reason if they exit.
+   * on-error will restart your service (10 times in succession) if it exits with a return status less than 0.
+   * never will keep the service down.
+   *
+   * @default "never"
+   */
   restart?: "unless-stopped"
     | "on-error"
     | "never"
