@@ -29,6 +29,11 @@
       "node",
       "bluebird"
     ],
-    "esModuleInterop": true 
+    "esModuleInterop": true,
+    "baseUrl": ".",
+    "paths": {
+      "@types*": ["./types*"],
+      "@lib*": ["./lib*"]
+    }
   }
 }
