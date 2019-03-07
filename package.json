@@ -39,7 +39,8 @@
     "debug": "^4.1.0",
     "formidable": "^1.2.1",
     "knex": "^0.14.2",
-    "toposort": "^2.0.2"
+    "toposort": "^2.0.2",
+    "typescript-json-schema": "^0.36.0"
   },
   "engine-strict": true,
   "engines": {
