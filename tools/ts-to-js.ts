@@ -1,28 +1,25 @@
 import {resolve} from "path"
+import {readFileSync} from "fs"
+import * as ts from "typescript"
 
-import * as TJS from "typescript-json-schema"
+export function TS2JS(path: string) {
+  const fileName = resolve(path)
+  const baseSchema = {
+    "$schema": "http://json-schema.org/draft-07/schema#",
+  }
 
-// optionally pass argument to schema generator
-const settings: TJS.PartialArgs = {
-    required: true
+  const sourceFile = ts.createSourceFile(
+    fileName,
+    readFileSync(fileName).toString(),
+    ts.ScriptTarget.ES2017,
+    /*setParentNodes */ true
+  )
+
+  sourceFile.statements.map((statement: ts.Node) => {
+    switch (statement.kind) {
+
+    }
+  })
 }
 
-// optionally pass ts compiler options
-const compilerOptions: TJS.CompilerOptions = {
-    strictNullChecks: true
-}
-
-const program = TJS.getProgramFromFiles([resolve("../types/multicolour/config.d.ts")], compilerOptions)
-
-// We can either get the schema for one file and one type...
-const schema = TJS.generateSchema(program, "Multicolour$Config", settings)
-
-
-// ... or a generator that lets us incrementally get more schemas
-
-  /*const generator = TJS.buildGenerator(program, settings)
-
-// all symbols
-const symbols = generator.getUserSymbols()*/
-
-console.log(schema)
+TS2JS("./types/multicolour/config.d.ts")
