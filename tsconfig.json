@@ -27,7 +27,8 @@
     ],
     "types": [
       "node",
-      "bluebird"
+      "bluebird",
+      "json-schema"
     ],
     "esModuleInterop": true,
     "baseUrl": ".",
