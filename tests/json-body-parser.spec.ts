@@ -1,6 +1,6 @@
-const { ClientRequest } = require("./mocks/http")
+import { IncomingMessage } from "./mocks/http"
 
-const JsonParser = require("../lib/server/request-parsers/parsers/json")
+import JsonParser from "@lib/server/request-parsers/parsers/json"
 
 const badPayloads = [ 
   require("./content/payloads/bad/json/bad-entry-char"),
@@ -14,7 +14,9 @@ const goodPayloads = [
 
 test("JSON body parser with known bad payloads", async() => {
   const parsers = badPayloads.map(payload => {
-    const request = new ClientRequest()
+    const request = new IncomingMessage({
+      url: "test"
+    })
     const parser = JsonParser(request)
     
     request.emit("data", payload)
@@ -31,7 +33,7 @@ test("JSON body parser with known bad payloads", async() => {
 
 test("JSON body parser with known good payloads", async() => {
   const parsers = goodPayloads.map(payload => {
-    const request = new ClientRequest()
+    const request = new IncomingMessage()
     const parser = JsonParser(request)
 
     request.emit("data", payload)

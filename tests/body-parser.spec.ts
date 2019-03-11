@@ -1,9 +1,9 @@
 import bodyParser from "../lib/server/request-parsers/body-parser"
-import { ClientRequest } from "./mocks/http"
+import { IncomingRequest } from "./mocks/http"
 
 {
   test("Body parser", () => {
-    const request = new ClientRequest({
+    const request = new IncomingRequest({
       url: "/body-parser",
       method: "POST",
     })
@@ -18,7 +18,7 @@ import { ClientRequest } from "./mocks/http"
   })
 
   test("Body parser max size", () => {
-    const request = new ClientRequest({
+    const request = new IncomingRequest({
       url: "/body-parser",
       method: "POST",
     })

@@ -1,7 +1,7 @@
-import ClientRequest from "./client-request"
+import IncomingMessage from "./client-request"
 import ServerResponse from "./server-response"
 
 export {
-  ClientRequest,
+  IncomingMessage,
   ServerResponse,
 }

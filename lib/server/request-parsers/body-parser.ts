@@ -1,17 +1,12 @@
-// @flow
+import { IncomingMessage } from "http"
+import HttpError from "@lib/better-errors/http-error"
 
-import type { IncomingMessage } from "http"
-import type { Resolve, Reject } from "bluebird"
-
-export type BodyParserArgs = {
+export interface BodyParserArgs {
   request: IncomingMessage, 
   maxBodySize?: number,
 }
 
-const HttpError = require("../../better-errors/http-error")
-const Promise = require("bluebird")
-
-async function BodyParser(config: BodyParserArgs): Promise<Object> {
+async function BodyParser(config: BodyParserArgs): Promise<string> {
   if (!config.request)
     return Promise.reject(new HttpError({
       statusCode: 500,
@@ -20,7 +15,7 @@ async function BodyParser(config: BodyParserArgs): Promise<Object> {
       },
     }))
 
-  return new Promise((resolve: Resolve, reject: Reject) => {
+  return new Promise((resolve, reject) => {
     const body: Buffer[] = []
     const maxBodySize = config.hasOwnProperty("maxBodySize")
       ? config.maxBodySize
@@ -47,5 +42,5 @@ async function BodyParser(config: BodyParserArgs): Promise<Object> {
   })
 }
 
-module.exports = BodyParser
+export default BodyParser
 

@@ -1,17 +1,26 @@
 import EventEmitter from "events"
+import { IncomingMessage as NodeIncomingMessage } from "http"
 
-class ClientRequest extends EventEmitter {
+interface Options {
+  url: string,
+  method?: string,
+  body?: Buffer,
+  headers?: object,
+}
+
+class IncomingMessage 
+  extends EventEmitter
+  implements NodeIncomingMessage {
   url: string
-  method: string
-  body: string
+  method?: string  = "GET"
+  body?: Buffer 
 
-  constructor(options: Object = {}) {
+  constructor(options: Options) {
     super()
     this.url = options.url
     this.method = options.method
     this.body = options.body
-    this.headers = options.headers
   }
 }
 
-export default ClientRequest
+export default IncomingMessage

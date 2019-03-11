@@ -1,39 +1,37 @@
-// @flow
+import { IncomingMessage } from "http"
 
-import type { ClientRequest } from "http"
+import HttpError from "@lib/better-errors/http-error"
+import bodyParser from "../body-parser"
 
-const Promise = require("bluebird")
+async function JsonParser(request: IncomingMessage): Promise<object> {
+  return bodyParser({ request })
+  .then((json: string) => {
+    let outwardBody
 
-const bodyParser = require("../body-parser")
-const HttpError = require("../../../better-errors/http-error")
+    if (json[0] !== "{" && json[0] !== "[")
+      throw new HttpError({
+        statusCode: 400,
+        error: {
+          message: `Your JSON isn't structured correctly, the issue is at \nline: 0 \ncolumn: 0\n\nUnexpected "${json[0]}"`,
+        },
+      })
 
-async function JsonParser(request: ClientRequest): Promise<Object> {
-  let outwardBody
-  const json = await bodyParser({ request })
+    try {
+      outwardBody = JSON.parse(json)
+    }
+    catch (error) {
+      throw new HttpError({
+        statusCode: 400,
+        error: {
+          message: "Invalid JSON received.",
+        },
+      })
+    }
 
-  if (json[0] !== "{" && json[0] !== "[")
-    throw new HttpError({
-      statusCode: 400,
-      error: {
-        message: `Your JSON isn't structured correctly, the issue is at \nline: 0 \ncolumn: 0\n\nUnexpected "${json[0]}"`,
-      },
-    })
-
-  try {
-    outwardBody = JSON.parse(json)
-  }
-  catch (error) {
-    throw new HttpError({
-      statusCode: 400,
-      error: {
-        message: "Invalid JSON received.",
-      },
-    })
-  }
-
-  return outwardBody
+    return outwardBody
+  })
 }
 
 JsonParser.negotiationAccept = "application/json"
 
-module.exports = JsonParser
+export default JsonParser

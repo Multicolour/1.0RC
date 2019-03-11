@@ -27,7 +27,7 @@
     ],
     "types": [
       "node",
-      "bluebird",
+      "jest",
       "json-schema"
     ],
     "esModuleInterop": true,
