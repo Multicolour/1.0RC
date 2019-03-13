@@ -1,17 +1,15 @@
-// @flow
-
 import {
   Error$MessageAST,
   Error$MessageFrameAST,
-} from "../../types/error-ast"
+} from "@mc-types/multicolour/error-ast"
 
 class PrettyErrorWithStack extends Error {
   messageAST: Error$MessageAST
-  data: Object
+  data: object
 
   static ignoredPackages: RegExp
 
-  constructor(message: string, context?: string | Object = {}) {
+  constructor(message: string, context: string | object = {}) {
     super(message)
     
     Error.captureStackTrace && Error.captureStackTrace(this, PrettyErrorWithStack)
@@ -30,7 +28,7 @@ class PrettyErrorWithStack extends Error {
    * @param {string} part to parse 
    * @param {Object} ast object to add parts to.
    */
-  parseStackFramePart(part: string, ast: Object): void {
+  parseStackFramePart(part: string, ast: Error$MessageFrameAST): void {
     const pathLineColumnRegex = /(?![()])(.*):(\d+):(\d+)/g
 
     if (pathLineColumnRegex.test(part)) {
@@ -59,7 +57,7 @@ class PrettyErrorWithStack extends Error {
       .slice(1)
       .filter(part => !(new Set(["", "(", "["]).has(part)))
 
-    const namedParts = {}
+    const namedParts: Error$MessageFrameAST = {}
 
     if (partsRaw.length !== 1) {
       switch (partsRaw.length) {
@@ -88,12 +86,14 @@ class PrettyErrorWithStack extends Error {
    */
   getMessageAst(): Error$MessageAST {
     const parsedStack = this.stack
-      .split("\n")
-      .map(line => line.trim())
-      .filter(Boolean)
-      .slice(1)
-      .map((frame: string) => this.parseStackFrame(frame))
-      .filter((frameAST: Error$MessageFrameAST) => Object.keys(frameAST).length > 0)
+      ? this.stack
+        .split("\n")
+        .map(line => line.trim())
+        .filter(Boolean)
+        .slice(1)
+        .map((frame: string) => this.parseStackFrame(frame))
+        .filter((frameAST: Error$MessageFrameAST) => Object.keys(frameAST).length > 0)
+      : []
 
     const filteredStack = parsedStack
       .filter((frameAST: Error$MessageFrameAST) => !PrettyErrorWithStack.ignoredPackages.test(frameAST.file || ""))

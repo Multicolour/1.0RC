@@ -33,7 +33,7 @@
     "esModuleInterop": true,
     "baseUrl": ".",
     "paths": {
-      "@types*": ["./types*"],
+      "@mc-types*": ["./types*"],
       "@lib*": ["./lib*"]
     }
   }

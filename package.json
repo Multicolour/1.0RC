@@ -98,6 +98,10 @@
       "jsx",
       "json",
       "node"
-    ]
+    ],
+    "moduleNameMapper": {
+      "^@lib(.*)$": "<rootDir>/lib/$1",
+      "^@mc-types(.*)$": "<rootDir>/types/$1"
+    }
   }
 }

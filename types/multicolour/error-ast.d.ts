@@ -7,25 +7,25 @@ export interface Error$MessageFrameAST {
    * that support clicable links in their terminal
    * emulator.
    */
-  file: string,
+  file?: string,
 
   /**
    * The calling function in the stack, will 
    * usually have a line with it too.
    */
-  caller: string,
+  caller?: string,
 
   /**
    * The line that this
    * caller is on to be traced back.
    */
-  line: number,
+  line?: number,
 
   /**
    * The column that this
    * caller is on to be traced back.
    */
-  column: number,
+  column?: number,
 
   /**
    * The module that this file is in, I.E
@@ -33,7 +33,7 @@ export interface Error$MessageFrameAST {
    * discover whether or not it's your fault
    * or mine! <3
    */
-  module: string,
+  module?: string,
 }
 
 /**
@@ -57,6 +57,6 @@ export interface Error$MessageAST {
    * stack becuase they matches the ignored_packages
    * filter.
    */
-  framesDropped: number
+  framesDropped?: number
 }
 
