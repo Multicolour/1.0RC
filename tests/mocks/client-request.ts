@@ -1,4 +1,5 @@
 import EventEmitter from "events"
+import { Socket } from "net"
 import { IncomingMessage as NodeIncomingMessage } from "http"
 
 interface Options {
@@ -9,17 +10,17 @@ interface Options {
 }
 
 class IncomingMessage 
-  extends EventEmitter
-  implements NodeIncomingMessage {
+  extends NodeIncomingMessage {
   url: string
   method?: string  = "GET"
   body?: Buffer 
 
   constructor(options: Options) {
-    super()
+    super(new Socket({}))
     this.url = options.url
     this.method = options.method
     this.body = options.body
+    EventEmitter.call(this)
   }
 }
 

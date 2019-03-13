@@ -33,7 +33,9 @@ test("JSON body parser with known bad payloads", async() => {
 
 test("JSON body parser with known good payloads", async() => {
   const parsers = goodPayloads.map(payload => {
-    const request = new IncomingMessage()
+    const request = new IncomingMessage({
+      url: "/test"
+    })
     const parser = JsonParser(request)
 
     request.emit("data", payload)

@@ -12,6 +12,7 @@ class ServerResponse extends EventEmitter {
 
     this.body = ""
     this.headers = {}
+    this.statusCode = 200
   }
 
   end(data: string | Buffer) {
@@ -23,7 +24,7 @@ class ServerResponse extends EventEmitter {
     return Boolean(this.headers[name.toLowerCase()])
   }
 
-  getHeader(name: string): ?string {
+  getHeader(name: string): void | string {
     return this.headers[name.toLowerCase()]
   }
 
