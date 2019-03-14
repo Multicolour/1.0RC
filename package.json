@@ -19,7 +19,7 @@
   "scripts": {
     "linters": "npm run eslint",
     "eslint": "eslint ./**/*.js",
-    "unit-tests": "jest tests/*.js --maxWorkers=4",
+    "unit-tests": "jest --maxWorkers=4",
     "test": "npm run unit-tests",
     "dev": "ts-node index.ts --watch"
   },
