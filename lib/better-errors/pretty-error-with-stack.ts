@@ -14,6 +14,9 @@ class PrettyErrorWithStack extends Error {
     
     Error.captureStackTrace && Error.captureStackTrace(this, PrettyErrorWithStack)
 
+    // Fix the prototype chain:
+    // @link https://github.com/Microsoft/TypeScript/wiki/Breaking-Changes#extending-built-ins-like-error-array-and-map-may-no-longer-work
+    Object.setPrototypeOf(this, PrettyErrorWithStack.prototype)
     this.data = { context }
     this.name = this.constructor.name
 

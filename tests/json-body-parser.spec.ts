@@ -23,13 +23,12 @@ test("JSON body parser with known bad payloads", async() => {
     request.emit("end")
 
     return parser
-      .catch((response) => response) // Kill the error, we want to test it.
+      .catch(({statusCode}) => statusCode) // Kill the error, we want to test it.
   })
 
   console.log(await Promise.all(parsers))
 
   const statusCodes = await Promise.all(parsers)
-  console.log(statusCodes)
   expect(statusCodes.every(code => code === 400)).toBe(true)
 })
 
