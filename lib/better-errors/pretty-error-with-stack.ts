@@ -30,6 +30,7 @@ class PrettyErrorWithStack extends Error {
    * 
    * @param {string} part to parse 
    * @param {Object} ast object to add parts to.
+   * @FIXME: this should not be a side affect function with no return type. Come back and parse expected parts properly.
    */
   parseStackFramePart(part: string, ast: Error$MessageFrameAST): void {
     const pathLineColumnRegex = /(?![()])(.*):(\d+):(\d+)/g
