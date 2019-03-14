@@ -1,8 +1,17 @@
-import { ErrorObject } from "ajv"
+import { 
+  ErrorObject,
+  RequiredParams,
+  LimitParams,
+  EnumParams,
+  AdditionalPropertiesParams,
+} from "ajv"
 
 import PrettyErrorWithStack from "./pretty-error-with-stack"
 
 class AJVValidationError extends PrettyErrorWithStack {
+  object: string
+  validationErrors: ErrorObject[]
+
   constructor(message: string, object: string, errors: ErrorObject[] = []) {
     super(message, `${object} objects validation against JSON schema.`)
 
@@ -17,19 +26,19 @@ class AJVValidationError extends PrettyErrorWithStack {
     return this.validationErrors.reduce((neatErrors: string[], currentError: ErrorObject): string[] => {
       switch (currentError.keyword) {
       case "required":
-        neatErrors.push(`Property "${this.object}${currentError.dataPath || ""}" requires the presence of "${currentError.params.missingProperty}".`) // eslint-disable-line max-len
+        neatErrors.push(`Property "${this.object}${currentError.dataPath || ""}" requires the presence of "${(currentError.params as RequiredParams).missingProperty}".`) // eslint-disable-line max-len
         break
       case "minProperties":
-        neatErrors.push(`Property "${this.object}${currentError.dataPath}" requires at least '${currentError.params.limit}' defined properties`) // eslint-disable-line max-len
+        neatErrors.push(`Property "${this.object}${currentError.dataPath}" requires at least '${(currentError.params as LimitParams).limit}' defined properties`) // eslint-disable-line max-len
 
         break
       case "enum":
-        neatErrors.push(`Property "${this.object}${currentError.dataPath}" has an incorrect value, expected a value matching one of '${currentError.params.allowedValues.join("', '")}'`) // eslint-disable-line max-len
+        neatErrors.push(`Property "${this.object}${currentError.dataPath}" has an incorrect value, expected a value matching one of '${(currentError.params as EnumParams).allowedValues.join("', '")}'`) // eslint-disable-line max-len
 
         break
       case "additionalProperties":
         // @TODO: Add common typo LUT for each property to offer some answers. 
-        neatErrors.push(`Data path ${this.object}${currentError.dataPath} shouldn't have the property "${currentError.params.additionalProperty}". Maybe you misspelled the propery? Check your service's configuration.`) // eslint-disable-line max-len
+        neatErrors.push(`Data path ${this.object}${currentError.dataPath} shouldn't have the property "${(currentError.params as AdditionalPropertiesParams).additionalProperty}". Maybe you misspelled the propery? Check your service's configuration.`) // eslint-disable-line max-len
 
         break
       /* istanbul ignore next */

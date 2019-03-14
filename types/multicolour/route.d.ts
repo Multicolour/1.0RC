@@ -21,10 +21,10 @@ export interface Multicolour$RouteAuthConfig {
 }
 
 export interface Multicolour$RouteValidations {
-  params: Object,
-  queryString: Object,
-  body: Object,
-  response: Object,
+  params: object,
+  queryString: object,
+  body: object,
+  response: object,
 }
 
 export interface Multicolour$RouteSpecificsConfig {

@@ -1,14 +1,12 @@
-// @flow
-
-import type { 
+import { 
   Multicolour$Route,
   Multicolour$RouteVerbs,
-} from "../../flow/declarations/multicolour/route.flow"
+} from "@mc-types/multicolour/route"
 
-import type { Multicolour$RadixTrieLeaf } from "./radix-trie"
+import { Multicolour$RadixTrieLeaf } from "./radix-trie"
 
-const RadixTrie = require("./radix-trie")
-const RouterError = require("../better-errors/router-error")
+import RadixTrie from "./radix-trie"
+import RouterError from "@lib/better-errors/router-error"
 
 const METHODS = [
   "GET",

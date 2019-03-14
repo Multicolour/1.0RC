@@ -17,7 +17,7 @@ export interface Multicolour$APIServiceSecurityConfig {
   /**
    * The auth config this services requires.
    */
-  auth: {
+  auth?: {
     /**
      * The master key used against all hash based security.
      * this is in addition to per user salting and hashing.
@@ -149,7 +149,7 @@ export interface Multicolour$APIServiceConfig extends Multicolour$ServiceBaseCon
   /**
    * The security config this API service requests.
    */
-  security?: Multicolour$APIServiceSecurityConfig,
+  security: Multicolour$APIServiceSecurityConfig,
 
   /**
    * All API services in production should

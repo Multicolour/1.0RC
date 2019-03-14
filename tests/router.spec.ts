@@ -1,6 +1,6 @@
-const Router = require("../lib/server/router")
-const { METHODS } = require("http")
-const RouterError = require("../lib/better-errors/router-error")
+import Router from "../lib/server/router"
+import { METHODS } from "http"
+import RouterError from "../lib/better-errors/router-error"
 
 test("Router starts and routing", () => {
   const router = new Router()
@@ -27,7 +27,7 @@ test("Router starts and routing", () => {
 
   // Route everything.
   routes.forEach(route => {
-    METHODS.forEach(method => {
+    METHODS.forEach((method: string) => {
       if (router[method.toLowerCase()]) 
         router[method.toLowerCase()](route)
     })

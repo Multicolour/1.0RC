@@ -91,6 +91,9 @@
       }
     },
     "testRegex": "(/tests/.*|(\\.|/)(test|spec))\\.tsx?$",
+    "testPathIgnorePatterns": [
+      "<rootDir>/tests/content"
+    ],
     "moduleFileExtensions": [
       "ts",
       "tsx",
