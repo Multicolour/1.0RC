@@ -65,14 +65,15 @@ export interface Multicolour$APIServiceSecurityConfig {
         secure?: boolean,
       }
     },
-    /**
-     * You can specify only certain origins for requests 
-     * by adding your FQDN/URIs here to be validated.
-     */
-    cors?: {
-      allowedDomains: string[],
-    },
-  }
+  },
+
+  /**
+   * You can specify only certain origins for requests 
+   * by adding your FQDN/URIs here to be validated.
+   */
+  cors?: {
+    allowedDomains: string[],
+  },
 }
 
 export interface Multicolour$DatabaseServiceConfig 

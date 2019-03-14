@@ -1,7 +1,7 @@
 import { IncomingMessage } from "http"
-import { Multicolour$ReplyContext } from "@flow/reply.flow"
+import { Multicolour$ReplyContext } from "@mc-types/multicolour/reply"
 
-import HttpError from "../../better-errors/http-error"
+import HttpError from "@lib/better-errors/http-error"
 
 export interface AcceptHeaderValue {
   contentType: string,
@@ -108,7 +108,7 @@ function HeaderParser(request: IncomingMessage, context: Multicolour$ReplyContex
   }
 }
 
-module.exports = {
+export {
   HeaderParser,
   parseAcceptHeader,
   parseContentTypeHeader,

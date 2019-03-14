@@ -1,10 +1,10 @@
-const {
+import {
   HeaderParser,
   parseAcceptHeader,
   parseContentTypeHeader,
-} = require("../lib/server/request-parsers/header-parser")
-const { ClientRequest } = require("./mocks/http")
-const { HttpError } = require("../lib/better-errors/http-error")
+} from "@lib/server/request-parsers/header-parser"
+import HttpError from "@lib/better-errors/http-error"
+import { IncomingMessage } from "./mocks/http"
 
 const goodAcceptHeaders = [
   {
@@ -121,7 +121,8 @@ test("Bad content type headers", () => {
 })
 
 test("Header parser: HeaderParser", () => {
-  const parsedHeaders = HeaderParser(new ClientRequest({
+  const parsedHeaders = HeaderParser(new IncomingMessage({
+    url: "/test",
     headers: {
       accept: "application/json",
       "content-type": "application/json",
@@ -137,12 +138,5 @@ test("Header parser: HeaderParser", () => {
       contentType: "application/json",
     },
   })
-})
-
-test("Bad Header parser", () => {
-  const badHeaderParserCall = () => HeaderParser()
-  expect(badHeaderParserCall).toThrow(HttpError)
-
-  expect(HeaderParser(new ClientRequest({}))).toEqual({})
 })
 
