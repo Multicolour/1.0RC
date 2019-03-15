@@ -1,3 +1,6 @@
+import { IncomingMessage } from "./mocks/http"
+import MultipartNegotiator from "@lib/server/request-parsers/parsers/multipart"
+
 const payload = `
 POST /test.html HTTP/1.1
 Host: example.org
@@ -13,13 +16,12 @@ Content-Disposition: form-data; name="field2"; filename="example.txt"
 value2
 --boundary--
 `
-const { ClientRequest } = require("./mocks/http")
 
-const MultipartNegotiator = require("../lib/server/request-parsers/parsers/multipart")
 
 test("Multipart negotiator", () => {
   expect.assertions(1)
-  const request = new ClientRequest({
+  const request = new IncomingMessage({
+    url: "/test",
     headers: {
       "content-type": "multipart/form-data; boundary=boundery",
       "content-length": payload.length,
