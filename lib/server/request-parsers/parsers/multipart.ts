@@ -1,11 +1,15 @@
-import { IncomingMessage} from "http"
-import { IncomingForm } from "formidable"
+import { 
+  IncomingForm,
+  Fields,
+  Files
+} from "formidable"
+import { Multicolour$RequestParserArgs } from "@mc-types/multicolour/route"
 
-async function multipartBodyParser(request: IncomingMessage): Promise<object> {
+async function multipartBodyParser(args: Multicolour$RequestParserArgs): Promise<object> {
   return new Promise((resolve, reject) => {
     const form = new IncomingForm()
  
-    form.parse(request, (err, fields, files) => {
+    form.parse(args.request, (err: any, fields: Fields, files: Files) => {
       if (err) return reject(err)
       else return resolve({
         fields,
@@ -17,4 +21,4 @@ async function multipartBodyParser(request: IncomingMessage): Promise<object> {
 
 multipartBodyParser.negotiationName = /^multipart\/form-data/
 
-module.exports = multipartBodyParser
+export default multipartBodyParser

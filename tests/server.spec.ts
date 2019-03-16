@@ -1,10 +1,10 @@
-const {
-  ClientRequest,
+import {
+  IncomingMessage,
   ServerResponse, 
-} = require("./mocks/http")
+} from "./mocks/http"
 
-const MulticolourServer = require("../lib/server/server")
-const HttpError = require("../lib/better-errors/http-error")
+import MulticolourServer from "@lib/server/server"
+import HttpError from "@lib/better-errors/http-error"
 
 const testableRoutes = [
   {
@@ -16,7 +16,7 @@ const testableRoutes = [
       path: "/text",
       handler: async() => "Text",
     },
-    expected: (reply, response) => {
+    expected: (reply: string, response: ServerResponse) => {
       console.log(response)
       expect(reply).toBe("Text")
       expect(response.headers["content-type"]).toBe("text/plain")
@@ -31,7 +31,7 @@ const testableRoutes = [
       path: "/json",
       handler: async() => ({ json: true }),
     },
-    expected: (reply, response) => {
+    expected: (reply: object, response: ServerResponse) => {
       expect(reply).toEqual({ json: true })
       expect(response.headers["content-type"]).toBe("application/json")
     },
@@ -52,7 +52,7 @@ const testableRoutes = [
         })
       },
     },
-    expected: (reply, response) => {
+    expected: (reply: object, response: ServerResponse) => {
       expect(reply).toEqual({
         statusCode: 418,
         error: {
@@ -65,21 +65,15 @@ const testableRoutes = [
   },
 ]
 
-test("Multicolour server instantiation", () => {
-  expect(() => new MulticolourServer()).not.toThrow()
-  expect(() => new MulticolourServer({
-    serverOptions: {},
-    secure: true,
-  })).not.toThrow()
-})
-
 test("Multicolour server routing", async() => {
-  const server = new MulticolourServer()
+  const server = new MulticolourServer({
+    type: "api",
+  })
 
   for await (const testableRoute of testableRoutes) {
     server.route(testableRoute.route)
     const response = new ServerResponse()
-    const request = new ClientRequest({
+    const request = new IncomingMessage({
       url: testableRoute.route.path,
       method: testableRoute.route.method.toUpperCase(),
       headers: testableRoute.headers,
@@ -91,7 +85,7 @@ test("Multicolour server routing", async() => {
   }
   
   const response = new ServerResponse()
-  server.onRequest(new ClientRequest({
+  server.onRequest(new IncomingMessage({
     url: "/nope",
     method: "GET",
   }), response)
@@ -102,7 +96,9 @@ test("Multicolour server routing", async() => {
 })
 
 test("Server content negotiator", () => {
-  const server = new MulticolourServer()
+  const server = new MulticolourServer({
+    type: "api",
+  })
   const JsonNegotiator = require("../lib/server/request-parsers/parsers/json")
   const classNegotiator = class {
     static get negotiationAccept() { return "text/html" }

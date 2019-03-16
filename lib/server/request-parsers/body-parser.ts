@@ -1,12 +1,7 @@
-import { IncomingMessage } from "http"
 import HttpError from "@lib/better-errors/http-error"
+import { Multicolour$RequestParserArgs } from "@mc-types/multicolour/route"
 
-export interface BodyParserArgs {
-  request: IncomingMessage, 
-  maxBodySize?: number,
-}
-
-async function BodyParser(config: BodyParserArgs): Promise<string> {
+async function BodyParser(config: Multicolour$RequestParserArgs): Promise<string> {
   if (!config.request)
     return Promise.reject(new HttpError({
       statusCode: 500,

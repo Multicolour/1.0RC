@@ -150,7 +150,7 @@ export interface Multicolour$APIServiceConfig extends Multicolour$ServiceBaseCon
   /**
    * The security config this API service requests.
    */
-  security: Multicolour$APIServiceSecurityConfig,
+    security?: Multicolour$APIServiceSecurityConfig,
 
   /**
    * All API services in production should

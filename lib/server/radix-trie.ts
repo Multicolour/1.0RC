@@ -1,11 +1,8 @@
-// @flow
-/* eslint-disable max-depth */
-
 /**
  * This code is MIT licensed and belongs to this repo. 
  * https://github.com/steambap/koa-tree-router/blob/master/tree.js
  *
- * modifications made to include Flow typing.
+ * modifications made.
  */
 
 const STATIC = 0
@@ -33,7 +30,7 @@ class Node {
   maxParams: number
   indices: string
   children: Node[]
-  handle: ?Object
+  handle: object | null
   priority: number
 
   /**
@@ -49,13 +46,13 @@ class Node {
    */
   constructor(
     path: string = "",
-    wildChild?: boolean = false,
-    type?: typeof STATIC | typeof ROOT | typeof PARAM | typeof CATCH_ALL = STATIC,
-    maxParams?: number = 0,
-    indices?: string = "",
-    children?: Node[] = [],
-    handle?: ?Object = null,
-    priority?: number = 0
+    wildChild: boolean = false,
+    type: typeof STATIC | typeof ROOT | typeof PARAM | typeof CATCH_ALL = STATIC,
+    maxParams: number = 0,
+    indices: string = "",
+    children: Node[] = [],
+    handle: object | null = null,
+    priority: number = 0
   ) {
     this.path = path
     this.wildChild = wildChild
@@ -101,7 +98,7 @@ class Node {
    * @param {Object} handle
    */
   addRoute(path: string, handle: Object) {
-    let n = this
+    let n: Node = this
     let fullPath = path
     n.priority++
     let numParams = countParams(path)
@@ -247,7 +244,7 @@ class Node {
    * @param {function[]} handle
    */
   insertChild(numParams: number, path: string, fullPath: string, handle: Object) {
-    let n = this
+    let n: Node = this
     let offset = 0 // Already handled chars of the path
 
     // Find prefix until first wildcard
@@ -383,7 +380,7 @@ class Node {
   search(path: string) {
     let handle = {}
     const params = []
-    let n = this
+    let n: Node = this
 
     walk: while (true) { // eslint-disable-line no-constant-condition
       if (path.length > n.path.length) {
@@ -450,7 +447,8 @@ class Node {
             throw new Error("invalid node type")
           }
         }
-      } else if (path === n.path) {
+      } 
+      else if (path === n.path) {
         handle = n.handle
       }
 
@@ -459,5 +457,5 @@ class Node {
   }
 }
 
-module.exports = Node
+export default Node
 

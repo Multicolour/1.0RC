@@ -1,6 +1,7 @@
 import {
   ClientRequest,
   ServerResponse,
+  IncomingMessage,
 } from "http"
 
 export type Multicolour$RouteVerbs = "GET" 
@@ -41,3 +42,7 @@ export interface Multicolour$Route {
   validate?: Multicolour$RouteValidations,
 }
 
+export interface Multicolour$RequestParserArgs {
+  request: IncomingMessage,
+  maxBodySize?: number,
+}

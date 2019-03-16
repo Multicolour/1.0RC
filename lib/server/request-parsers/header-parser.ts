@@ -1,22 +1,14 @@
 import { IncomingMessage } from "http"
-import { Multicolour$ReplyContext } from "@mc-types/multicolour/reply"
+import {
+  Multicolour$ReplyContext,
+  Multicolour$ContentTypeHeader,
+  Multicolour$AcceptHeaderValue,
+  Multicolour$AcceptHeader,
+} from "@mc-types/multicolour/reply"
 
 import HttpError from "@lib/better-errors/http-error"
 
-export interface AcceptHeaderValue {
-  contentType: string,
-  quality: number,
-}
-
-export type AcceptHeader = AcceptHeaderValue | AcceptHeaderValue[]
-
-export type ContentTypeHeader = {
-  contentType: string,
-  boundary?: string,
-  charset?: string,
-}
-
-function parseContentTypeHeader(header: string = ""): ContentTypeHeader {
+function parseContentTypeHeader(header: string = ""): Multicolour$ContentTypeHeader {
   const [contentType, ...directives] = header.split(";")
 
   const returnHeader = {
@@ -26,7 +18,7 @@ function parseContentTypeHeader(header: string = ""): ContentTypeHeader {
   return directives
     .filter(Boolean)
     .map((directive: string = "") => directive.trim())
-    .reduce((out: ContentTypeHeader, currentDirectiveKV) => {
+    .reduce((out: Multicolour$ContentTypeHeader, currentDirectiveKV) => {
       const [key, value] = currentDirectiveKV.split("=")
 
       if (key.length > 100)
@@ -58,7 +50,7 @@ function parseContentTypeHeader(header: string = ""): ContentTypeHeader {
     }, returnHeader)
 }
 
-function parseAcceptHeader(header: string = ""): AcceptHeader {
+function parseAcceptHeader(header: string = ""): Multicolour$AcceptHeader {
   const parts = header.split(",")
 
   const values = parts
@@ -79,12 +71,12 @@ function parseAcceptHeader(header: string = ""): AcceptHeader {
 
   return values.length === 1
     ? values[0]
-    : values.sort((left: AcceptHeaderValue, right: AcceptHeaderValue) => 
+    : values.sort((left: Multicolour$AcceptHeaderValue, right: Multicolour$AcceptHeaderValue) => 
       right.quality - left.quality
     )
 }
 
-function HeaderParser(request: IncomingMessage, context: Multicolour$ReplyContext = {}) {
+function HeaderParser(request: IncomingMessage, context: Multicolour$ReplyContext = { responseHeaders: {} }) {
   if (!request) 
     throw new HttpError({
       statusCode: 500,

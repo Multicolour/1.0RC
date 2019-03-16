@@ -1,10 +1,9 @@
-import { IncomingMessage } from "http"
-
 import HttpError from "@lib/better-errors/http-error"
+import { Multicolour$RequestParserArgs } from "@mc-types/multicolour/route"
 import bodyParser from "../body-parser"
 
-async function JsonParser(request: IncomingMessage): Promise<object> {
-  return bodyParser({ request })
+async function JsonParser(args: Multicolour$RequestParserArgs): Promise<object> {
+  return bodyParser({ request: args.request })
   .then((json: string) => {
     let outwardBody
 

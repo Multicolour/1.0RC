@@ -1,39 +1,29 @@
-// @flow
-
-import type { 
+import { 
   ServerResponse,
   Server as InsecureServer,
+  createServer as createInsecureServer,
 } from "http"
-import type { Debug } from "debug"
-import type { Server as SecureServer } from "https"
+import { 
+  Server as SecureServer,
+  createServer as createSecureServer,
+} from "https"
+import Debug from "debug"
+import { Multicolour$ReplyContext } from "@mc-types/multicolour/reply"
+import { Multicolour$IncomingMessage } from "@mc-types/multicolour/incoming-message"
+import { Multicolour$APIServiceConfig } from "@mc-types/multicolour/config"
+import { Multicolour$ContentNegotiator } from "@mc-types/multicolour/content-negotiation"
 
-import type { Multicolour$ReplyContext } from "@flow/multicolour/reply.flow"
-import type { Multicolour$IncomingMessage } from "@flow/multicolour/incoming-message.flow"
-import type { Multicolour$APIServiceConfig } from "@flow/multicolour/config.flow"
-import type { Multicolour$ContentNegotiator } from "@flow/multicolour/content-negotiation.flow"
+import Router from "./router"
+import { HeaderParser } from "./request-parsers/header-parser"
+import JsonNegotiator from "./request-parsers/parsers/json"
+import MultipartNegotiator from "./request-parsers/parsers/multipart"
 
-const Router = require("./router")
-const { HeaderParser } = require("./request-parsers/header-parser")
-
-const { 
-  createServer: createSecureServer,
-} = require("https")
-
-const { 
-  createServer: createInsecureServer,
-} = require("http")
-
-const Promise = require("bluebird")
-const debug = require("debug")("multicolour:server")
-
-const JsonNegotiator = require("./request-parsers/parsers/json")
-const MultipartNegotiator = require("./request-parsers/parsers/multipart")
+const debug = Debug("multicolour:server")
 
 class MulticolourServer {
   config: Multicolour$APIServiceConfig
   server: SecureServer | InsecureServer
   router: Router
-  debug: Debug
   negotiators: {
     [acceptHeaderValue: string]: Multicolour$ContentNegotiator<string>,
   }
@@ -42,7 +32,7 @@ class MulticolourServer {
    * 
    * @param {Multicolour$APIServiceConfig} config for this server. 
    */
-  constructor(config?: Multicolour$APIServiceConfig = { type: "api" }) {
+  constructor(config: Multicolour$APIServiceConfig) {
     this.config = config
     this.negotiators = {}
     
@@ -62,7 +52,7 @@ class MulticolourServer {
       .addContentNegotiator(MultipartNegotiator)
   }
 
-  onResponseError(request: Multicolour$IncomingMessage, response: ServerResponse, error: Error) {
+  onResponseError(request: Multicolour$IncomingMessage, response: ServerResponse, error: Multicolour$HttpError) {
     debug("An irrecoverable error occured, please fix this and add a test to prevent this error occuring again. If you believe this to be a bug with Multicolour, please submit a bug report to https://github.com/Multicolour/multicolour/issues/new. \n\nError: %O\nMethod: %s,\nStack: %O", error, request.method, error.stack) // eslint-disable-line max-len
     response.writeHead(error.statusCode || 500)
     response.end(JSON.stringify({
@@ -76,7 +66,7 @@ class MulticolourServer {
     const routeMatch = this.router.match(request.method, request.url)
     const context: Multicolour$ReplyContext = {
       statusCode: 200,
-      headers: {
+      responseHeaders: {
         "content-type": "application/json",
       },
     }
@@ -104,7 +94,7 @@ class MulticolourServer {
 
     return routeMatch.handler(request, context)
       .then((reply: any) => {
-        response.writeHead(context.statusCode || 200, context.headers)
+        response.writeHead(context.statusCode || 200, context.responseHeaders)
 
         if (!reply || (typeof reply === "string" && reply.length === 0))
           response.end("{}")
@@ -150,5 +140,5 @@ class MulticolourServer {
   }
 }
 
-module.exports = MulticolourServer
+export default MulticolourServer
 

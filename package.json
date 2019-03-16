@@ -19,7 +19,7 @@
   "scripts": {
     "linters": "npm run eslint",
     "eslint": "eslint ./**/*.js",
-    "unit-tests": "jest --maxWorkers=4",
+    "unit-tests": "jest --maxWorkers=8",
     "test": "npm run unit-tests",
     "dev": "ts-node index.ts --watch"
   },
@@ -34,9 +34,10 @@
   },
   "homepage": "https://github.com/Multicolour/multicolour#readme",
   "dependencies": {
+    "@types/debug": "^4.1.2",
     "ajv": "^6.5.5",
     "bluebird": "^3.5.3",
-    "debug": "^4.1.0",
+    "debug": "^4.1.1",
     "formidable": "^1.2.1",
     "knex": "^0.14.2",
     "toposort": "^2.0.2",
@@ -48,6 +49,7 @@
   },
   "devDependencies": {
     "@types/bluebird": "^3.5.26",
+    "@types/formidable": "^1.0.31",
     "@types/jest": "^24.0.9",
     "@types/json-schema": "^7.0.3",
     "@types/node": "^11.10.4",

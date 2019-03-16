@@ -3,9 +3,8 @@ import {
   Multicolour$RouteVerbs,
 } from "@mc-types/multicolour/route"
 
-import { Multicolour$RadixTrieLeaf } from "./radix-trie"
+import RadixTrie, { Multicolour$RadixTrieLeaf } from "./radix-trie"
 
-import RadixTrie from "./radix-trie"
 import RouterError from "@lib/better-errors/router-error"
 
 const METHODS = [
@@ -75,4 +74,4 @@ class Router {
   }
 }
 
-module.exports = Router
+export default Router
