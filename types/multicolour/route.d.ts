@@ -4,13 +4,15 @@ import {
   IncomingMessage,
 } from "http"
 
-export type Multicolour$RouteVerbs = "GET" 
-  | "POST" 
-  | "PUT" 
-  | "PATCH" 
-  | "DELETE" 
-  | "OPTIONS" 
-  | "HEAD"
+export enum Multicolour$RouteVerbs {
+  GET = "GET",
+  POST = "POST",
+  PUT = "PUT",
+  PATCH = "PATCH",
+  DELETE = "DELETE",
+  OPTIONS = "OPTIONS",
+  HEAD = "HEAD",
+}
 
 export interface Multicolour$RouteAuthConfig {
   type: "oauth" | "jwt" | "none",

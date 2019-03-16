@@ -1,5 +1,5 @@
 import Router from "../lib/server/router"
-import { METHODS } from "http"
+import { Multicolour$RouteVerbs } from "@mc-types/multicolour/route"
 import RouterError from "../lib/better-errors/router-error"
 
 test("Router starts and routing", () => {

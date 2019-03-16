@@ -3,32 +3,28 @@ import {
   Multicolour$RouteVerbs,
 } from "@mc-types/multicolour/route"
 
-import RadixTrie, { Multicolour$RadixTrieLeaf } from "./radix-trie"
-
+import RadixTrie from "./radix-trie"
 import RouterError from "@lib/better-errors/router-error"
 
-const METHODS = [
-  "GET",
-  "POST",
-  "PUT",
-  "PATCH",
-  "DELETE",
-  "OPTIONS",
-  "HEAD",
-]
-
-export type Tries = {
-  [method: Multicolour$RouteVerbs]: Multicolour$RadixTrieLeaf
+export interface Tries {
+  [Multicolour$RouteVerbs.GET]: RadixTrie,
+  [Multicolour$RouteVerbs.POST]: RadixTrie,
+  [Multicolour$RouteVerbs.PATCH]: RadixTrie,
+  [Multicolour$RouteVerbs.PUT]: RadixTrie,
+  [Multicolour$RouteVerbs.DELETE]: RadixTrie,
+  [Multicolour$RouteVerbs.HEAD]: RadixTrie,
+  [Multicolour$RouteVerbs.OPTIONS]: RadixTrie,
 }
 
 class Router {
-  tries: Tries
-
-  constructor() {
-    this.tries = METHODS.reduce((tries: Tries, method: string): Tries => {
-      tries[method] = new RadixTrie()
-      return tries
-    }, {})
+  tries: Tries = {
+    [Multicolour$RouteVerbs.GET]: new RadixTrie(),
+    [Multicolour$RouteVerbs.POST]: new RadixTrie(),
+    [Multicolour$RouteVerbs.PATCH]: new RadixTrie(),
+    [Multicolour$RouteVerbs.PUT]: new RadixTrie(),
+    [Multicolour$RouteVerbs.DELETE]: new RadixTrie(),
+    [Multicolour$RouteVerbs.HEAD]: new RadixTrie(),
+    [Multicolour$RouteVerbs.OPTIONS]: new RadixTrie(),
   }
 
   on(method: Multicolour$RouteVerbs, route: Multicolour$Route) {
@@ -42,35 +38,35 @@ class Router {
   }
 
   get(route: Multicolour$Route) {
-    return this.on("GET", route)
+    return this.on(Multicolour$RouteVerbs.GET, route)
   }
 
   post(route: Multicolour$Route) {
-    return this.on("POST", route)
+    return this.on(Multicolour$RouteVerbs.POST, route)
   }
   
   patch(route: Multicolour$Route) {
-    return this.on("PATCH", route)
+    return this.on(Multicolour$RouteVerbs.PATCH, route)
   }
 
   put(route: Multicolour$Route) {
-    return this.on("PUT", route)
+    return this.on(Multicolour$RouteVerbs.PUT, route)
   }
 
   delete(route: Multicolour$Route) {
-    return this.on("DELETE", route)
+    return this.on(Multicolour$RouteVerbs.DELETE, route)
   }
 
   head(route: Multicolour$Route) {
-    return this.on("HEAD", route)
+    return this.on(Multicolour$RouteVerbs.HEAD, route)
   }
 
   options(route: Multicolour$Route) {
-    return this.on("OPTIONS", route)
+    return this.on(Multicolour$RouteVerbs.OPTIONS, route)
   }
 
   match(method: Multicolour$RouteVerbs, path: string) {
-    return this.tries[method.toUpperCase()].search(path)
+    return this.tries[method].search(path)
   }
 }
 
