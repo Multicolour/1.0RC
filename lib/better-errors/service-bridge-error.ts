@@ -1,9 +1,11 @@
-import { ServiceDeclarationErrorType } from "../../types/multicolour/service-declaration-error"
+import { Multicolour$ServiceDeclarationError  } from "@mc-types/multicolour/service-declaration-error"
 
 import PrettyErrorWithStack from "./pretty-error-with-stack"
 
 class ServiceBridgeError extends PrettyErrorWithStack {
-  constructor(message: string, errors: ServiceBridgeError[] = []) {
+  validationErrors: Multicolour$ServiceDeclarationError[] = []
+
+  constructor(message: string, errors: Multicolour$ServiceDeclarationError[] = []) {
     super(message, "Service declaration error")
     
     this.validationErrors = errors
@@ -12,7 +14,7 @@ class ServiceBridgeError extends PrettyErrorWithStack {
   }
 
   getErrors(): string[] {
-    return this.validationErrors.reduce((neatErrors: string[], currentError: ErrorObject): string[] => {
+    return this.validationErrors.reduce((neatErrors: string[], currentError: Multicolour$ServiceDeclarationError): string[] => {
       switch (currentError.type) {
       case "bridge-on-child-thread":
         neatErrors.push(currentError.message)

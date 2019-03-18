@@ -1,5 +1,3 @@
-import * as Promise from "bluebird"
-
 import { Multicolour$ServiceGroup } from "../../types/multicolour/config"
 import { Multicolour$ThreadMessage } from "../../types/multicolour/thread-message"
 
@@ -13,7 +11,7 @@ import {
 class ServiceNetworkBridge {
   services: {
     [serviceName: string]: Worker,
-  }
+  } = {}
   serviceDeclarations: Multicolour$ServiceGroup
   startOrder: string[]
   
@@ -30,7 +28,7 @@ class ServiceNetworkBridge {
     return this
   }
 
-  handleMessageFromThread(message: Multicolour$ThreadMessage): Promise<any> {
+  handleMessageFromThread(message: Multicolour$ThreadMessage) {
     if (!this.services.hasOwnProperty(message.serviceName))
       throw new ServiceBridgeError("Missing service dependency", [{
         type: "missing-service-dependency",
