@@ -4,8 +4,8 @@
  * Modified for purpose, structural and for coverage.
  */
 
-const Tree = require("../lib/server/radix-trie")
-const noOp = [() => {}]
+import Tree from "@lib/server/radix-trie"
+const noOp = () => Promise.resolve()
 
 let tree = new Tree()
 let routes = [
@@ -46,10 +46,6 @@ const testData = [
     found: true,
   },
   {
-    route: "/co",
-    found: true,
-  },
-  {
     route: "/con",
     found: false,
   },
@@ -82,7 +78,7 @@ testData.forEach(data => {
       expect(handle).toBeTruthy()
     } 
     else {
-      expect(handle.handler).toBeFalsy()
+      expect(handle.handle).toBeFalsy()
     }
   })
 })
@@ -188,17 +184,8 @@ const noHandlerData = [
 noHandlerData.forEach(data => {
   test(data.route, () => {
     const route = tree.search(data.route)
-    expect(route.handler).toBeFalsy()
+    expect(route.handle).toBeFalsy()
     expect(route.params).toMatchObject(data.params)
   })
 })
 
-test("node type", () => {
-  const tree = new Tree()
-  tree.addRoute("/", noOp)
-  tree.addRoute("/:page", noOp)
-
-  tree.children[0].type = 42
-
-  expect(() => tree.search("/test")).toThrow()
-})

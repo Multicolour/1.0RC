@@ -4,6 +4,12 @@
  *
  * modifications made.
  */
+import { Multicolour$RouteHandler } from "@mc-types/multicolour/route"
+
+export interface Multicolour$RouteParam {
+  key: string,
+  value: string,
+}
 
 const STATIC = 0
 const ROOT = 1
@@ -25,13 +31,13 @@ function countParams(path: string = "") {
 
 class Node {
   path: string
-  wildChild: boolean
+  wildChild: boolean = false
   type: typeof STATIC | typeof ROOT | typeof PARAM | typeof CATCH_ALL
-  maxParams: number
-  indices: string
-  children: Node[]
-  handle: object | null
-  priority: number
+  maxParams: number = 0
+  indices: string = ""
+  children: Node[] = []
+  handle?: Multicolour$RouteHandler
+  priority: number = 0
 
   /**
    *
@@ -51,7 +57,7 @@ class Node {
     maxParams: number = 0,
     indices: string = "",
     children: Node[] = [],
-    handle: object | null = null,
+    handle: Multicolour$RouteHandler | undefined = undefined,
     priority: number = 0
   ) {
     this.path = path
@@ -97,7 +103,7 @@ class Node {
    * @param {string} path
    * @param {Object} handle
    */
-  addRoute(path: string, handle: Object) {
+  addRoute(path: string, handle: Multicolour$RouteHandler) {
     let n: Node = this
     let fullPath = path
     n.priority++
@@ -134,7 +140,7 @@ class Node {
           )
 
           // Update maxParams (max of all children)
-          child.children.forEach(grandChild => {
+          child.children.forEach((grandChild: Node) => {
             if (grandChild.maxParams > child.maxParams) {
               child.maxParams = grandChild.maxParams
             }
@@ -143,7 +149,7 @@ class Node {
           n.children = [child]
           n.indices = n.path[i]
           n.path = path.slice(0, i)
-          n.handle = null
+          n.handle = undefined
           n.wildChild = false
         }
 
@@ -211,7 +217,11 @@ class Node {
               "",
               false,
               STATIC,
-              numParams
+              numParams,
+              "",
+              [],
+              undefined,
+              0
             )
             n.children.push(child)
             n.addPriority(n.indices.length - 1)
@@ -243,7 +253,7 @@ class Node {
    * @param {string} fullPath
    * @param {function[]} handle
    */
-  insertChild(numParams: number, path: string, fullPath: string, handle: Object) {
+  insertChild(numParams: number, path: string, fullPath: string, handle: Multicolour$RouteHandler) {
     let n: Node = this
     let offset = 0 // Already handled chars of the path
 
@@ -315,7 +325,7 @@ class Node {
             numParams,
             "",
             [],
-            null,
+            undefined,
             1
           )
           n.children = [staticChild]
@@ -378,11 +388,11 @@ class Node {
    * @param {string} path
    */
   search(path: string) {
-    let handle = {}
-    const params = []
+    let handle = undefined
+    const params: Multicolour$RouteParam[] = []
     let n: Node = this
 
-    walk: while (true) { // eslint-disable-line no-constant-condition
+    walk: while (true) {
       if (path.length > n.path.length) {
         if (path.slice(0, n.path.length) === n.path) {
           path = path.slice(n.path.length)
@@ -399,7 +409,10 @@ class Node {
             }
 
             // Nothing found.
-            return { ...handle, params }
+            return { 
+              handle, 
+              params, 
+            }
           }
 
           // Handle wildcard child
@@ -427,12 +440,18 @@ class Node {
               }
 
               // ... but we can't
-              return { ...handle, params }
+              return {
+                handle, 
+                params,
+              }
             }
 
             handle = n.handle
 
-            return { ...handle, params }
+            return {
+              handle,
+              params,
+            }
           }
           case CATCH_ALL:
             params.push({
@@ -441,7 +460,10 @@ class Node {
             })
 
             handle = n.handle
-            return { ...handle, params }
+              return {
+                handle,
+                params,
+              }
 
           default:
             throw new Error("invalid node type")
@@ -452,7 +474,10 @@ class Node {
         handle = n.handle
       }
 
-      return { ...handle, params }
+      return {
+        handle,
+        params,
+      }
     }
   }
 }

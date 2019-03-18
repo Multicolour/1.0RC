@@ -1,15 +1,16 @@
-const Config = require("../lib/config")
+import configValidator from "@lib/config"
 
-const configGood = require("./content/config-good")
-const configBadMinProperties = require("./content/config-bad/min-properties")
+import configGood from "./content/config-good"
+import configBadMinProperties from "./content/config-bad/min-properties"
 
 test("Config validates and throws expected errors", () => {
   let error = false
   try {
-    new Config(configGood)
+    configValidator(configGood)
   }
   catch(configError) {
     error = true
+    console.log("URR", configError)
   }
   finally {
     expect(error).toEqual(false)
@@ -18,7 +19,7 @@ test("Config validates and throws expected errors", () => {
   // Test enum properties error message
   error = false
   try {
-    new Config(configBadMinProperties)
+    configValidator(configBadMinProperties)
   }
   catch(configError) {
     error = configError.prettify()

@@ -22,4 +22,4 @@ const config: Multicolour$Config = {
   },
 }
 
-module.exports = config
+export default config
