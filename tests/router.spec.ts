@@ -1,7 +1,7 @@
 import Router from "@lib/server/router"
 import { 
-  Multicolour$RouteVerbs,
   Multicolour$Route,
+  Multicolour$RouteVerbs,
 } from "@mc-types/multicolour/route"
 import RouterError from "@lib/better-errors/router-error"
 
