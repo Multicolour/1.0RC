@@ -29,7 +29,7 @@ class Router {
 
   on(method: Multicolour$RouteVerbs, route: Multicolour$Route) {
     try {
-      this.tries[method].addRoute(route.path, route)
+      this.tries[method].addRoute(route.path, route.handler)
     }
     catch (error) {
       throw new RouterError(error)
