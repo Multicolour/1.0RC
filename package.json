@@ -34,9 +34,7 @@
   },
   "homepage": "https://github.com/Multicolour/multicolour#readme",
   "dependencies": {
-    "@types/debug": "^4.1.2",
     "ajv": "^6.5.5",
-    "bluebird": "^3.5.3",
     "debug": "^4.1.1",
     "formidable": "^1.2.1",
     "knex": "^0.14.2",
@@ -48,6 +46,7 @@
     "node": ">= 11.1.0"
   },
   "devDependencies": {
+    "@types/debug": "^4.1.2",
     "@types/bluebird": "^3.5.26",
     "@types/formidable": "^1.0.31",
     "@types/jest": "^24.0.9",
@@ -58,7 +57,6 @@
     "codacy-coverage": "^3.3.0",
     "eslint": "^4.11.0",
     "jest": "^24.1.0",
-    "newman": "^3.8.3",
     "ts-jest": "^24.0.0",
     "ts-node": "^8.0.2",
     "typescript": "^3.3.3333"
@@ -106,8 +104,8 @@
       "node"
     ],
     "moduleNameMapper": {
-      "^@lib(.*)$": "<rootDir>/lib/$1",
-      "^@mc-types(.*)$": "<rootDir>/types/$1"
+      "^@lib(.*)$": "<rootDir>/lib$1",
+      "^@mc-types(.*)$": "<rootDir>/types$1"
     }
   }
 }
