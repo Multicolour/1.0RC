@@ -1,12 +1,15 @@
-import Router from "../lib/server/router"
-import { Multicolour$RouteVerbs } from "@mc-types/multicolour/route"
-import RouterError from "../lib/better-errors/router-error"
+import Router from "@lib/server/router"
+import { 
+  Multicolour$RouteVerbs,
+  Multicolour$Route,
+} from "@mc-types/multicolour/route"
+import RouterError from "@lib/better-errors/router-error"
 
 test("Router starts and routing", () => {
   const router = new Router()
-  const noOp = async() => {}
+  const noOp = async() => Promise.resolve()
 
-  const routes = [
+  const routes: Multicolour$Route[] = [
     {
       path: "/user", 
       handler: noOp,
@@ -25,14 +28,10 @@ test("Router starts and routing", () => {
     },
   ]
 
-  // Route everything.
-  routes.forEach(route => {
-    METHODS.forEach((method: string) => {
-      if (router[method.toLowerCase()]) 
-        router[method.toLowerCase()](route)
-    })
+  routes.forEach((route: Multicolour$Route) => {
+    router.get(route)
   })
-  
+
   // Do some basic tests on the resulting structure.
   expect(router.tries.GET.path).toEqual("/us")
   expect(router.tries.GET.children.length).toEqual(2)
@@ -40,7 +39,7 @@ test("Router starts and routing", () => {
   expect(router.tries.GET.children[1].path).toEqual("urper")
 
   // Test some of the parametric uris
-  expect(router.match("GET", "/user/123")).toEqual({
+  expect(router.match(Multicolour$RouteVerbs.GET, "/user/123")).toEqual({
     path: "/user/:userId",
     handler: noOp,
     params: [
@@ -51,7 +50,7 @@ test("Router starts and routing", () => {
     ],
   })
 
-  expect(router.match("GET", "/usurper/dave-mackintosh")).toEqual({
+  expect(router.match(Multicolour$RouteVerbs.GET, "/usurper/dave-mackintosh")).toEqual({
     path: "/usurper/*name",
     handler: noOp,
     params: [
@@ -80,9 +79,11 @@ test("Router starts and routing", () => {
     const router = new Router()
     router.get({
       path: "/*/errorPlease",
+      handler: noOp,
     })
     router.get({
       path: "/cant/do/error",
+      handler: noOp,
     })
   }).toThrow(RouterError)
   
@@ -91,6 +92,7 @@ test("Router starts and routing", () => {
     const router = new Router()
     router.get({
       path: "/*/cant*/do/this",
+      handler: noOp,
     })
   }).toThrow(RouterError)
   
@@ -99,6 +101,7 @@ test("Router starts and routing", () => {
     const router = new Router()
     router.get({
       path: "/**",
+      handler: noOp,
     })
   }).toThrow(RouterError)
   
@@ -107,6 +110,7 @@ test("Router starts and routing", () => {
     const router = new Router()
     router.get({
       path: "/:",
+      handler: noOp,
     })
   }).toThrow(RouterError)
   
@@ -115,6 +119,7 @@ test("Router starts and routing", () => {
     const router = new Router()
     router.get({
       path: "*",
+      handler: noOp,
     })
   }).toThrow(RouterError)
   
@@ -123,9 +128,11 @@ test("Router starts and routing", () => {
     const router = new Router()
     router.get({
       path: "/:param",
+      handler: noOp,
     })
     router.get({
       path: "/*test",
+      handler: noOp,
     })
   }).toThrow(RouterError)
 
@@ -134,8 +141,14 @@ test("Router starts and routing", () => {
     let string = ""
 
     try {
-      router.get({ path: "/test" })
-      router.get({ path: "/test" })
+      router.get({ 
+        path: "/test",
+        handler: noOp,
+      })
+      router.get({ 
+        path: "/test",
+        handler: noOp,
+      })
     }
     catch(error) {
       string = error.prettify()

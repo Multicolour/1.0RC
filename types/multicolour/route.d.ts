@@ -36,9 +36,9 @@ export interface Multicolour$RouteSpecificsConfig {
 export type Multicolour$RouteHandler = (request: IncomingMessage, response: ServerResponse) => Promise<any>
 
 export interface Multicolour$Route {
-  method: Multicolour$RouteVerbs,
   path: string,
   handler: Multicolour$RouteHandler,
+  method?: Multicolour$RouteVerbs,
   config?: Multicolour$RouteSpecificsConfig,
   validate?: Multicolour$RouteValidations,
 }
