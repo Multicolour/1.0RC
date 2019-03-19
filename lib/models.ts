@@ -24,18 +24,19 @@ function validateModelAgainstSchema(model: Multicolour$Model) {
 
   const validModel = ajv.validate(require("../schema/model/model.schema.json"), model.modelConfiguration)
 
-  if (!validModel)
+  if (!validModel) {
     throw new ModelValidationError(`Your model "${model.modelName}" contains errors. See below for an explanation:`, ajv.errors)
+  }
 
   return model
 }
 
 function getModels(path: string): Multicolour$ModelObject {
   const { readdirSync } = require("fs")
-  const { 
-    basename, 
-    extname, 
-    resolve, 
+  const {
+    basename,
+    extname,
+    resolve,
   } = require("path")
 
   const includePattern = /\.js$/gi

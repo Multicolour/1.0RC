@@ -1,9 +1,8 @@
 import {
-  Multicolour$SingleDatabaseConnectionConfig,
   Multicolour$APIServiceConfig,
+  Multicolour$SingleDatabaseConnectionConfig,
 } from "../../types/multicolour/config"
 
-import { workerData } from "worker_threads"
 import APIServer from "./api-server"
 
 class Service {

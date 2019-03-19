@@ -1,10 +1,10 @@
 import {
   IncomingMessage,
-  ServerResponse, 
+  ServerResponse,
 } from "./mocks/http"
 
-import MulticolourServer from "@lib/server/server"
 import HttpError from "@lib/better-errors/http-error"
+import MulticolourServer from "@lib/server/server"
 
 const testableRoutes = [
   {
@@ -14,7 +14,7 @@ const testableRoutes = [
     route: {
       method: "get",
       path: "/text",
-      handler: async() => "Text",
+      handler: async () => "Text",
     },
     expected: (reply: string, response: ServerResponse) => {
       console.log(response)
@@ -29,7 +29,7 @@ const testableRoutes = [
     route: {
       method: "get",
       path: "/json",
-      handler: async() => ({ json: true }),
+      handler: async () => ({ json: true }),
     },
     expected: (reply: object, response: ServerResponse) => {
       expect(reply).toEqual({ json: true })
@@ -43,7 +43,7 @@ const testableRoutes = [
     route: {
       method: "get",
       path: "/throws-http-error",
-      handler: async() => {
+      handler: async () => {
         throw new HttpError({
           statusCode: 418,
           error: {
@@ -65,7 +65,7 @@ const testableRoutes = [
   },
 ]
 
-test("Multicolour server routing", async() => {
+test("Multicolour server routing", async () => {
   const server = new MulticolourServer({
     type: "api",
   })
@@ -80,10 +80,10 @@ test("Multicolour server routing", async() => {
     })
 
     const reply = await server.onRequest(request, response)
-  
+
     await testableRoute.expected(reply, response)
   }
-  
+
   const response = new ServerResponse()
   server.onRequest(new IncomingMessage({
     url: "/nope",
@@ -102,7 +102,7 @@ test("Server content negotiator", () => {
   const JsonNegotiator = require("../lib/server/request-parsers/parsers/json")
   const classNegotiator = class {
     static get negotiationAccept() { return "text/html" }
-    async parseBody() {}
+    public async parseBody() {}
   }
 
   server.addContentNegotiator(JsonNegotiator)

@@ -1,11 +1,11 @@
 import { EventEmitter } from "events"
 
 class ServerResponse extends EventEmitter {
-  headers: {
+  public headers: {
     [name: string]: any,
   }
-  body: string | Buffer
-  statusCode: number
+  public body: string | Buffer
+  public statusCode: number
 
   constructor() {
     super()
@@ -15,25 +15,25 @@ class ServerResponse extends EventEmitter {
     this.statusCode = 200
   }
 
-  end(data: string | Buffer) {
+  public end(data: string | Buffer) {
     this.body = data
     return data
   }
 
-  hasHeader(name: string): boolean {
+  public hasHeader(name: string): boolean {
     return Boolean(this.headers[name.toLowerCase()])
   }
 
-  getHeader(name: string): void | string {
+  public getHeader(name: string): void | string {
     return this.headers[name.toLowerCase()]
   }
 
-  setHeader(name: string, value: string | number) {
+  public setHeader(name: string, value: string | number) {
     this.headers[name.toLowerCase()] = value
     return this
   }
 
-  writeHead(statusCode: number, headers: Object) {
+  public writeHead(statusCode: number, headers: Object) {
     this.statusCode = statusCode
     this.headers = {
       ...this.headers,

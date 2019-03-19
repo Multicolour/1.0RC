@@ -1,5 +1,5 @@
 /**
- * This code is MIT licensed and belongs to this repo. 
+ * This code is MIT licensed and belongs to this repo.
  * https://github.com/steambap/koa-tree-router/blob/master/tree.js
  *
  * modifications made.
@@ -19,8 +19,8 @@ const CATCH_ALL = 3
 /** @param {string} path */
 function countParams(path: string = "") {
   let n = 0
-  for (let i = 0; i < path.length; i++) {
-    if (path[i] !== ":" && path[i] !== "*") {
+  for (const character of path) {
+    if (character !== ":" && character !== "*") {
       continue
     }
     n++
@@ -30,14 +30,14 @@ function countParams(path: string = "") {
 }
 
 class Node {
-  path: string
-  wildChild: boolean = false
-  type: typeof STATIC | typeof ROOT | typeof PARAM | typeof CATCH_ALL
-  maxParams: number = 0
-  indices: string = ""
-  children: Node[] = []
-  handle?: Multicolour$RouteHandler
-  priority: number = 0
+  public path: string
+  public wildChild: boolean = false
+  public type: typeof STATIC | typeof ROOT | typeof PARAM | typeof CATCH_ALL
+  public maxParams: number = 0
+  public indices: string = ""
+  public children: Node[] = []
+  public handle?: Multicolour$RouteHandler
+  public priority: number = 0
 
   /**
    *
@@ -57,8 +57,8 @@ class Node {
     maxParams: number = 0,
     indices: string = "",
     children: Node[] = [],
-    handle: Multicolour$RouteHandler | undefined = undefined,
-    priority: number = 0
+    handle?: Multicolour$RouteHandler,
+    priority: number = 0,
   ) {
     this.path = path
     this.wildChild = wildChild
@@ -73,7 +73,7 @@ class Node {
    *
    * @param {number} pos
    */
-  addPriority(pos: number) {
+  public addPriority(pos: number) {
     const children = this.children
     children[pos].priority++
     const prio = children[pos].priority
@@ -103,9 +103,9 @@ class Node {
    * @param {string} path
    * @param {Object} handle
    */
-  addRoute(path: string, handle: Multicolour$RouteHandler) {
+  public addRoute(path: string, handle: Multicolour$RouteHandler) {
     let n: Node = this
-    let fullPath = path
+    const fullPath = path
     n.priority++
     let numParams = countParams(path)
 
@@ -136,7 +136,7 @@ class Node {
             n.indices,
             n.children,
             n.handle,
-            n.priority - 1
+            n.priority - 1,
           )
 
           // Update maxParams (max of all children)
@@ -187,7 +187,7 @@ class Node {
               throw new Error(
                 `'${pathSeg}' in new path '${fullPath}' conflicts with existing wildcard '${
                   n.path
-                }' in existing prefix '${prefix}'`
+                }' in existing prefix '${prefix}'`,
               )
             }
           }
@@ -221,7 +221,7 @@ class Node {
               "",
               [],
               undefined,
-              0
+              0,
             )
             n.children.push(child)
             n.addPriority(n.indices.length - 1)
@@ -233,7 +233,7 @@ class Node {
           // Make node a (in-path leaf)
           if (n.handle !== null) {
             throw new Error(
-              "A handle is already registered for path '" + fullPath + "'"
+              "A handle is already registered for path '" + fullPath + "'",
             )
           }
           n.handle = handle
@@ -253,7 +253,7 @@ class Node {
    * @param {string} fullPath
    * @param {function[]} handle
    */
-  insertChild(numParams: number, path: string, fullPath: string, handle: Multicolour$RouteHandler) {
+  public insertChild(numParams: number, path: string, fullPath: string, handle: Multicolour$RouteHandler) {
     let n: Node = this
     let offset = 0 // Already handled chars of the path
 
@@ -273,7 +273,7 @@ class Node {
               path.slice(i) +
               "' in path '" +
               fullPath +
-              "'"
+              "'",
           )
         } else {
           end++
@@ -288,7 +288,7 @@ class Node {
             path.slice(i, end) +
             "' conflicts with existing children in path '" +
             fullPath +
-            "'"
+            "'",
         )
       }
 
@@ -297,7 +297,7 @@ class Node {
         throw new Error(
           "wildcards must be named with a non-empty name in path '" +
             fullPath +
-            "'"
+            "'",
         )
       }
 
@@ -326,7 +326,7 @@ class Node {
             "",
             [],
             undefined,
-            1
+            1,
           )
           n.children = [staticChild]
           n = staticChild
@@ -336,7 +336,7 @@ class Node {
           throw new Error(
             "catch-all routes are only allowed at the end of the path in path '" +
               fullPath +
-              "'"
+              "'",
           )
         }
 
@@ -344,7 +344,7 @@ class Node {
           throw new Error(
             "catch-all conflicts with existing handle for the path segment root in path '" +
               fullPath +
-              "'"
+              "'",
           )
         }
 
@@ -371,7 +371,7 @@ class Node {
           "",
           [],
           handle,
-          1
+          1,
         )
         n.children = [child]
 
@@ -387,8 +387,8 @@ class Node {
    *
    * @param {string} path
    */
-  search(path: string) {
-    let handle = undefined
+  public search(path: string) {
+    let handle
     const params: Multicolour$RouteParam[] = []
     let n: Node = this
 
@@ -409,9 +409,9 @@ class Node {
             }
 
             // Nothing found.
-            return { 
-              handle, 
-              params, 
+            return {
+              handle,
+              params,
             }
           }
 
@@ -441,7 +441,7 @@ class Node {
 
               // ... but we can't
               return {
-                handle, 
+                handle,
                 params,
               }
             }
@@ -460,7 +460,7 @@ class Node {
             })
 
             handle = n.handle
-              return {
+            return {
                 handle,
                 params,
               }
@@ -469,8 +469,7 @@ class Node {
             throw new Error("invalid node type")
           }
         }
-      } 
-      else if (path === n.path) {
+      } else if (path === n.path) {
         handle = n.handle
       }
 

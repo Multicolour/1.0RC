@@ -1,5 +1,5 @@
-import { IncomingMessage } from "./mocks/http"
 import MultipartNegotiator from "@lib/server/request-parsers/parsers/multipart"
+import { IncomingMessage } from "./mocks/http"
 
 const payload = `
 POST /test.html HTTP/1.1

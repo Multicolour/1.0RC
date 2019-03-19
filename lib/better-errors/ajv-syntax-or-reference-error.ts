@@ -5,13 +5,13 @@ const PrettyErrorWithStack = require("./pretty-error-with-stack")
 class AJVSyntaxOrReferenceError extends PrettyErrorWithStack {
   constructor(message: string, errors: ErrorObject[]) {
     super(message, "Schema syntax and relational checks")
-    
+
     this.validationErrors = errors
 
     Error.captureStackTrace(this, AJVSyntaxOrReferenceError)
   }
 
-  prettify() {
+  public prettify() {
     const messages = [
       "ERROR: " + this.messageAST.message,
       "\n",
@@ -24,7 +24,7 @@ class AJVSyntaxOrReferenceError extends PrettyErrorWithStack {
       "\n",
       "Filtered out " + this.messageAST.framesDropped + " frames from frameworks and Node internals from the stack.",
     ]
-    
+
     return messages.join("\n")
   }
 }

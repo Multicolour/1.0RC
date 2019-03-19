@@ -1,6 +1,8 @@
 import PrettyErrorWithStack from "./pretty-error-with-stack"
 
 class ClientRequestError extends PrettyErrorWithStack {
+  private errors: Error
+
   constructor(error: Error) {
     super("Client request error")
 
@@ -9,7 +11,7 @@ class ClientRequestError extends PrettyErrorWithStack {
     Error.captureStackTrace(this, ClientRequestError)
   }
 
-  prettify(): string {
+  public prettify(): string {
     return this.errors.message
   }
 }

@@ -1,5 +1,5 @@
-import bodyParser from "@lib/server/request-parsers/body-parser"
 import PrettyErrorWithStack from "@lib/better-errors/pretty-error-with-stack"
+import bodyParser from "@lib/server/request-parsers/body-parser"
 import { IncomingMessage } from "./mocks/http"
 
 {
@@ -15,7 +15,7 @@ import { IncomingMessage } from "./mocks/http"
     request.emit("end")
 
     parser
-      .then(value => expect(value).toEqual("1234"))
+      .then((value) => expect(value).toEqual("1234"))
   })
 
   test("Body parser max size", () => {
@@ -30,6 +30,6 @@ import { IncomingMessage } from "./mocks/http"
     request.emit("end")
 
     parser
-      .catch((error: PrettyErrorWithStack) => expect(error.messageAST.message).toEqual("Body size exceeded the maximum body size allowed on this server. Please try again with a smaller payload.")) //eslint-disable-line max-len
+      .catch((error: PrettyErrorWithStack) => expect(error.messageAST.message).toEqual("Body size exceeded the maximum body size allowed on this server. Please try again with a smaller payload.")) // eslint-disable-line max-len
   })
 }

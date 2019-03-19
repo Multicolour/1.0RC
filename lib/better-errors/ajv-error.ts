@@ -1,28 +1,28 @@
-import { 
-  ErrorObject,
-  RequiredParams,
-  LimitParams,
-  EnumParams,
+import {
   AdditionalPropertiesParams,
+  EnumParams,
+  ErrorObject,
+  LimitParams,
+  RequiredParams,
 } from "ajv"
 
 import PrettyErrorWithStack from "./pretty-error-with-stack"
 
 class AJVValidationError extends PrettyErrorWithStack {
-  object: string
-  validationErrors: ErrorObject[]
+  public object: string
+  public validationErrors: ErrorObject[]
 
   constructor(message: string, object: string, errors: ErrorObject[] = []) {
     super(message, `${object} objects validation against JSON schema.`)
 
     this.object = object
-    
+
     this.validationErrors = errors
 
     Error.captureStackTrace(this, AJVValidationError)
   }
 
-  getValidationErrorsFromAJVAST(): string[] {
+  public getValidationErrorsFromAJVAST(): string[] {
     return this.validationErrors.reduce((neatErrors: string[], currentError: ErrorObject): string[] => {
       switch (currentError.keyword) {
       case "required":
@@ -37,7 +37,7 @@ class AJVValidationError extends PrettyErrorWithStack {
 
         break
       case "additionalProperties":
-        // @TODO: Add common typo LUT for each property to offer some answers. 
+        // @TODO: Add common typo LUT for each property to offer some answers.
         neatErrors.push(`Data path ${this.object}${currentError.dataPath} shouldn't have the property "${(currentError.params as AdditionalPropertiesParams).additionalProperty}". Maybe you misspelled the propery? Check your service's configuration.`) // eslint-disable-line max-len
 
         break
@@ -51,7 +51,7 @@ class AJVValidationError extends PrettyErrorWithStack {
     }, [])
   }
 
-  prettify(): string {
+  public prettify(): string {
     const validationErrors = this.getValidationErrorsFromAJVAST()
 
     const messages = [
@@ -66,7 +66,7 @@ class AJVValidationError extends PrettyErrorWithStack {
       "\n",
       "Filtered out " + this.messageAST.framesDropped + " frames from frameworks and Node internals from the stack.",
     ]
-    
+
     return messages.join("\n")
   }
 }

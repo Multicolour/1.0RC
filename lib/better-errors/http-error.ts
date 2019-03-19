@@ -9,17 +9,17 @@ export interface HttpErrorMessage {
 }
 
 class HttpError extends PrettyErrorWithStack {
-  statusCode: number
+  public statusCode: number
 
   constructor(error: HttpErrorMessage) {
     super(error.error.message)
-    
+
     this.statusCode = error.statusCode
 
     Error.captureStackTrace(this, HttpError)
   }
 
-  prettify() {
+  public prettify() {
     return [
       this.statusCode,
       this.message,

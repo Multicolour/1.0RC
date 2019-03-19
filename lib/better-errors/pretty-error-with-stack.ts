@@ -4,18 +4,17 @@ import {
 } from "@mc-types/multicolour/error-ast"
 
 class PrettyErrorWithStack extends Error {
-  messageAST: Error$MessageAST
-  data: object
 
-  static ignoredPackages: RegExp
+  public static ignoredPackages: RegExp
+  public data: object
+  public messageAST: Error$MessageAST
 
   constructor(message: string, context: string | object = {}) {
     super(message)
-    
-    Error.captureStackTrace && Error.captureStackTrace(this, PrettyErrorWithStack)
+
+    Error.captureStackTrace(this, PrettyErrorWithStack)
 
     // Fix the prototype chain:
-    // @link https://github.com/Microsoft/TypeScript/wiki/Breaking-Changes#extending-built-ins-like-error-array-and-map-may-no-longer-work
     Object.setPrototypeOf(this, PrettyErrorWithStack.prototype)
     this.data = { context }
     this.name = this.constructor.name
@@ -27,12 +26,12 @@ class PrettyErrorWithStack extends Error {
    * Modify the target object and add the various
    * parsed parts of the stack frame so the object
    * can be parsed into a CLI string or a HTML page.
-   * 
-   * @param {string} part to parse 
+   *
+   * @param {string} part to parse
    * @param {Object} ast object to add parts to.
    * @FIXME: this should not be a side affect function with no return type. Come back and parse expected parts properly.
    */
-  parseStackFramePart(part: string, ast: Error$MessageFrameAST): void {
+  public parseStackFramePart(part: string, ast: Error$MessageFrameAST): void {
     const pathLineColumnRegex = /(?![()])(.*):(\d+):(\d+)/g
 
     if (pathLineColumnRegex.test(part)) {
@@ -51,15 +50,15 @@ class PrettyErrorWithStack extends Error {
    * Parse the frame of a stack trace to an
    * friendly object so that we can later turn
    * it into a pretty message that's also helpful.
-   * 
+   *
    * @param {string} frame to parse into AST.
    */
-  parseStackFrame(frame: string): Error$MessageFrameAST {
+  public parseStackFrame(frame: string): Error$MessageFrameAST {
     // Split the parts and remove the "at " that begins on each line.
     const partsRaw = frame
       .split(/\s+(?=[^\])}]*([[({]|$))/g)
       .slice(1)
-      .filter(part => !(new Set(["", "(", "["]).has(part)))
+      .filter((part) => !(new Set(["", "(", "["]).has(part)))
 
     const namedParts: Error$MessageFrameAST = {}
 
@@ -75,7 +74,7 @@ class PrettyErrorWithStack extends Error {
       }
     }
 
-    partsRaw.forEach(part => {
+    partsRaw.forEach((part) => {
       this.parseStackFramePart(part, namedParts)
     })
 
@@ -83,16 +82,16 @@ class PrettyErrorWithStack extends Error {
   }
 
   /**
-   * Parse the error object into a format we 
+   * Parse the error object into a format we
    * understand and can prettify.
-   * 
+   *
    * @return {Error$MessageAST} parsed error stack and message.
    */
-  getMessageAst(): Error$MessageAST {
+  public getMessageAst(): Error$MessageAST {
     const parsedStack = this.stack
       ? this.stack
         .split("\n")
-        .map(line => line.trim())
+        .map((line) => line.trim())
         .filter(Boolean)
         .slice(1)
         .map((frame: string) => this.parseStackFrame(frame))
@@ -113,16 +112,18 @@ class PrettyErrorWithStack extends Error {
     }
   }
 
-  getPrettyStack(): string[] {
+  public getPrettyStack(): string[] {
     return this.messageAST
       .stack.map((frame: Error$MessageFrameAST, index: number) => {
         let contextLanguage = "called by"
-      
-        if (index === 0)
-          contextLanguage = "error created at"
 
-        if (index === this.messageAST.stack.length - 1)
+        if (index === 0) {
+          contextLanguage = "error created at"
+        }
+
+        if (index === this.messageAST.stack.length - 1) {
           contextLanguage = "starting at"
+        }
 
         return [
           "\n",
@@ -135,14 +136,14 @@ class PrettyErrorWithStack extends Error {
       })
   }
 
-  prettify(): string {
+  public prettify(): string {
     const messages = [
       "ERROR: " + this.messageAST.message,
       this.getPrettyStack(),
       "\n",
       "Filtered out " + this.messageAST.framesDropped + " frames from frameworks and Node internals from the stack.",
     ]
-    
+
     return messages.join("\n")
   }
 }
@@ -150,9 +151,10 @@ class PrettyErrorWithStack extends Error {
 /**
  * Ommit lines in the stack trace that match
  * these patterns. Can be string or a RegExp.
- * 
+ *
  * @type {RegExp}
  */
-PrettyErrorWithStack.ignoredPackages = /(^internal\/process\/|module.js|flow-node|bootstrap_node.js|node_modules\/flow-remove-types|next_tick.js|node_modules\/jest-jasmine2|^events.js$|internal\/(bootstrap|modules)\/.*$)/ // eslint-disable-line max-len
+// tslint:disable-next-line:max-line-length
+PrettyErrorWithStack.ignoredPackages = /(^internal\/process\/|module.js|flow-node|bootstrap_node.js|node_modules\/flow-remove-types|next_tick.js|node_modules\/jest-jasmine2|^events.js$|internal\/(bootstrap|modules)\/.*$)/
 
 export default PrettyErrorWithStack

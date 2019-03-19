@@ -1,17 +1,15 @@
-import type { IncomingMessage } from "http"
-import type { 
-  Multicolour$RouteVerbs,
+import {
   Multicolour$RouteSpecificsConfig,
-} from "@flow/multicolour/route.flow"
+  Multicolour$RouteVerbs,
+} from "@mc-types/multicolour/route"
+import { IncomingMessage } from "http"
 
 /**
  * Each attribute has to have a type, here are the
  * types that Multicolour supports at the moment.
  * @type {string}
  */
-export type Multicolour$ModelAttributeType = 
-  // Integers/floats/numbers.
-  "smallInt" // signed
+export type Multicolour$ModelAttributeType = "smallInt" // signed
   | "mediumInt" // signed
   | "integer" // signed
   | "bigInt" // signed
@@ -21,7 +19,7 @@ export type Multicolour$ModelAttributeType =
   | "bit"
 
   | "boolean"
-  
+
   // dates.
   | "date"
   | "time"
@@ -39,7 +37,7 @@ export type Multicolour$ModelAttributeType =
  * and each column can be configured for
  * requirement, docs and etcetera.
  */
-export type Multicolour$ModelAttribute = {
+export interface Multicolour$ModelAttribute {
   // The type of the database column.
   type: Multicolour$ModelAttributeType,
 
@@ -55,12 +53,14 @@ export type Multicolour$ModelAttribute = {
   tags?: string[],
 }
 
+export type Multicolour$ConstraintTargetCallback = (request: IncomingMessage) => Promise<any>
+
 export type Multicolour$ConstraintTarget = string
   | number
   | boolean
-  | (request: IncomingMessage) => Promise<string | number | boolean>
+  | Multicolour$ConstraintTargetCallback
 
-export type Multicolour$ConstraintDefinition = {
+export interface Multicolour$ConstraintDefinition {
   // The verbs this constraint has an affect on.
   verbs: Multicolour$RouteVerbs[],
 
@@ -68,23 +68,29 @@ export type Multicolour$ConstraintDefinition = {
   constraint: Multicolour$ConstraintTarget,
 }
 
-export type Multicolour$ModelRouteConfig = {
-  [verb: Multicolour$RouteVerbs]: Multicolour$RouteSpecificsConfig,
+export interface Multicolour$ModelRouteConfig {
+  [Multicolour$RouteVerbs.GET]: Multicolour$RouteSpecificsConfig,
+  [Multicolour$RouteVerbs.POST]: Multicolour$RouteSpecificsConfig,
+  [Multicolour$RouteVerbs.PUT]: Multicolour$RouteSpecificsConfig,
+  [Multicolour$RouteVerbs.PATCH]: Multicolour$RouteSpecificsConfig,
+  [Multicolour$RouteVerbs.DELETE]: Multicolour$RouteSpecificsConfig,
+  [Multicolour$RouteVerbs.HEAD]: Multicolour$RouteSpecificsConfig,
+  [Multicolour$RouteVerbs.OPTIONS]: Multicolour$RouteSpecificsConfig,
 }
 
-export type Multicolour$Model<ModelAttributes = Object> = {
-  columns: {  
+export interface Multicolour$Model<ModelAttributes = object> {
+  columns: {
     [attribute: string]: Multicolour$ModelAttribute,
   },
   services?: string[],
   database?: string,
   routeConfig?: Multicolour$ModelRouteConfig,
   constraints?: {
-    [column: string]: Multicolour$ConstraintDefinition
+    [column: string]: Multicolour$ConstraintDefinition,
   },
-  toJSON?: (row: ModelAttributes) => Promise<{ ...ModelAttributes }>,
+  toJSON?: (row: ModelAttributes) => Promise<ModelAttributes> ,
 }
 
-export type Multicolour$ModelsObject = {
-  [modelName: string]: Multicolour$Model<*>,
+export interface Multicolour$ModelsObject {
+  [modelName: string]: Multicolour$Model<any>,
 }

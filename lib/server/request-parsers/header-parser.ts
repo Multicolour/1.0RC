@@ -1,10 +1,10 @@
-import { IncomingMessage } from "http"
 import {
-  Multicolour$ReplyContext,
-  Multicolour$ContentTypeHeader,
-  Multicolour$AcceptHeaderValue,
   Multicolour$AcceptHeader,
+  Multicolour$AcceptHeaderValue,
+  Multicolour$ContentTypeHeader,
+  Multicolour$ReplyContext,
 } from "@mc-types/multicolour/reply"
+import { IncomingMessage } from "http"
 
 import HttpError from "@lib/better-errors/http-error"
 
@@ -21,21 +21,23 @@ function parseContentTypeHeader(header: string = ""): Multicolour$ContentTypeHea
     .reduce((out: Multicolour$ContentTypeHeader, currentDirectiveKV) => {
       const [key, value] = currentDirectiveKV.split("=")
 
-      if (key.length > 100)
+      if (key.length > 100) {
         throw new HttpError({
           statusCode: 400,
           error: {
             message: `The key "${JSON.stringify(key)}" exceeds 100 characters in length.`,
           },
         })
+      }
 
-      if (value.length > 255)
+      if (value.length > 255) {
         throw new HttpError({
           statusCode: 400,
           error: {
             message: `The value for the "${key}" directive in the content-type header exceeds 255 characters.`,
           },
         })
+      }
 
       // We want to ignore unknown directives to prevent as many arbitrary memory attacks by fillong them up.
       switch (key) {
@@ -60,8 +62,9 @@ function parseAcceptHeader(header: string = ""): Multicolour$AcceptHeader {
 
       let quality = 1
 
-      if (qualityUnparsed)
+      if (qualityUnparsed) {
         quality = Number(qualityUnparsed.split("=")[1])
+      }
 
       return {
         contentType,
@@ -71,22 +74,25 @@ function parseAcceptHeader(header: string = ""): Multicolour$AcceptHeader {
 
   return values.length === 1
     ? values[0]
-    : values.sort((left: Multicolour$AcceptHeaderValue, right: Multicolour$AcceptHeaderValue) => 
-      right.quality - left.quality
+    : values.sort((left: Multicolour$AcceptHeaderValue, right: Multicolour$AcceptHeaderValue) =>
+      right.quality - left.quality,
     )
 }
 
 function HeaderParser(request: IncomingMessage, context: Multicolour$ReplyContext = { responseHeaders: {} }) {
-  if (!request) 
+  if (!request) {
     throw new HttpError({
       statusCode: 500,
       error: {
-        message: "The request handler tried to parse the request headers but failed to pass the request. This is a developer problem. Please contact the owner of this API.", // eslint-disable-line max-len
+        // tslint:disable-next-line:max-line-length
+        message: "The request handler tried to parse the request headers but failed to pass the request. This is a developer problem. Please contact the owner of this API.",
       },
     })
+  }
 
-  if (!request.headers)
+  if (!request.headers) {
     return {}
+  }
 
   const accept = parseAcceptHeader(request.headers.accept)
   const contentType = parseContentTypeHeader(request.headers["content-type"])

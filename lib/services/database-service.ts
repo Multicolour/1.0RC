@@ -1,14 +1,10 @@
-import { Multicolour$ModelObject } from "../../types/multicolour/model.flow"
+import { Multicolour$ModelsObject } from "@mc-types/multicolour/model"
 
 import Database from "../database"
 
 class DatabaseService {
-  models: Multicolour$ModelObject 
-  connection: Database
-
-  constructor() {
-
-  }
+  public models: Multicolour$ModelsObject = {}
+  public connection?: Database
 }
 
 export default DatabaseService

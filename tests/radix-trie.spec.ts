@@ -1,5 +1,5 @@
 /**
- * This code is MIT licensed and belongs to this repo. 
+ * This code is MIT licensed and belongs to this repo.
  * https://github.com/steambap/koa-tree-router/blob/master/test/tree-spec.js
  * Modified for purpose, structural and for coverage.
  */
@@ -24,7 +24,7 @@ let routes = [
   "/ab/*wildcard",
 ]
 
-routes.forEach(route => {
+routes.forEach((route) => {
   tree.addRoute(route, noOp)
 })
 
@@ -71,13 +71,12 @@ const testData = [
   },
 ]
 
-testData.forEach(data => {
+testData.forEach((data) => {
   test(data.route, () => {
     const handle = tree.search(data.route)
     if (data.found) {
       expect(handle).toBeTruthy()
-    } 
-    else {
+    } else {
       expect(handle.handle).toBeFalsy()
     }
   })
@@ -101,7 +100,7 @@ routes = [
   "/info/:user/project/:project",
 ]
 
-routes.forEach(route => {
+routes.forEach((route) => {
   tree.addRoute(route, noOp)
 })
 
@@ -162,7 +161,7 @@ const foundData = [
   },
 ]
 
-foundData.forEach(data => {
+foundData.forEach((data) => {
   test(data.route, () => {
     const route = tree.search(data.route)
     expect(route).toBeTruthy()
@@ -181,7 +180,7 @@ const noHandlerData = [
   },
 ]
 
-noHandlerData.forEach(data => {
+noHandlerData.forEach((data) => {
   test(data.route, () => {
     const route = tree.search(data.route)
     expect(route.handle).toBeFalsy()

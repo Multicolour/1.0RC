@@ -7,18 +7,19 @@ async function JsonParser(args: Multicolour$RequestParserArgs): Promise<object> 
   .then((json: string) => {
     let outwardBody
 
-    if (json[0] !== "{" && json[0] !== "[")
+    if (json[0] !== "{" && json[0] !== "[") {
       throw new HttpError({
         statusCode: 400,
         error: {
+          // tslint:disable-next-line:max-line-length
           message: `Your JSON isn't structured correctly, the issue is at \nline: 0 \ncolumn: 0\n\nUnexpected "${json[0]}"`,
         },
       })
+    }
 
     try {
       outwardBody = JSON.parse(json)
-    }
-    catch (error) {
+    } catch (error) {
       throw new HttpError({
         statusCode: 400,
         error: {

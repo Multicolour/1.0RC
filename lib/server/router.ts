@@ -1,10 +1,10 @@
-import { 
+import {
   Multicolour$Route,
   Multicolour$RouteVerbs,
 } from "@mc-types/multicolour/route"
 
-import RadixTrie from "./radix-trie"
 import RouterError from "@lib/better-errors/router-error"
+import RadixTrie from "./radix-trie"
 
 export interface Tries {
   [Multicolour$RouteVerbs.GET]: RadixTrie,
@@ -17,7 +17,7 @@ export interface Tries {
 }
 
 class Router {
-  tries: Tries = {
+  public tries: Tries = {
     [Multicolour$RouteVerbs.GET]: new RadixTrie(),
     [Multicolour$RouteVerbs.POST]: new RadixTrie(),
     [Multicolour$RouteVerbs.PATCH]: new RadixTrie(),
@@ -27,45 +27,44 @@ class Router {
     [Multicolour$RouteVerbs.OPTIONS]: new RadixTrie(),
   }
 
-  on(method: Multicolour$RouteVerbs, route: Multicolour$Route) {
+  public on(method: Multicolour$RouteVerbs, route: Multicolour$Route) {
     try {
       this.tries[method].addRoute(route.path, route.handler)
-    }
-    catch (error) {
+    } catch (error) {
       throw new RouterError(error)
     }
     return this
   }
 
-  get(route: Multicolour$Route) {
+  public get(route: Multicolour$Route) {
     return this.on(Multicolour$RouteVerbs.GET, route)
   }
 
-  post(route: Multicolour$Route) {
+  public post(route: Multicolour$Route) {
     return this.on(Multicolour$RouteVerbs.POST, route)
   }
-  
-  patch(route: Multicolour$Route) {
+
+  public patch(route: Multicolour$Route) {
     return this.on(Multicolour$RouteVerbs.PATCH, route)
   }
 
-  put(route: Multicolour$Route) {
+  public put(route: Multicolour$Route) {
     return this.on(Multicolour$RouteVerbs.PUT, route)
   }
 
-  delete(route: Multicolour$Route) {
+  public delete(route: Multicolour$Route) {
     return this.on(Multicolour$RouteVerbs.DELETE, route)
   }
 
-  head(route: Multicolour$Route) {
+  public head(route: Multicolour$Route) {
     return this.on(Multicolour$RouteVerbs.HEAD, route)
   }
 
-  options(route: Multicolour$Route) {
+  public options(route: Multicolour$Route) {
     return this.on(Multicolour$RouteVerbs.OPTIONS, route)
   }
 
-  match(method: Multicolour$RouteVerbs, path: string) {
+  public match(method: Multicolour$RouteVerbs, path: string) {
     return this.tries[method].search(path)
   }
 }

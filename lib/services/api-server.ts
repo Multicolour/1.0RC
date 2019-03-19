@@ -1,27 +1,26 @@
 import {
-  Multicolour$SingleDatabaseConnectionConfig,
   Multicolour$APIServiceConfig,
-} from "../../types/multicolour/config.flow"
+  Multicolour$DatabaseServiceConfig,
+} from "@mc-types/multicolour/config"
 
 import MulticolourServer from "../server/server"
-import * as Promise from "bluebird"
 
 class APIServer {
-  server: MulticolourServer
+  public server: MulticolourServer
 
-  constructor(service: Multicolour$SingleDatabaseConnectionConfig | Multicolour$APIServiceConfig) {
+  constructor(service: Multicolour$DatabaseServiceConfig | Multicolour$APIServiceConfig) {
     this.server = new MulticolourServer(service)
 
     this.start()
   }
 
-  start() {
+  public start() {
     return Promise.resolve(
-      this.server.listenToHTTP()
+      this.server.listenToHTTP(),
     )
   }
 
-  stop() {
+  public stop() {
     return this.server.gracefulStop()
   }
 }

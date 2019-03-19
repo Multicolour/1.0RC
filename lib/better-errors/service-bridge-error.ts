@@ -3,18 +3,21 @@ import { Multicolour$ServiceDeclarationError  } from "@mc-types/multicolour/serv
 import PrettyErrorWithStack from "./pretty-error-with-stack"
 
 class ServiceBridgeError extends PrettyErrorWithStack {
-  validationErrors: Multicolour$ServiceDeclarationError[] = []
+  private validationErrors: Multicolour$ServiceDeclarationError[] = []
 
   constructor(message: string, errors: Multicolour$ServiceDeclarationError[] = []) {
     super(message, "Service declaration error")
-    
+
     this.validationErrors = errors
 
     Error.captureStackTrace(this, ServiceBridgeError)
   }
 
-  getErrors(): string[] {
-    return this.validationErrors.reduce((neatErrors: string[], currentError: Multicolour$ServiceDeclarationError): string[] => {
+  public getErrors(): string[] {
+    return this.validationErrors.reduce((
+      neatErrors: string[],
+      currentError: Multicolour$ServiceDeclarationError,
+    ): string[] => {
       switch (currentError.type) {
       case "bridge-on-child-thread":
         neatErrors.push(currentError.message)
@@ -28,7 +31,7 @@ class ServiceBridgeError extends PrettyErrorWithStack {
     }, [])
   }
 
-  prettify(): string {
+  public prettify(): string {
     const validationErrors = this.getErrors()
 
     const messages = [
@@ -38,12 +41,13 @@ class ServiceBridgeError extends PrettyErrorWithStack {
       ...validationErrors.map((error: string, index: number) => `[${index}] * ${error}`),
       "\n",
       "Validation errors in your config are preventing Multicolour from starting up safely.",
-      "Please review the error above, frame stack below and perhaps visit the documentation https://getmulticolour.com/docs/1.0/config to help fix this issue.", // eslint-disable-line max-len
+      // tslint:disable-next-line:max-line-length
+      "Please review the error above, frame stack below and perhaps visit the documentation https://getmulticolour.com/docs/1.0/config to help fix this issue.",
       this.getPrettyStack(),
       "\n",
       "Filtered out " + this.messageAST.framesDropped + " frames from frameworks and Node internals from the stack.",
     ]
-    
+
     return messages.join("\n")
   }
 }

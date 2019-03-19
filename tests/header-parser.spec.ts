@@ -1,9 +1,9 @@
+import HttpError from "@lib/better-errors/http-error"
 import {
   HeaderParser,
   parseAcceptHeader,
   parseContentTypeHeader,
 } from "@lib/server/request-parsers/header-parser"
-import HttpError from "@lib/better-errors/http-error"
 import { IncomingMessage } from "./mocks/http"
 
 const goodAcceptHeaders = [
@@ -92,7 +92,7 @@ const goodContentTypeHeaders = [
 ]
 
 test("Header parser: Accept headers", () => {
-  goodAcceptHeaders.forEach(header => {
+  goodAcceptHeaders.forEach((header) => {
     const parsedHeaders = parseAcceptHeader(header.contentType)
 
     expect(parsedHeaders).toEqual(header.expected)
@@ -100,7 +100,7 @@ test("Header parser: Accept headers", () => {
 })
 
 test("Header parser: Content Type headers", () => {
-  goodContentTypeHeaders.forEach(header => {
+  goodContentTypeHeaders.forEach((header) => {
     const parsedHeaders = parseContentTypeHeader(header.contentType)
 
     expect(parsedHeaders).toEqual(header.expected)
@@ -109,14 +109,14 @@ test("Header parser: Content Type headers", () => {
 })
 
 test("Bad content type headers", () => {
-  const badDirectiveContentType = () => 
+  const badDirectiveContentType = () =>
     parseContentTypeHeader("application/json; --boundary=" + "1".repeat(256))
 
   expect(badDirectiveContentType).toThrow(HttpError)
 
   const badDirectiveContentTypeKey = () =>
     parseContentTypeHeader("application/json; " + "a".repeat(101) + "=1")
-  
+
   expect(badDirectiveContentTypeKey).toThrow(HttpError)
 })
 
@@ -124,13 +124,13 @@ test("Header parser: HeaderParser", () => {
   const parsedHeaders = HeaderParser(new IncomingMessage({
     url: "/test",
     headers: {
-      accept: "application/json",
+      "accept": "application/json",
       "content-type": "application/json",
     },
   }))
 
   expect(parsedHeaders).toEqual({
-    accept: {
+    "accept": {
       contentType: "application/json",
       quality: 1,
     },

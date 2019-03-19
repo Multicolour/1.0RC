@@ -1,18 +1,16 @@
 import configValidator from "@lib/config"
 
-import configGood from "./content/config-good"
 import configBadMinProperties from "./content/config-bad/min-properties"
+import configGood from "./content/config-good"
 
 test("Config validates and throws expected errors", () => {
   let error = false
   try {
     configValidator(configGood)
-  }
-  catch(configError) {
+  } catch (configError) {
     error = true
     console.log("URR", configError)
-  }
-  finally {
+  } finally {
     expect(error).toEqual(false)
   }
 
@@ -20,11 +18,9 @@ test("Config validates and throws expected errors", () => {
   error = false
   try {
     configValidator(configBadMinProperties)
-  }
-  catch(configError) {
+  } catch (configError) {
     error = configError.prettify()
-  }
-  finally {
+  } finally {
     expect(typeof error).toEqual("string")
     expect(error).toContain("Property \"config.services\" requires at least '1' defined properties")
   }

@@ -2,7 +2,7 @@ import { IncomingMessage } from "./mocks/http"
 
 import JsonParser from "@lib/server/request-parsers/parsers/json"
 
-const badPayloads = [ 
+const badPayloads = [
   require("./content/payloads/bad/json/bad-entry-char"),
   require("./content/payloads/bad/json/syntax-error"),
 ]
@@ -12,13 +12,13 @@ const goodPayloads = [
   require("./content/payloads/good/json/object"),
 ]
 
-test("JSON body parser with known bad payloads", async() => {
-  const parsers = badPayloads.map(payload => {
+test("JSON body parser with known bad payloads", async () => {
+  const parsers = badPayloads.map((payload) => {
     const request = new IncomingMessage({
-      url: "test"
+      url: "test",
     })
     const parser = JsonParser({ request })
-    
+
     request.emit("data", payload)
     request.emit("end")
 
@@ -29,13 +29,13 @@ test("JSON body parser with known bad payloads", async() => {
   console.log(await Promise.all(parsers))
 
   const statusCodes = await Promise.all(parsers)
-  expect(statusCodes.every(code => code === 400)).toBe(true)
+  expect(statusCodes.every((code) => code === 400)).toBe(true)
 })
 
-test("JSON body parser with known good payloads", async() => {
-  const parsers = goodPayloads.map(payload => {
+test("JSON body parser with known good payloads", async () => {
+  const parsers = goodPayloads.map((payload) => {
     const request = new IncomingMessage({
-      url: "/test"
+      url: "/test",
     })
     const parser = JsonParser({ request })
 

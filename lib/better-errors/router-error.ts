@@ -1,6 +1,8 @@
 import PrettyErrorWithStack from "./pretty-error-with-stack"
 
 class RouterError extends PrettyErrorWithStack {
+  private errors: Error
+
   constructor(error: Error) {
     super("Routing error")
 
@@ -9,7 +11,7 @@ class RouterError extends PrettyErrorWithStack {
     Error.captureStackTrace(this, RouterError)
   }
 
-  prettify(): string {
+  public prettify(): string {
     return this.errors.message
   }
 }

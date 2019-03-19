@@ -63,12 +63,12 @@ export interface Multicolour$APIServiceSecurityConfig {
 
         // @TODO remove this if its not needed.
         secure?: boolean,
-      }
+      },
     },
   },
 
   /**
-   * You can specify only certain origins for requests 
+   * You can specify only certain origins for requests
    * by adding your FQDN/URIs here to be validated.
    */
   cors?: {
@@ -76,8 +76,8 @@ export interface Multicolour$APIServiceSecurityConfig {
   },
 }
 
-export interface Multicolour$DatabaseServiceConfig 
-extends Multicolour$ServiceBaseConfig {
+export interface Multicolour$DatabaseServiceConfig
+  extends Multicolour$ServiceBaseConfig {
   /**
    * The adapter this database connection will use.
    */
@@ -96,7 +96,7 @@ extends Multicolour$ServiceBaseConfig {
   host?: string,
 
   /**
-   * The port this database is on. Will default to 
+   * The port this database is on. Will default to
    * whatever the default is for the technology,
    * I.E
    * pg: 5432
@@ -120,7 +120,8 @@ extends Multicolour$ServiceBaseConfig {
   password?: string,
 }
 
-export interface Multicolour$APIServiceConfig extends Multicolour$ServiceBaseConfig {
+export interface Multicolour$APIServiceConfig
+  extends Multicolour$ServiceBaseConfig {
   /**
    * The hostname/interface this API service will serve from.
    * Note: localhost will only listen on certain devices and
@@ -132,10 +133,9 @@ export interface Multicolour$APIServiceConfig extends Multicolour$ServiceBaseCon
 
   /**
    * The port on the `host` to listen for requests on.
-   * If no port supplied then; starting at 1811, ports will increment 
+   * If no port supplied then; starting at 1811, ports will increment
    * based on the number of services.
    *
-   * @TJS-type integer
    * @default 1811
    */
   port?: number,
@@ -150,11 +150,19 @@ export interface Multicolour$APIServiceConfig extends Multicolour$ServiceBaseCon
   /**
    * The security config this API service requests.
    */
-    security?: Multicolour$APIServiceSecurityConfig,
+  security?: Multicolour$APIServiceSecurityConfig,
+
+  /**
+   * Whether or not to use the https module and
+   * not the http module of Node to create a service.
+   * Setting this to true requires you to also set
+   * `secureServerOptions` config.
+   */
+  secure?: boolean,
 
   /**
    * All API services in production should
-   * run a secure server, this is where you 
+   * run a secure server, this is where you
    * configure the NodeJS https module.
    */
   secureServerOptions?: https.ServerOptions,
@@ -187,8 +195,8 @@ export interface Multicolour$Config {
 
   /**
    * When an uncaught error occurs or the service
-   * unexpectedly stops the restart policy is 
-   * checked. 
+   * unexpectedly stops the restart policy is
+   * checked.
    *
    * Unless stopped will restart services for any reason if they exit.
    * on-error will restart your service (10 times in succession) if it exits with a return status less than 0.
