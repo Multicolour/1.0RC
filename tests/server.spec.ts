@@ -1,10 +1,13 @@
+import HttpError from "@lib/better-errors/http-error"
+import MulticolourServer from "@lib/server/server"
+import {
+  Multicolour$Route,
+  Multicolour$RouteVerbs,
+} from "@mc-types/multicolour/route"
 import {
   IncomingMessage,
   ServerResponse,
 } from "./mocks/http"
-
-import HttpError from "@lib/better-errors/http-error"
-import MulticolourServer from "@lib/server/server"
 
 const testableRoutes = [
   {
@@ -12,12 +15,11 @@ const testableRoutes = [
       accept: "text/plain",
     },
     route: {
-      method: "get",
+      method: Multicolour$RouteVerbs.GET,
       path: "/text",
       handler: async () => "Text",
     },
     expected: (reply: string, response: ServerResponse) => {
-      console.log(response)
       expect(reply).toBe("Text")
       expect(response.headers["content-type"]).toBe("text/plain")
     },
@@ -27,7 +29,7 @@ const testableRoutes = [
       accept: "application/json",
     },
     route: {
-      method: "get",
+      method: Multicolour$RouteVerbs.GET,
       path: "/json",
       handler: async () => ({ json: true }),
     },
@@ -41,7 +43,7 @@ const testableRoutes = [
       accept: "application/json",
     },
     route: {
-      method: "get",
+      method: Multicolour$RouteVerbs.GET,
       path: "/throws-http-error",
       handler: async () => {
         throw new HttpError({
@@ -72,22 +74,22 @@ test("Multicolour server routing", async () => {
 
   for await (const testableRoute of testableRoutes) {
     server.route(testableRoute.route)
-    const response = new ServerResponse()
+    const testableResponse = new ServerResponse()
     const request = new IncomingMessage({
       url: testableRoute.route.path,
       method: testableRoute.route.method.toUpperCase(),
       headers: testableRoute.headers,
     })
 
-    const reply = await server.onRequest(request, response)
+    const reply = await server.onRequest(request, testableResponse)
 
-    await testableRoute.expected(reply, response)
+    await testableRoute.expected(reply, testableResponse)
   }
 
   const response = new ServerResponse()
   server.onRequest(new IncomingMessage({
     url: "/nope",
-    method: "GET",
+    method: Multicolour$RouteVerbs.GET,
   }), response)
     .then(() => {
       expect(response.statusCode).toBe(404)
@@ -102,7 +104,9 @@ test("Server content negotiator", () => {
   const JsonNegotiator = require("../lib/server/request-parsers/parsers/json")
   const classNegotiator = class {
     static get negotiationAccept() { return "text/html" }
-    public async parseBody() {}
+    public async parseBody() {
+      return Promise.resolve()
+    }
   }
 
   server.addContentNegotiator(JsonNegotiator)

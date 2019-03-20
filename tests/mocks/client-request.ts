@@ -1,3 +1,7 @@
+import {
+  Multicolour$ParsedBody,
+  Multicolour$ParsedHeaders,
+} from "@lib/server/incoming-message"
 import EventEmitter from "events"
 import { IncomingMessage as NodeIncomingMessage } from "http"
 import { Socket } from "net"
@@ -14,6 +18,14 @@ class IncomingMessage
   public url: string
   public method?: string  = "GET"
   public body?: Buffer
+  public parsedHeaders: Multicolour$ParsedHeaders = {
+    accept: {
+      contentType: "application/json",
+      quality: 1,
+    },
+  }
+  public parsedBody: Multicolour$ParsedBody = {}
+
 
   constructor(options: Options) {
     super(new Socket({}))
