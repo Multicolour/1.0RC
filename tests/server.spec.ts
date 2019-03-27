@@ -1,13 +1,9 @@
 import HttpError from "@lib/better-errors/http-error"
 import MulticolourServer from "@lib/server/server"
-import {
-  Multicolour$Route,
-  Multicolour$RouteVerbs,
-} from "@mc-types/multicolour/route"
-import {
-  IncomingMessage,
-  ServerResponse,
-} from "./mocks/http"
+import { Multicolour$RouteVerbs } from "@mc-types/multicolour/route"
+import { ServerResponse } from "http"
+import { IncomingMessage } from "./mocks/http"
+
 
 const testableRoutes = [
   {
@@ -19,9 +15,9 @@ const testableRoutes = [
       path: "/text",
       handler: async () => "Text",
     },
-    expected: (reply: string, response: ServerResponse) => {
+    expected: (reply: any, response: ServerResponse) => {
       expect(reply).toBe("Text")
-      expect(response.headers["content-type"]).toBe("text/plain")
+      expect(response.getHeader("content-type")).toBe("text/plain")
     },
   },
   {
@@ -33,9 +29,9 @@ const testableRoutes = [
       path: "/json",
       handler: async () => ({ json: true }),
     },
-    expected: (reply: object, response: ServerResponse) => {
+    expected: (reply: any, response: ServerResponse) => {
       expect(reply).toEqual({ json: true })
-      expect(response.headers["content-type"]).toBe("application/json")
+      expect(response.getHeader("content-type")).toBe("application/json")
     },
   },
   {
@@ -54,7 +50,7 @@ const testableRoutes = [
         })
       },
     },
-    expected: (reply: object, response: ServerResponse) => {
+    expected: (reply: any, response: ServerResponse) => {
       expect(reply).toEqual({
         statusCode: 418,
         error: {
@@ -62,7 +58,7 @@ const testableRoutes = [
         },
       })
       expect(response.statusCode).toBe(418)
-      expect(response.headers["content-type"]).toBe("application/json")
+      expect(response.getHeader("content-type")).toBe("application/json")
     },
   },
 ]
@@ -74,23 +70,30 @@ test("Multicolour server routing", async () => {
 
   for await (const testableRoute of testableRoutes) {
     server.route(testableRoute.route)
-    const testableResponse = new ServerResponse()
     const request = new IncomingMessage({
       url: testableRoute.route.path,
       method: testableRoute.route.method.toUpperCase(),
       headers: testableRoute.headers,
     })
+    const testableResponse = new ServerResponse(request)
 
     const reply = await server.onRequest(request, testableResponse)
 
     await testableRoute.expected(reply, testableResponse)
   }
 
-  const response = new ServerResponse()
-  server.onRequest(new IncomingMessage({
+})
+
+test("404 for unknown route", () => {
+  const server = new MulticolourServer({
+    type: "api",
+  })
+  const request = new IncomingMessage({
     url: "/nope",
     method: Multicolour$RouteVerbs.GET,
-  }), response)
+  })
+  const response = new ServerResponse(request)
+  server.onRequest(request, response)
     .then(() => {
       expect(response.statusCode).toBe(404)
       expect(response.statusCode).not.toBe(500)

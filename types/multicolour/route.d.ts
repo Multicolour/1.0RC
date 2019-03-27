@@ -38,7 +38,7 @@ export type Multicolour$RouteHandler = (request?: IncomingMessage, response?: Se
 export interface Multicolour$Route {
   path: string,
   handler: Multicolour$RouteHandler,
-  method?: Multicolour$RouteVerbs,
+  method: Multicolour$RouteVerbs,
   config?: Multicolour$RouteSpecificsConfig,
   validate?: Multicolour$RouteValidations,
 }

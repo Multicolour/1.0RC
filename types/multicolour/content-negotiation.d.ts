@@ -1,7 +1,8 @@
-export class Multicolour$ContentNegotiatorClass<NegotiatorReturnType> {
-  parseBody: (body: string) => Promise<NegotiatorReturnType>;
+export class Multicolour$ContentNegotiatorClass {
+  public parseBody: (body: string) => Promise<any>
 }
 
-export function Multicolour$ContentNegotiatorFunction<NegotiatorReturnType>(body: string): Promise<NegotiatorReturnType>
+export function Multicolour$ContentNegotiatorFunction(body: string): Promise<any>
 
-export type Multicolour$ContentNegotiator<NegotiatorReturnType> = Multicolour$ContentNegotiatorClass<NegotiatorReturnType> | Multicolour$ContentNegotiatorFunction<NegotiatorReturnType>
+export type Multicolour$ContentNegotiator = Multicolour$ContentNegotiatorClass
+  | Multicolour$ContentNegotiatorFunction

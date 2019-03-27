@@ -1,6 +1,6 @@
+import ServerError from "@lib/better-errors/server-error"
 import { Multicolour$APIServiceConfig } from "@mc-types/multicolour/config"
 import { Multicolour$ContentNegotiator } from "@mc-types/multicolour/content-negotiation"
-import { Multicolour$IncomingMessage } from "@mc-types/multicolour/incoming-message"
 import { Multicolour$ReplyContext } from "@mc-types/multicolour/reply"
 import { Multicolour$Route } from "@mc-types/multicolour/route"
 import Debug from "debug"
@@ -13,6 +13,7 @@ import {
   createServer as createSecureServer,
   Server as SecureServer,
 } from "https"
+import { Multicolour$IncomingMessage } from "./incoming-message"
 
 import { HeaderParser } from "./request-parsers/header-parser"
 import JsonNegotiator from "./request-parsers/parsers/json"
@@ -24,9 +25,9 @@ const debug = Debug("multicolour:server")
 class MulticolourServer {
   public config: Multicolour$APIServiceConfig
   public server: SecureServer | InsecureServer
-  public router: Router
+  public router: Router = new Router()
   public negotiators: {
-    [acceptHeaderValue: string]: Multicolour$ContentNegotiator<string>,
+    [acceptHeaderValue: string]: Multicolour$ContentNegotiator,
   }
 
   /**
@@ -40,12 +41,13 @@ class MulticolourServer {
     if (!this.config.secure) {
       debug("Creating insecure server because this.config.secure either isn't set or is set to a falsey value.")
       this.server = createInsecureServer(this.onRequest.bind(this))
+    } else if (this.config.secure && !this.config.secureServerOptions) {
+      // tslint:disable-next-line:max-line-length
+      throw new ServerError("You have requested a secure server but have not supplied a secure server config.\n\nPlease see the Node documentation on how to configure a secure server using your certificates.\n\nhttps://nodejs.org/api/https.html#https_https_createserver_options_requestlistener")
     } else {
       debug("Creating a secure server with %O.", this.config.secureServerOptions)
       this.server = createSecureServer(this.config.secureServerOptions, this.onRequest.bind(this))
     }
-
-    this.router = new Router()
 
     this
       .addContentNegotiator(JsonNegotiator)
@@ -64,7 +66,7 @@ class MulticolourServer {
     return error
   }
 
-  public async onRequest(request: Multicolour$IncomingMessage, response: ServerResponse): Promise<ServerResponse> {
+  public onRequest(request: Multicolour$IncomingMessage, response: ServerResponse): Promise<ServerResponse> {
     const routeMatch = this.router.match(request.method, request.url)
     const context: Multicolour$ReplyContext = {
       statusCode: 200,
@@ -95,7 +97,7 @@ class MulticolourServer {
     // Add headers to the request.
     request.parsedHeaders = HeaderParser(request, context)
 
-    return routeMatch.handler(request, context)
+    return routeMatch.handle(request, context)
       .then((reply: any) => {
         response.writeHead(context.statusCode || 200, context.responseHeaders)
 
@@ -113,14 +115,15 @@ class MulticolourServer {
   }
 
   public route(route: Multicolour$Route) {
-    this.router[route.method.toLowerCase()](route)
+    this.router.tries[route.method](route)
     return this
   }
 
   /* istanbul ignore next */
   public async listenToHTTP() {
     return Promise.resolve(this.server.listen(this.config.port))
-      .then(() => console.log(`Server started on ${this.config.port}`)) // eslint-disable-line
+      // tslint:disable-next-line:no-console
+      .then(() => console.log(`Server started on ${this.config.port}`))
   }
 
   /* istanbul ignore next */

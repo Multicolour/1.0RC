@@ -1,6 +1,8 @@
 import { EventEmitter } from "events"
+import { ServerResponse as NativeResponse } from "http"
 
-class ServerResponse extends EventEmitter {
+class ServerResponse
+extends NativeResponse {
   public headers: {
     [name: string]: any,
   }
@@ -33,7 +35,7 @@ class ServerResponse extends EventEmitter {
     return this
   }
 
-  public writeHead(statusCode: number, headers: Object) {
+  public writeHead(statusCode: number, headers: object) {
     this.statusCode = statusCode
     this.headers = {
       ...this.headers,

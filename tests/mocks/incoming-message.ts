@@ -1,9 +1,8 @@
 import {
+  Multicolour$IncomingMessage,
   Multicolour$ParsedBody,
   Multicolour$ParsedHeaders,
 } from "@lib/server/incoming-message"
-import EventEmitter from "events"
-import { IncomingMessage as NodeIncomingMessage } from "http"
 import { Socket } from "net"
 
 interface Options {
@@ -14,7 +13,7 @@ interface Options {
 }
 
 class IncomingMessage
-  extends NodeIncomingMessage {
+  extends Multicolour$IncomingMessage {
   public url: string
   public method?: string  = "GET"
   public body?: Buffer
@@ -32,7 +31,6 @@ class IncomingMessage
     this.url = options.url
     this.method = options.method
     this.body = options.body
-    EventEmitter.call(this)
   }
 }
 

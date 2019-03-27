@@ -1,6 +1,8 @@
+import { OutgoingHttpHeaders } from "http"
+
 export interface Multicolour$ReplyContext {
   contentType?: Multicolour$ContentTypeHeader,
-  responseHeaders: object,
+  responseHeaders: OutgoingHttpHeaders,
   statusCode?: number,
 }
 

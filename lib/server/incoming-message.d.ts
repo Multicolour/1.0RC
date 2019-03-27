@@ -1,4 +1,7 @@
-import { IncomingMessage } from "http"
+import {
+  IncomingMessage,
+  OutgoingHttpHeaders,
+} from "http"
 
 import {
   Multicolour$AcceptHeader,
@@ -7,10 +10,10 @@ import {
   Multicolour$ReplyContext,
 } from "@mc-types/multicolour/reply"
 
-export interface Multicolour$ParsedHeaders {
+export interface Multicolour$ParsedHeaders
+  extends OutgoingHttpHeaders {
   accept: Multicolour$AcceptHeader,
   "content-type"?: Multicolour$ContentTypeHeader,
-  [header: string]: string,
 }
 
 export interface Multicolour$ParsedBody {

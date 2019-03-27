@@ -1,5 +1,3 @@
-// @flow
-
 import { ErrorObject } from "ajv"
 
 import AJVValidationError from "./ajv-error"
