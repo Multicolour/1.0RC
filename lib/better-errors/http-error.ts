@@ -8,7 +8,7 @@ export interface HttpErrorMessage {
   },
 }
 
-class HttpError extends PrettyErrorWithStack {
+class Multicolour$HttpError extends PrettyErrorWithStack {
   public statusCode: number
 
   constructor(error: HttpErrorMessage) {
@@ -16,7 +16,7 @@ class HttpError extends PrettyErrorWithStack {
 
     this.statusCode = error.statusCode
 
-    Error.captureStackTrace(this, HttpError)
+    Error.captureStackTrace(this, Multicolour$HttpError)
   }
 
   public prettify() {
@@ -28,4 +28,4 @@ class HttpError extends PrettyErrorWithStack {
 
 }
 
-export default HttpError
+export default Multicolour$HttpError

@@ -30,37 +30,38 @@ class Router {
   public on(method: Multicolour$RouteVerbs, route: Multicolour$Route) {
     try {
       this.tries[method].addRoute(route.path, route.handler)
-    } catch (error) {
+    }
+    catch (error) {
       throw new RouterError(error)
     }
     return this
   }
 
-  public get(route: Multicolour$Route) {
+  public GET(route: Multicolour$Route) {
     return this.on(Multicolour$RouteVerbs.GET, route)
   }
 
-  public post(route: Multicolour$Route) {
+  public POST(route: Multicolour$Route) {
     return this.on(Multicolour$RouteVerbs.POST, route)
   }
 
-  public patch(route: Multicolour$Route) {
+  public PATCH(route: Multicolour$Route) {
     return this.on(Multicolour$RouteVerbs.PATCH, route)
   }
 
-  public put(route: Multicolour$Route) {
+  public PUT(route: Multicolour$Route) {
     return this.on(Multicolour$RouteVerbs.PUT, route)
   }
 
-  public delete(route: Multicolour$Route) {
+  public DELETE(route: Multicolour$Route) {
     return this.on(Multicolour$RouteVerbs.DELETE, route)
   }
 
-  public head(route: Multicolour$Route) {
+  public HEAD(route: Multicolour$Route) {
     return this.on(Multicolour$RouteVerbs.HEAD, route)
   }
 
-  public options(route: Multicolour$Route) {
+  public OPTIONS(route: Multicolour$Route) {
     return this.on(Multicolour$RouteVerbs.OPTIONS, route)
   }
 

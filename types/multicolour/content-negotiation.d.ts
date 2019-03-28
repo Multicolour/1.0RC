@@ -1,8 +1,4 @@
-export class Multicolour$ContentNegotiatorClass {
+export class Multicolour$ContentNegotiator {
   public parseBody: (body: string) => Promise<any>
 }
 
-export function Multicolour$ContentNegotiatorFunction(body: string): Promise<any>
-
-export type Multicolour$ContentNegotiator = Multicolour$ContentNegotiatorClass
-  | Multicolour$ContentNegotiatorFunction

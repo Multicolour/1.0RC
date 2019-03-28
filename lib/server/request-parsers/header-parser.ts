@@ -5,8 +5,9 @@ import {
   Multicolour$ReplyContext,
 } from "@mc-types/multicolour/reply"
 import { IncomingMessage } from "http"
+import { Multicolour$ParsedHeaders } from "../incoming-message"
 
-import HttpError from "@lib/better-errors/http-error"
+import Multicolour$HttpError from "@lib/better-errors/http-error"
 
 function parseContentTypeHeader(header: string = ""): Multicolour$ContentTypeHeader {
   const [contentType, ...directives] = header.split(";")
@@ -22,7 +23,7 @@ function parseContentTypeHeader(header: string = ""): Multicolour$ContentTypeHea
       const [key, value] = currentDirectiveKV.split("=")
 
       if (key.length > 100) {
-        throw new HttpError({
+        throw new Multicolour$HttpError({
           statusCode: 400,
           error: {
             message: `The key "${JSON.stringify(key)}" exceeds 100 characters in length.`,
@@ -31,7 +32,7 @@ function parseContentTypeHeader(header: string = ""): Multicolour$ContentTypeHea
       }
 
       if (value.length > 255) {
-        throw new HttpError({
+        throw new Multicolour$HttpError({
           statusCode: 400,
           error: {
             message: `The value for the "${key}" directive in the content-type header exceeds 255 characters.`,
@@ -79,9 +80,12 @@ function parseAcceptHeader(header: string = ""): Multicolour$AcceptHeader {
     )
 }
 
-function HeaderParser(request: IncomingMessage, context: Multicolour$ReplyContext = { responseHeaders: {} }) {
+function HeaderParser(
+  request: IncomingMessage,
+  context: Multicolour$ReplyContext = { responseHeaders: {} },
+): Multicolour$ParsedHeaders {
   if (!request) {
-    throw new HttpError({
+    throw new Multicolour$HttpError({
       statusCode: 500,
       error: {
         // tslint:disable-next-line:max-line-length
@@ -91,7 +95,12 @@ function HeaderParser(request: IncomingMessage, context: Multicolour$ReplyContex
   }
 
   if (!request.headers) {
-    return {}
+    return {
+      accept: {
+        contentType: "application/json",
+        quality: 1,
+      },
+    }
   }
 
   const accept = parseAcceptHeader(request.headers.accept)

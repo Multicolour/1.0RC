@@ -2,6 +2,7 @@ import {
   IncomingMessage,
   ServerResponse,
 } from "http"
+import { Multicolour$ReplyContext } from "./reply"
 
 export enum Multicolour$RouteVerbs {
   GET = "GET",
@@ -33,7 +34,7 @@ export interface Multicolour$RouteSpecificsConfig {
   auth?: Multicolour$RouteAuthConfig,
 }
 
-export type Multicolour$RouteHandler = (request?: IncomingMessage, response?: ServerResponse) => Promise<any>
+export type Multicolour$RouteHandler = (request: IncomingMessage, context: Multicolour$ReplyContext) => Promise<any>
 
 export interface Multicolour$Route {
   path: string,
