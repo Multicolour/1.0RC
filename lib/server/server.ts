@@ -146,7 +146,7 @@ class MulticolourServer {
   }
 
   private getEnumValueFromRequest(inputMethod?: string): Multicolour$RouteVerbs {
-    var method : Multicolour$RouteVerbs = Multicolour$RouteVerbs[inputMethod as keyof typeof Multicolour$RouteVerbs];
+    const method: Multicolour$RouteVerbs = Multicolour$RouteVerbs[inputMethod as keyof typeof Multicolour$RouteVerbs]
     if (!method) {
       return Multicolour$RouteVerbs.GET
     }
