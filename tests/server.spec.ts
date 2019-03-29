@@ -104,16 +104,13 @@ test("Server content negotiator", () => {
   const server = new MulticolourServer({
     type: "api",
   })
-  const JsonNegotiator = require("../lib/server/request-parsers/parsers/json")
   const classNegotiator = class {
-    static get negotiationAccept() { return "text/html" }
     public async parseBody() {
-      return Promise.resolve()
+      return Promise.resolve("")
     }
   }
 
-  server.addContentNegotiator(JsonNegotiator)
-  server.addContentNegotiator(classNegotiator)
+  server.addContentNegotiator("text/html", classNegotiator)
 
-  expect(server.negotiators["application/json"]).toBeTruthy()
+  expect(server.negotiators["text/html"]).toBeTruthy()
 })
