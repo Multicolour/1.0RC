@@ -2,7 +2,7 @@ export interface Error$MessageFrameAST {
   /**
    * The file in the stack that had a caller
    * in it that led to this error being risen.
-   * 
+   *
    * Should be a fully resolved path for terminals
    * that support clicable links in their terminal
    * emulator.
@@ -10,7 +10,7 @@ export interface Error$MessageFrameAST {
   file?: string,
 
   /**
-   * The calling function in the stack, will 
+   * The calling function in the stack, will
    * usually have a line with it too.
    */
   caller?: string,
@@ -38,7 +38,7 @@ export interface Error$MessageFrameAST {
 
 /**
  * An object we can quickly generate from an error
- * and even faster process into a helpful message 
+ * and even faster process into a helpful message
  * for you, the developer.
  */
 export interface Error$MessageAST {
@@ -53,7 +53,7 @@ export interface Error$MessageAST {
   stack: Error$MessageFrameAST[],
 
   /**
-   * The number of frames dropped fromm the 
+   * The number of frames dropped fromm the
    * stack becuase they matches the ignored_packages
    * filter.
    */

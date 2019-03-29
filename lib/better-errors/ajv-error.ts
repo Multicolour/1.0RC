@@ -26,19 +26,22 @@ class AJVValidationError extends PrettyErrorWithStack {
     return this.validationErrors.reduce((neatErrors: string[], currentError: ErrorObject): string[] => {
       switch (currentError.keyword) {
       case "required":
-        neatErrors.push(`Property "${this.object}${currentError.dataPath || ""}" requires the presence of "${(currentError.params as RequiredParams).missingProperty}".`) // eslint-disable-line max-len
+        // tslint:disable-next-line:max-line-length
+        neatErrors.push(`Property "${this.object}${currentError.dataPath || ""}" requires the presence of "${(currentError.params as RequiredParams).missingProperty}".`)
         break
       case "minProperties":
-        neatErrors.push(`Property "${this.object}${currentError.dataPath}" requires at least '${(currentError.params as LimitParams).limit}' defined properties`) // eslint-disable-line max-len
-
+        // tslint:disable-next-line:max-line-length
+        neatErrors.push(`Property "${this.object}${currentError.dataPath}" requires at least '${(currentError.params as LimitParams).limit}' defined properties`)
         break
       case "enum":
-        neatErrors.push(`Property "${this.object}${currentError.dataPath}" has an incorrect value, expected a value matching one of '${(currentError.params as EnumParams).allowedValues.join("', '")}'`) // eslint-disable-line max-len
+        // tslint:disable-next-line:max-line-length
+        neatErrors.push(`Property "${this.object}${currentError.dataPath}" has an incorrect value, expected a value matching one of '${(currentError.params as EnumParams).allowedValues.join("', '")}'`)
 
         break
       case "additionalProperties":
         // @TODO: Add common typo LUT for each property to offer some answers.
-        neatErrors.push(`Data path ${this.object}${currentError.dataPath} shouldn't have the property "${(currentError.params as AdditionalPropertiesParams).additionalProperty}". Maybe you misspelled the propery? Check your service's configuration.`) // eslint-disable-line max-len
+        // tslint:disable-next-line:max-line-length
+        neatErrors.push(`Data path ${this.object}${currentError.dataPath} shouldn't have the property "${(currentError.params as AdditionalPropertiesParams).additionalProperty}". Maybe you misspelled the propery? Check your service's configuration.`)
 
         break
       /* istanbul ignore next */
@@ -61,7 +64,8 @@ class AJVValidationError extends PrettyErrorWithStack {
       ...validationErrors.map((error: string, index: number) => `[${index}] * ${error}`),
       "\n",
       `Validation errors in your ${this.object} are preventing Multicolour from starting up safely.`,
-      "Please review the error above, frame stack below and perhaps visit the documentation https://getmulticolour.com/docs/1.0/config to help fix this issue.", // eslint-disable-line max-len
+        // tslint:disable-next-line:max-line-length
+      "Please review the error above, frame stack below and perhaps visit the documentation https://getmulticolour.com/docs/1.0/config to help fix this issue.",
       this.getPrettyStack(),
       "\n",
       "Filtered out " + this.messageAST.framesDropped + " frames from frameworks and Node internals from the stack.",

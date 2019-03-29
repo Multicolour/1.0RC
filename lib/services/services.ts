@@ -1,6 +1,6 @@
-import { Multicolour$ServiceGroup } from "../../types/multicolour/config"
+import { Multicolour$ServiceGroup } from "@mc-types/multicolour/config"
 
-import ServiceDeclarationError from "../better-errors/service-declaration-error"
+import ServiceDeclarationError from "@lib/better-errors/service-declaration-error"
 import ServiceBridge from "./service-bridge"
 
 class Services {
@@ -50,12 +50,14 @@ class Services {
     return Object.keys(services)
       .map((serviceName: string) => {
         const service: Multicolour$ServiceGroup = services[serviceName]
+
         if (service.dependsOn) {
           return service.dependsOn.map((serviceDependsOnName: string) => {
             if (configuredServicesNames.indexOf(serviceDependsOnName) < 0) {
               return {
                 type: "missing-dependency",
-                message: `The service "${serviceName}" depends on "${serviceDependsOnName}" but there is no service by that name. Check for a spelling mistake and check cases of service names.`, // eslint-disable-line
+                // tslint:disable-next-line:max-line-length
+                message: `The service "${serviceName}" depends on "${serviceDependsOnName}" but there is no service by that name. Check for a spelling mistake and check cases of service names.`,
               }
             }
           })

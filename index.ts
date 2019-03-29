@@ -20,20 +20,22 @@ class Multicolour {
     try {
       this.config = configValidator(config)
     } catch (error) {
-      console.error(error.prettify ? error.prettify() : error) // eslint-disable-line no-console
+      console.error(error.prettify ? error.prettify() : error)
       process.exit(-1)
     }
 
-    console.info("Config syntax looks good, nice work.\nNow, on to resolving, compiling and setting up your models") // eslint-disable-line
+    // tslint:disable-next-line:max-line-length no-console
+    console.info("Config syntax looks good, nice work.\nNow, on to resolving, compiling and setting up your models")
 
     try {
       this.models = this.getModels()
     } catch (error) {
-      console.error(error.prettify ? error.prettify() : error) // eslint-disable-line no-console
+      console.error(error.prettify ? error.prettify() : error)
       process.exit(-1)
     }
 
-    console.info("Models syntax checked and set up, now service dependency sorting and resolution.") // eslint-disable-line
+    // tslint:disable-next-line:max-line-length no-console
+    console.info("Models syntax checked and set up, now service dependency sorting and resolution.")
 
     try {
       this.sortServicesAndPrepareWorkers()
@@ -42,7 +44,8 @@ class Multicolour {
       process.exit(-1)
     }
 
-    console.info("All services check out okay, dependencies all resolve and service workers are ready to be prepared.") // eslint-disable-line
+    // tslint:disable-next-line:max-line-length no-console
+    console.info("All services check out okay, dependencies all resolve and service workers are ready to be prepared.")
   }
 
   public getModels(): Multicolour$ModelsObject {
