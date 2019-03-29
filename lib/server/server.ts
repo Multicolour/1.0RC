@@ -145,24 +145,12 @@ class MulticolourServer {
     return this
   }
 
-  private getEnumValueFromRequest(method?: string): Multicolour$RouteVerbs {
-    switch (method) {
-    case "POST":
-        return Multicolour$RouteVerbs.POST
-    case "PUT":
-        return Multicolour$RouteVerbs.PUT
-    case "PATCH":
-        return Multicolour$RouteVerbs.PATCH
-    case "OPTIONS":
-        return Multicolour$RouteVerbs.OPTIONS
-    case "HEAD":
-        return Multicolour$RouteVerbs.HEAD
-    case "DELETE":
-        return Multicolour$RouteVerbs.DELETE
-    case "GET":
-    default:
-        return Multicolour$RouteVerbs.GET
+  private getEnumValueFromRequest(inputMethod?: string): Multicolour$RouteVerbs {
+    const method: Multicolour$RouteVerbs = Multicolour$RouteVerbs[inputMethod as keyof typeof Multicolour$RouteVerbs]
+    if (!method) {
+      return Multicolour$RouteVerbs.GET
     }
+    return Multicolour$RouteVerbs[method]
   }
 }
 
