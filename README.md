@@ -1,4 +1,6 @@
-<img src="https://getmulticolour.com/images/MC_Icon_PurpleRain_Logotype.png" width="40%" style="margin: 2rem auto">
+<p align="center">
+<img src="https://getmulticolour.com/images/MC_Icon_PurpleRain_Logotype.png" width="40%">
+</p>
 
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/27207c31ff6a4d37925ac38d1ce1438c)](https://app.codacy.com/app/Multicolour/1.0RC?utm_source=github.com&utm_medium=referral&utm_content=Multicolour/1.0RC&utm_campaign=Badge_Grade_Settings)
 [![Join the chat at https://slack.getmulticolour.com](https://slack.getmulticolour.com/badge.svg)](https://slack.getmulticolour.com)
