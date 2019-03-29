@@ -5,6 +5,7 @@
     "sourceMap": true,
     "outDir": "./build",
     "removeComments": true,
+    "resolveJsonModule": true,
 
     "strict": true,
     "noImplicitAny": true,

@@ -1,13 +1,14 @@
-import { Multicolour$Config } from "../../types/multicolour/config"
+import { Multicolour$Config } from "@mc-types/multicolour/config"
+import Ajv from "ajv"
+import { ConfigValidationError } from "../better-errors/better-errors"
+import defaultConfig from "./default-config"
 
-const configSchema = require("../../schema/config/config.schema.json")
-const databaseConfigSchema = require("../../schema/config/database-service.schema.json")
-const apiConfigSchema = require("../../schema/config/api-service.schema.json")
-const defaultConfig = require("./default-config")
-const { ConfigValidationError } = require("../better-errors/better-errors")
+import apiConfigSchema from "../../schema/config/api-service.schema.json"
+import configSchema from "../../schema/config/config.schema.json"
+import databaseConfigSchema from "../../schema/config/database-service.schema.json"
 
 function configValidator(config: Multicolour$Config): Multicolour$Config {
-  const ajv = new (require("ajv"))
+  const ajv = new Ajv()
 
   ajv
     .addSchema(apiConfigSchema)
@@ -19,7 +20,7 @@ function configValidator(config: Multicolour$Config): Multicolour$Config {
   }
   const valid = ajv.validate(configSchema, target)
 
-  if (!valid) {
+  if (!valid && ajv.errors) {
     throw new ConfigValidationError("Invalid configuration", ajv.errors)
   }
 
