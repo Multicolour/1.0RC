@@ -1,3 +1,4 @@
+import { Multicolour$ContentNegotiator } from "@mc-types/multicolour/content-negotiation"
 import { Multicolour$RequestParserArgs } from "@mc-types/multicolour/route"
 import {
   Fields,
@@ -5,23 +6,24 @@ import {
   IncomingForm,
 } from "formidable"
 
-async function multipartBodyParser(args: Multicolour$RequestParserArgs): Promise<object> {
-  return new Promise((resolve, reject) => {
-    const form = new IncomingForm()
+class MultipartBodyParser implements Multicolour$ContentNegotiator {
 
-    form.parse(args.request, (err: any, fields: Fields, files: Files) => {
-      if (err) {
-        return reject(err)
-      }
+  public async parseBody(args: Multicolour$RequestParserArgs): Promise<object> {
+    return new Promise((resolve, reject) => {
+      const form = new IncomingForm()
 
-      return resolve({
-        fields,
-        files,
+      form.parse(args.request, (err: any, fields: Fields, files: Files) => {
+        if (err) {
+          return reject(err)
+        }
+
+        return resolve({
+          fields,
+          files,
+        })
       })
     })
-  })
+  }
 }
 
-multipartBodyParser.negotiationName = /^multipart\/form-data/
-
-export default multipartBodyParser
+export default MultipartBodyParser

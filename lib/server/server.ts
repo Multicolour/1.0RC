@@ -57,8 +57,8 @@ class MulticolourServer {
     }
 
     this
-      .addContentNegotiator(JsonNegotiator)
-      .addContentNegotiator(MultipartNegotiator)
+      .addContentNegotiator("application/json", JsonNegotiator)
+      .addContentNegotiator("multipart/form-data", MultipartNegotiator)
   }
 
   public onResponseError(request: IncomingMessage, response: ServerResponse, error: Multicolour$HttpError) {
@@ -73,7 +73,7 @@ class MulticolourServer {
     return error
   }
 
-  public onRequest(request: IncomingMessage, response: ServerResponse): void {
+  public async onRequest(request: IncomingMessage, response: ServerResponse) {
     const extendedRequest: Multicolour$IncomingMessage = request
 
     const routeMatch = this.router.match(this.getEnumValueFromRequest(request.method), extendedRequest.url)
@@ -96,7 +96,7 @@ class MulticolourServer {
       response.writeHead(500)
       response.end(JSON.stringify({
         // tslint:disable-next-line:max-line-length
-        error: "A handler is present to handle this request but it is not a callable function. This is a developer problem and you should contact the owner of this service to rectify this issue.", // eslint-disable-line max-len
+        error: "A handler is present to handle this request but it is not a callable function. This is a developer problem and you should contact the owner of this service to rectify this issue.",
       }))
 
       return
@@ -105,7 +105,7 @@ class MulticolourServer {
     // Add headers to the request.
     extendedRequest.parsedHeaders = HeaderParser(request, context)
 
-    routeMatch.handle(extendedRequest, context)
+    return routeMatch.handle(extendedRequest, context)
       .then((reply: any) => {
         response.writeHead(context.statusCode || 200, context.responseHeaders)
 
@@ -139,7 +139,7 @@ class MulticolourServer {
     return Promise.resolve(this.server.close())
   }
 
-  public addContentNegotiator(negotiationAccept: string, Negotiator: Multicolour$ContentNegotiator) {
+  public addContentNegotiator(negotiationAccept: string, Negotiator: typeof Multicolour$ContentNegotiator) {
     this.negotiators[negotiationAccept] = new Negotiator()
 
     return this

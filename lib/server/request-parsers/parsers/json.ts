@@ -1,37 +1,39 @@
 import HttpError from "@lib/better-errors/http-error"
+import { Multicolour$ContentNegotiator } from "@mc-types/multicolour/content-negotiation"
 import { Multicolour$RequestParserArgs } from "@mc-types/multicolour/route"
 import bodyParser from "../body-parser"
 
-async function JsonParser(args: Multicolour$RequestParserArgs): Promise<object> {
-  return bodyParser({ request: args.request })
-  .then((json: string) => {
-    let outwardBody
+class JsonParser implements Multicolour$ContentNegotiator {
 
-    if (json[0] !== "{" && json[0] !== "[") {
-      throw new HttpError({
-        statusCode: 400,
-        error: {
-          // tslint:disable-next-line:max-line-length
-          message: `Your JSON isn't structured correctly, the issue is at \nline: 0 \ncolumn: 0\n\nUnexpected "${json[0]}"`,
-        },
-      })
-    }
+  public async parseBody(args: Multicolour$RequestParserArgs): Promise<object> {
+    return bodyParser({ request: args.request })
+    .then((json: string) => {
+      let outwardBody
 
-    try {
-      outwardBody = JSON.parse(json)
-    } catch (error) {
-      throw new HttpError({
-        statusCode: 400,
-        error: {
-          message: "Invalid JSON received.",
-        },
-      })
-    }
+      if (json[0] !== "{" && json[0] !== "[") {
+        throw new HttpError({
+          statusCode: 400,
+          error: {
+            // tslint:disable-next-line:max-line-length
+            message: `Your JSON isn't structured correctly, the issue is at \nline: 0 \ncolumn: 0\n\nUnexpected "${json[0]}"`,
+          },
+        })
+      }
 
-    return outwardBody
-  })
+      try {
+        outwardBody = JSON.parse(json)
+      } catch (error) {
+        throw new HttpError({
+          statusCode: 400,
+          error: {
+            message: "Invalid JSON received.",
+          },
+        })
+      }
+
+      return outwardBody
+    })
+  }
 }
-
-JsonParser.negotiationAccept = "application/json"
 
 export default JsonParser
