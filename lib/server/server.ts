@@ -51,9 +51,14 @@ class MulticolourServer {
       // tslint:disable-next-line:max-line-length
       throw new ServerError("You have requested a secure server but have not supplied a secure server config.\n\nPlease see the Node documentation on how to configure a secure server using your certificates.\n\nhttps://nodejs.org/api/https.html#https_https_createserver_options_requestlistener")
     }
-    else {
+    else if (this.config.secureServerOptions) {
       debug("Creating a secure server with %O.", this.config.secureServerOptions)
       this.server = createSecureServer(this.config.secureServerOptions, this.onRequest.bind(this))
+    }
+    else {
+      // tslint:disable-next-line:max-line-length
+      debug("Creating insecure server because this.config.secure either isn't set or is set to a falsey value or you havent set secureServerOptions in this servervice config.")
+      this.server = createInsecureServer(this.onRequest.bind(this))
     }
 
     this

@@ -65,7 +65,11 @@ class Router {
     return this.on(Multicolour$RouteVerbs.OPTIONS, route)
   }
 
-  public match(method: Multicolour$RouteVerbs, path: string) {
+  public match(method: Multicolour$RouteVerbs, path?: string) {
+    if (typeof path !== "string" || path.length === 0) {
+      return false
+    }
+
     return this.tries[method].search(path)
   }
 }

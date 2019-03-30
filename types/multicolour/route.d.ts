@@ -16,7 +16,7 @@ export enum Multicolour$RouteVerbs {
 
 export interface Multicolour$RouteAuthConfig {
   type: "oauth" | "jwt" | "none",
-  roles: string[],
+  roles?: string[],
   provider?: "google"
     | "github"
     | "facebook"
