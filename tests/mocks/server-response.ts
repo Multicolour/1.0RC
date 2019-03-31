@@ -1,4 +1,3 @@
-import { EventEmitter } from "events"
 import { ServerResponse as NativeResponse } from "http"
 
 class ServerResponse

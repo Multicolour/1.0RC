@@ -60,52 +60,5 @@
     "ts-jest": "^24.0.0",
     "ts-node": "^8.0.2",
     "typescript": "^3.3.3333"
-  },
-  "jest": {
-    "transform": {
-      "^.+\\.tsx?$": "ts-jest"
-    },
-    "coverageDirectory": "./coverage/",
-    "collectCoverage": true,
-    "coveragePathIgnorePatterns": [
-      "/node_modules/",
-      "/tests/mocks",
-      "<rootDir>/lib/better-errors/ajv-syntax-or-reference-error.ts",
-      "tests/content/uncaught-error-handlers.ts"
-    ],
-    "setupFiles": [
-      "./tests/content/uncaught-error-handlers.ts"
-    ],
-    "coverageReporters": [
-      "lcov",
-      "json",
-      "html",
-      "text"
-    ],
-    "coverageThreshold": {
-      "global": {
-        "branches": 80,
-        "functions": 80,
-        "lines": 80,
-        "statements": -10
-      }
-    },
-    "testRegex": "(/tests/.*|(\\.|/)(test|spec))\\.tsx?$",
-    "testPathIgnorePatterns": [
-      "<rootDir>/tests/content",
-      "<rootDir>/tests/mocks"
-    ],
-    "moduleFileExtensions": [
-      "ts",
-      "tsx",
-      "js",
-      "jsx",
-      "json",
-      "node"
-    ],
-    "moduleNameMapper": {
-      "^@lib(.*)$": "<rootDir>/lib$1",
-      "^@mc-types(.*)$": "<rootDir>/types$1"
-    }
   }
 }

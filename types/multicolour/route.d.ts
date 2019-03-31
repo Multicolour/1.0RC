@@ -1,7 +1,4 @@
-import {
-  IncomingMessage,
-  ServerResponse,
-} from "http"
+import { IncomingMessage } from "http"
 import { Multicolour$ReplyContext } from "./reply"
 
 export enum Multicolour$RouteVerbs {
