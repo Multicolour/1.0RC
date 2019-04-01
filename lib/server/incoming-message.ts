@@ -1,4 +1,5 @@
 import { IncomingMessage } from "http"
+import { Socket } from "net"
 
 import {
   Multicolour$AcceptHeader,
@@ -15,6 +16,21 @@ export interface Multicolour$ParsedBody {
 }
 
 export class Multicolour$IncomingMessage extends IncomingMessage {
-  public parsedHeaders?: Multicolour$ParsedHeaders
-  public parsedBody?: Multicolour$ParsedBody
+  public parsedHeaders: Multicolour$ParsedHeaders
+  public parsedBody: Multicolour$ParsedBody
+
+  constructor(socket: Socket) {
+    super(socket)
+    this.parsedHeaders = {
+      "accept": {
+        contentType: "application/json",
+        quality: 1.0,
+      },
+      "content-type": {
+        contentType: "application/json",
+      },
+    }
+
+    this.parsedBody = {}
+  }
 }

@@ -1,7 +1,7 @@
 import Multicolour$HttpError from "@lib/better-errors/http-error"
-import ServerError from "@lib/better-errors/server-error"
+// import ServerError from "@lib/better-errors/server-error"
+import { Multicolour$ContentNegotiator } from "@lib/content-negotiators/base"
 import { Multicolour$APIServiceConfig } from "@mc-types/multicolour/config"
-import { Multicolour$ContentNegotiator } from "@mc-types/multicolour/content-negotiation"
 import { Multicolour$ReplyContext } from "@mc-types/multicolour/reply"
 import {
   Multicolour$Route,
@@ -22,8 +22,15 @@ import { Multicolour$IncomingMessage } from "./incoming-message"
 import JsonNegotiator from "@lib/content-negotiators/json"
 import { IncomingMessage } from "http"
 import { HeaderParser } from "./request-parsers/header-parser"
-import MultipartNegotiator from "./request-parsers/parsers/multipart"
+// import MultipartNegotiator from "./request-parsers/parsers/multipart"
 import Router from "./router"
+
+interface Multicolour$ResponseParserArgs { 
+  reply: any
+  context: Multicolour$ReplyContext
+  response: ServerResponse
+  request: Multicolour$IncomingMessage 
+}
 
 const debug = Debug("multicolour:server")
 
@@ -47,11 +54,7 @@ class MulticolourServer {
       debug("Creating insecure server because this.config.secure either isn't set or is set to a falsey value.")
       this.server = createInsecureServer(this.onRequest.bind(this))
     }
-    else if (this.config.secure && !this.config.secureServerOptions) {
-      // tslint:disable-next-line:max-line-length
-      throw new ServerError("You have requested a secure server but have not supplied a secure server config.\n\nPlease see the Node documentation on how to configure a secure server using your certificates.\n\nhttps://nodejs.org/api/https.html#https_https_createserver_options_requestlistener")
-    }
-    else if (this.config.secureServerOptions) {
+    else if (this.config.secure && this.config.secureServerOptions) {
       debug("Creating a secure server with %O.", this.config.secureServerOptions)
       this.server = createSecureServer(this.config.secureServerOptions, this.onRequest.bind(this))
     }
@@ -63,7 +66,7 @@ class MulticolourServer {
 
     this
       .addContentNegotiator("application/json", JsonNegotiator)
-      .addContentNegotiator("multipart/form-data", MultipartNegotiator)
+    // .addContentNegotiator("multipart/form-data", MultipartNegotiator)
   }
 
   public onResponseError(request: IncomingMessage, response: ServerResponse, error: Multicolour$HttpError) {
@@ -132,10 +135,10 @@ class MulticolourServer {
       .catch(this.onResponseError.bind(this, request, response))
   }
 
-  public runResponseParser(responseConfig: { reply: any, context: Multicolour$ReplyContext, response: ServerResponse, request: Multicolour$IncomingMessage }): Promise<any> {
+  public runResponseParser(responseConfig: Multicolour$ResponseParserArgs): Promise<any> {
     const targetNegotiator = responseConfig.request.parsedHeaders.accept.contentType
     if (this.negotiators.hasOwnProperty(targetNegotiator)) {
-      this.negotiators[targetNegotiator].parseResponse()
+      return this.negotiators[targetNegotiator].parseResponse(responseConfig)
     }
   }
 

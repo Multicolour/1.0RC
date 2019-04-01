@@ -1,6 +1,6 @@
 import HttpError from "@lib/better-errors/http-error"
+import { Multicolour$ContentNegotiator } from "@lib/content-negotiators/base"
 import MulticolourServer from "@lib/server/server"
-import { Multicolour$ContentNegotiator } from "@mc-types/multicolour/content-negotiation"
 import { Multicolour$RouteVerbs } from "@mc-types/multicolour/route"
 import { ServerResponse } from "http"
 import { IncomingMessage } from "./mocks/http"
@@ -105,10 +105,7 @@ test("Server content negotiator", () => {
   const server = new MulticolourServer({
     type: "api",
   })
-  const classNegotiator = class implements Multicolour$ContentNegotiator {
-    public async parseBody() {
-      return Promise.resolve("")
-    }
+  const classNegotiator = class extends Multicolour$ContentNegotiator {
   }
 
   server.addContentNegotiator("text/html", classNegotiator)
