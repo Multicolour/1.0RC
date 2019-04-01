@@ -19,9 +19,9 @@ import {
 } from "https"
 import { Multicolour$IncomingMessage } from "./incoming-message"
 
+import JsonNegotiator from "@lib/content-negotiators/json"
 import { IncomingMessage } from "http"
 import { HeaderParser } from "./request-parsers/header-parser"
-import JsonNegotiator from "./request-parsers/parsers/json"
 import MultipartNegotiator from "./request-parsers/parsers/multipart"
 import Router from "./router"
 
@@ -110,21 +110,33 @@ class MulticolourServer {
     // Add headers to the request.
     extendedRequest.parsedHeaders = HeaderParser(request, context)
 
+    // Run the registered handler for this route.
     return routeMatch.handle(extendedRequest, context)
+      // Then run the response parser.
+      .then((reply: any) =>
+        this.runResponseParser({
+          reply,
+          context,
+          response,
+          request: extendedRequest,
+        }),
+      )
+      // Then reply with all of our data.
       .then((reply: any) => {
         response.writeHead(context.statusCode || 200, context.responseHeaders)
 
-        if (!reply || (typeof reply === "string" && reply.length === 0)) {
-          response.end("{}")
-        } else if (reply.toString() === "[object Object]") {
-          response.end(JSON.stringify(reply))
-             } else {
-          response.end(reply)
-             }
+        response.end(reply)
 
         return reply
       }, this.onResponseError.bind(this, request, response))
       .catch(this.onResponseError.bind(this, request, response))
+  }
+
+  public runResponseParser(responseConfig: { reply: any, context: Multicolour$ReplyContext, response: ServerResponse, request: Multicolour$IncomingMessage }): Promise<any> {
+    const targetNegotiator = responseConfig.request.parsedHeaders.accept.contentType
+    if (this.negotiators.hasOwnProperty(targetNegotiator)) {
+      this.negotiators[targetNegotiator].parseResponse()
+    }
   }
 
   public route(route: Multicolour$Route) {

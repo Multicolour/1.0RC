@@ -18,7 +18,7 @@ const testableRoutes = [
     },
     expected: (reply: any, response: ServerResponse) => {
       expect(reply).toBe("Text")
-      expect(response.getHeader("content-type")).toBe("text/plain")
+      expect(response.getHeader("Content-Type")).toBe("text/plain")
     },
   },
   {
