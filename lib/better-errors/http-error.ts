@@ -4,8 +4,8 @@ export interface HttpErrorMessage {
   statusCode: number
   headers?: object
   error: {
-    message: string
-    [extra: string]: any
+    message: string,
+    [extra: string]: any,
   }
 }
 
