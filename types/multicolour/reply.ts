@@ -11,11 +11,13 @@ export interface Multicolour$AcceptHeaderValue {
   quality: number,
 }
 
-export type Multicolour$AcceptHeader = Multicolour$AcceptHeaderValue | Multicolour$AcceptHeaderValue[]
+export type Multicolour$AcceptHeader = Multicolour$AcceptHeaderValue[]
 
-export interface Multicolour$ContentTypeHeader {
+export interface Multicolour$ContentTypeHeaderValue {
   contentType?: string,
   boundary?: string,
   charset?: string,
 }
+
+export type Multicolour$ContentTypeHeader = Multicolour$ContentTypeHeaderValue[]
 

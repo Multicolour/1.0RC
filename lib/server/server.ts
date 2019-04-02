@@ -20,16 +20,15 @@ import {
 import { Multicolour$IncomingMessage } from "./incoming-message"
 
 import JsonNegotiator from "@lib/content-negotiators/json"
-import { IncomingMessage } from "http"
 import { HeaderParser } from "./request-parsers/header-parser"
 // import MultipartNegotiator from "./request-parsers/parsers/multipart"
 import Router from "./router"
 
-interface Multicolour$ResponseParserArgs { 
+interface Multicolour$ResponseParserArgs {
   reply: any
   context: Multicolour$ReplyContext
   response: ServerResponse
-  request: Multicolour$IncomingMessage 
+  request: Multicolour$IncomingMessage
 }
 
 const debug = Debug("multicolour:server")
@@ -50,18 +49,25 @@ class MulticolourServer {
     this.config = config
     this.negotiators = {}
 
+    const serverOptions = {
+      IncomingMessage: Multicolour$IncomingMessage,
+    }
+
     if (!this.config.secure) {
       debug("Creating insecure server because this.config.secure either isn't set or is set to a falsey value.")
-      this.server = createInsecureServer(this.onRequest.bind(this))
+      this.server = createInsecureServer(serverOptions, this.onRequest.bind(this))
     }
     else if (this.config.secure && this.config.secureServerOptions) {
       debug("Creating a secure server with %O.", this.config.secureServerOptions)
-      this.server = createSecureServer(this.config.secureServerOptions, this.onRequest.bind(this))
+      this.server = createSecureServer({
+        ...this.config.secureServerOptions,
+        ...serverOptions,
+      }, this.onRequest.bind(this))
     }
     else {
       // tslint:disable-next-line:max-line-length
       debug("Creating insecure server because this.config.secure either isn't set or is set to a falsey value or you havent set secureServerOptions in this servervice config.")
-      this.server = createInsecureServer(this.onRequest.bind(this))
+      this.server = createInsecureServer(serverOptions, this.onRequest.bind(this))
     }
 
     this
@@ -69,7 +75,7 @@ class MulticolourServer {
     // .addContentNegotiator("multipart/form-data", MultipartNegotiator)
   }
 
-  public onResponseError(request: IncomingMessage, response: ServerResponse, error: Multicolour$HttpError) {
+  public onResponseError(request: Multicolour$IncomingMessage, response: ServerResponse, error: Multicolour$HttpError) {
     // tslint:disable-next-line:max-line-length
     debug("An irrecoverable error occured, please fix this and add a test to prevent this error occuring again. If you believe this to be a bug with Multicolour, please submit a bug report to https://github.com/Multicolour/multicolour/issues/new. \n\nError: %O\nMethod: %s,\nStack: %O", error, request.method, error.stack) // eslint-disable-line max-len
     response.writeHead(error.statusCode || 500)
@@ -81,10 +87,8 @@ class MulticolourServer {
     return error
   }
 
-  public async onRequest(request: IncomingMessage, response: ServerResponse) {
-    const extendedRequest: Multicolour$IncomingMessage = request
-
-    const routeMatch = this.router.match(this.getEnumValueFromRequest(request.method), extendedRequest.url)
+  public async onRequest(request: Multicolour$IncomingMessage, response: ServerResponse) {
+    const routeMatch = this.router.match(this.getEnumValueFromRequest(request.method), request.url)
     const context: Multicolour$ReplyContext = {
       statusCode: 200,
       responseHeaders: {
@@ -111,17 +115,17 @@ class MulticolourServer {
     }
 
     // Add headers to the request.
-    extendedRequest.parsedHeaders = HeaderParser(request, context)
+    request.parsedHeaders = HeaderParser(request, context)
 
     // Run the registered handler for this route.
-    return routeMatch.handle(extendedRequest, context)
+    return routeMatch.handle(request, context)
       // Then run the response parser.
       .then((reply: any) =>
         this.runResponseParser({
           reply,
           context,
           response,
-          request: extendedRequest,
+          request,
         }),
       )
       // Then reply with all of our data.
@@ -136,10 +140,32 @@ class MulticolourServer {
   }
 
   public runResponseParser(responseConfig: Multicolour$ResponseParserArgs): Promise<any> {
-    const targetNegotiator = responseConfig.request.parsedHeaders.accept.contentType
-    if (this.negotiators.hasOwnProperty(targetNegotiator)) {
-      return this.negotiators[targetNegotiator].parseResponse(responseConfig)
+    let negotiatorIndex = 0
+    let targetNegotiator
+    const requestedNegotiators = responseConfig.request.parsedHeaders.accept
+
+    while (negotiatorIndex <= requestedNegotiators.length && !targetNegotiator) {
+      const contentType = requestedNegotiators[negotiatorIndex].contentType
+      if (this.negotiators.hasOwnProperty(contentType)) {
+        targetNegotiator = this.negotiators[contentType]
+      }
+      else {
+        negotiatorIndex += 1
+      }
     }
+
+    if (!targetNegotiator) {
+      return Promise.reject(new Multicolour$HttpError({
+        statusCode: 400,
+        error: {
+          // tslint:disable-next-line:max-line-length
+          message: "Couldn't find a content negotiator that could confidently handle this request for you, your accept header in the request either has a typo or the creator of this API server has not included the appropriate plugin to handle the requested content format.",
+          acceptHeaderRecieved: responseConfig.request.parsedHeaders.accept,
+        },
+      }))
+    }
+
+    return targetNegotiator.parseResponse(responseConfig)
   }
 
   public route(route: Multicolour$Route) {

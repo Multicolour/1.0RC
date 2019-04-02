@@ -22,13 +22,13 @@ export class Multicolour$IncomingMessage extends IncomingMessage {
   constructor(socket: Socket) {
     super(socket)
     this.parsedHeaders = {
-      "accept": {
+      "accept": [{
         contentType: "application/json",
         quality: 1.0,
-      },
-      "content-type": {
+      }],
+      "content-type": [{
         contentType: "application/json",
-      },
+      }],
     }
 
     this.parsedBody = {}
