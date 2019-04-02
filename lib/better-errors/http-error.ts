@@ -1,11 +1,12 @@
 import PrettyErrorWithStack from "./pretty-error-with-stack"
 
 export interface HttpErrorMessage {
-  statusCode: number,
-  headers?: object,
+  statusCode: number
+  headers?: object
   error: {
-    message: string,
-  },
+    message: string
+    [extra: string]: any
+  }
 }
 
 class Multicolour$HttpError extends PrettyErrorWithStack {
