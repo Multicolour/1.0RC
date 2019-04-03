@@ -1,13 +1,12 @@
 import PrettyErrorWithStack from "./pretty-error-with-stack"
 
 class UncaughtError extends PrettyErrorWithStack {
-  public originalErrorMessage: string
+  public originalErrorMessage: {} | null | undefined
 
-  constructor(message: string, error: Error) {
+  constructor(message: string, error: {} | null | undefined = {}) {
     super(message)
 
-    this.stack = error.stack
-    this.originalErrorMessage = error.message
+    this.originalErrorMessage = error
     Error.captureStackTrace(this, UncaughtError)
   }
 
@@ -30,3 +29,4 @@ class UncaughtError extends PrettyErrorWithStack {
 }
 
 export default UncaughtError
+

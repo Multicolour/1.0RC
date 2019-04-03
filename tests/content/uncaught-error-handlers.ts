@@ -5,8 +5,8 @@
       debug(error)
       debug(error.stack)
     })
-    .on("unhandledRejection", (error: Error) => {
-      debug(error)
-      debug(error.stack)
+    .on("unhandledRejection", (reason: any, promise: Promise<any>) => {
+      debug(reason)
+      debug(promise)
     })
 }
