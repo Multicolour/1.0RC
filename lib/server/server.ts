@@ -154,6 +154,8 @@ class MulticolourServer {
       }
     }
 
+    console.log(targetNegotiator)
+
     if (!targetNegotiator) {
       return Promise.reject(new Multicolour$HttpError({
         statusCode: 400,

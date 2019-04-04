@@ -73,6 +73,13 @@ function parseAcceptHeader(header: string = ""): Multicolour$AcceptHeader {
       }
     })
 
+  if (values.length === 0) {
+    return [{
+      contentType: "application/json",
+      quality: 1.0,
+    }]
+  }
+
   return values
     .sort((left: Multicolour$AcceptHeaderValue, right: Multicolour$AcceptHeaderValue) =>
       right.quality - left.quality,

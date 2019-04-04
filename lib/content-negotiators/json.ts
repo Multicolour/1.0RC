@@ -33,4 +33,8 @@ export default class JSONContentNegotiator extends Multicolour$ContentNegotiator
       return outwardBody
     })
   }
+
+  public async parseResponse(reply: any) {
+    console.log(reply)
+  }
 }
