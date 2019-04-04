@@ -2,7 +2,10 @@ import Multicolour$HttpError from "@lib/better-errors/http-error"
 // import ServerError from "@lib/better-errors/server-error"
 import { Multicolour$ContentNegotiator } from "@lib/content-negotiators/base"
 import { Multicolour$APIServiceConfig } from "@mc-types/multicolour/config"
-import { Multicolour$ReplyContext } from "@mc-types/multicolour/reply"
+import {
+  Multicolour$ReplyContext,
+  Multicolour$ResponseParserArgs,
+} from "@mc-types/multicolour/reply"
 import {
   Multicolour$Route,
   Multicolour$RouteVerbs,
@@ -23,13 +26,6 @@ import JsonNegotiator from "@lib/content-negotiators/json"
 import { HeaderParser } from "./request-parsers/header-parser"
 // import MultipartNegotiator from "./request-parsers/parsers/multipart"
 import Router from "./router"
-
-interface Multicolour$ResponseParserArgs {
-  reply: any
-  context: Multicolour$ReplyContext
-  response: ServerResponse
-  request: Multicolour$IncomingMessage
-}
 
 const debug = Debug("multicolour:server")
 
@@ -118,7 +114,9 @@ class MulticolourServer {
     request.parsedHeaders = HeaderParser(request, context)
 
     // Run the registered handler for this route.
-    return routeMatch.handle(request, context)
+    return routeMatch
+      .handle(request, context)
+
       // Then run the response parser.
       .then((reply: any) =>
         this.runResponseParser({
@@ -128,6 +126,7 @@ class MulticolourServer {
           request,
         }),
       )
+
       // Then reply with all of our data.
       .then((reply: string) => {
         response.writeHead(context.statusCode || 200, context.responseHeaders)

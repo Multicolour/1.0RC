@@ -1,5 +1,6 @@
 import HttpError from "@lib/better-errors/http-error"
 import bodyParser from "@lib/server/request-parsers/body-parser"
+import { Multicolour$ResponseParserArgs } from "@mc-types/multicolour/reply"
 import { Multicolour$RequestParserArgs } from "@mc-types/multicolour/route"
 import { Multicolour$ContentNegotiator } from "./base"
 
@@ -34,7 +35,7 @@ export default class JSONContentNegotiator extends Multicolour$ContentNegotiator
     })
   }
 
-  public async parseResponse(reply: any) {
-    console.log(reply)
+  public async parseResponse(config: Multicolour$ResponseParserArgs) {
+    return JSON.stringify(config.reply)
   }
 }

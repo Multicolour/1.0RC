@@ -7,7 +7,8 @@ import { IncomingMessage } from "./mocks/http"
 
 
 const testableRoutes = [
-  {
+  /* @TODO: Add a text content negotiator
+   * {
     headers: {
       accept: "text/plain",
     },
@@ -18,9 +19,9 @@ const testableRoutes = [
     },
     expected: (reply: any, response: ServerResponse) => {
       expect(reply).toBe("Text")
-      expect(response.getHeader("Content-Type")).toBe("text/plain")
+      expect(response.getHeader("content-type")).toBe("text/plain")
     },
-  },
+  },*/
   {
     headers: {
       accept: "application/json",
@@ -31,8 +32,8 @@ const testableRoutes = [
       handler: async () => ({ json: true }),
     },
     expected: (reply: any, response: ServerResponse) => {
-      expect(reply).toEqual({ json: true })
-      expect(response.getHeader("content-type")).toBe("application/json")
+      expect(reply).toEqual("{\"json\":true}")
+      expect(response.getHeader("Content-Type")).toBe("application/json")
     },
   },
   {
@@ -98,6 +99,9 @@ test("404 for unknown route", () => {
     .then(() => {
       expect(response.statusCode).toBe(404)
       expect(response.statusCode).not.toBe(500)
+    })
+    .catch((error: Error) => {
+      throw error
     })
 })
 

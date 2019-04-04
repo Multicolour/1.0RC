@@ -1,4 +1,9 @@
-import { OutgoingHttpHeaders } from "http"
+import {
+  OutgoingHttpHeaders,
+  ServerResponse,
+} from "http"
+
+import { Multicolour$IncomingMessage } from "@lib/server/incoming-message"
 
 export interface Multicolour$ReplyContext {
   contentType?: Multicolour$ContentTypeHeader,
@@ -19,3 +24,9 @@ export interface Multicolour$ContentTypeHeader {
   charset?: string,
 }
 
+export interface Multicolour$ResponseParserArgs {
+  reply: any
+  context: Multicolour$ReplyContext
+  response: ServerResponse
+  request: Multicolour$IncomingMessage
+}
