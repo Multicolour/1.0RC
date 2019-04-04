@@ -133,7 +133,10 @@ class MulticolourServer {
 
         response.end(reply)
 
-        return reply
+        return {
+          reply,
+          context,
+        }
       }, this.onResponseError.bind(this, request, response))
       .catch(this.onResponseError.bind(this, request, response))
   }

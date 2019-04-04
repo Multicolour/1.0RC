@@ -31,9 +31,9 @@ const testableRoutes = [
       path: "/json",
       handler: async () => ({ json: true }),
     },
-    expected: (reply: any, response: ServerResponse) => {
-      expect(reply).toEqual("{\"json\":true}")
-      expect(response.getHeader("Content-Type")).toBe("application/json")
+    expected: (reply: any) => {
+      expect(reply.reply).toEqual("{\"json\":true}")
+      expect(reply.context.responseHeaders["content-type"]).toBe("application/json")
     },
   },
   {
