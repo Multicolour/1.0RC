@@ -18,10 +18,10 @@ class IncomingMessage
   public method?: string  = "GET"
   public body?: Buffer
   public parsedHeaders: Multicolour$ParsedHeaders = {
-    accept: {
+    accept: [{
       contentType: "application/json",
       quality: 1,
-    },
+    }],
   }
   public parsedBody: Multicolour$ParsedBody = {}
 

@@ -12,14 +12,14 @@ import Multicolour$HttpError from "@lib/better-errors/http-error"
 function parseContentTypeHeader(header: string = ""): Multicolour$ContentTypeHeader {
   const [contentType, ...directives] = header.split(";")
 
-  const returnHeader = {
+  const returnHeader: Multicolour$ContentTypeHeader = {
     contentType,
   }
 
   return directives
     .filter(Boolean)
     .map((directive: string = "") => directive.trim())
-    .reduce((out: Multicolour$ContentTypeHeader, currentDirectiveKV) => {
+    .reduce((out: Multicolour$ContentTypeHeader, currentDirectiveKV): Multicolour$ContentTypeHeader => {
       const [key, value] = currentDirectiveKV.split("=")
 
       if (key.length > 100) {
@@ -73,9 +73,8 @@ function parseAcceptHeader(header: string = ""): Multicolour$AcceptHeader {
       }
     })
 
-  return values.length === 1
-    ? values[0]
-    : values.sort((left: Multicolour$AcceptHeaderValue, right: Multicolour$AcceptHeaderValue) =>
+  return values
+    .sort((left: Multicolour$AcceptHeaderValue, right: Multicolour$AcceptHeaderValue) =>
       right.quality - left.quality,
     )
 }
@@ -96,10 +95,10 @@ function HeaderParser(
 
   if (!request.headers) {
     return {
-      accept: {
+      accept: [{
         contentType: "application/json",
         quality: 1,
-      },
+      }],
     }
   }
 

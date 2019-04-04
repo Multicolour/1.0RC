@@ -77,11 +77,11 @@ class MulticolourServer {
 
   public onResponseError(request: Multicolour$IncomingMessage, response: ServerResponse, error: Multicolour$HttpError) {
     // tslint:disable-next-line:max-line-length
-    debug("An irrecoverable error occured, please fix this and add a test to prevent this error occuring again. If you believe this to be a bug with Multicolour, please submit a bug report to https://github.com/Multicolour/multicolour/issues/new. \n\nError: %O\nMethod: %s,\nStack: %O", error, request.method, error.stack) // eslint-disable-line max-len
+    debug("An irrecoverable error occured, please fix this and add a test to prevent this error occuring again. If you believe this to be a bug with Multicolour, please submit a bug report to https://github.com/Multicolour/multicolour/issues/new. \n\nError: %O\nMethod: %s,\nStack: %O", error, request.method, error.stack)
     response.writeHead(error.statusCode || 500)
     response.end(JSON.stringify({
       // tslint:disable-next-line:max-line-length
-      error: "Something went wrong server side, there wasn't anything that could be done. This is a developer problem, please contact the owner of this service to remedy this situation.", // eslint-disable-line max-len
+      error: "Something went wrong server side, there wasn't anything that could be done. This is a developer problem, please contact the owner of this service to remedy this situation.",
     }))
 
     return error
@@ -129,7 +129,7 @@ class MulticolourServer {
         }),
       )
       // Then reply with all of our data.
-      .then((reply: any) => {
+      .then((reply: string) => {
         response.writeHead(context.statusCode || 200, context.responseHeaders)
 
         response.end(reply)

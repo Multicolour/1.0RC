@@ -9,31 +9,31 @@ import { IncomingMessage } from "./mocks/http"
 const goodAcceptHeaders = [
   {
     contentType: "text/plain",
-    expected: {
+    expected: [{
       contentType: "text/plain",
       quality: 1,
-    },
+    }],
   },
   {
     contentType: "application/vnd.api+json",
-    expected: {
+    expected: [{
       contentType: "application/vnd.api+json",
       quality: 1,
-    },
+    }],
   },
   {
     contentType: "*/*",
-    expected: {
+    expected: [{
       contentType: "*/*",
       quality: 1,
-    },
+    }],
   },
   {
     contentType: "application/json;q=0.1",
-    expected: {
+    expected: [{
       contentType: "application/json",
       quality: 0.1,
-    },
+    }],
   },
   {
     contentType: "text/plain;q=0.5,text/html;q=0.001,application/json",
