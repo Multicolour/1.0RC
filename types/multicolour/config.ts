@@ -4,13 +4,13 @@ export interface Multicolour$ServiceBaseConfig {
   /**
    * The type of service this config describes.
    */
-  type: "database" | "api",
+  type: "database" | "api"
 
   /**
    * What other services does this one require
    * to run, the order is irrelevant.
    */
-  dependsOn?: string[],
+  dependsOn?: string[]
 }
 
 export interface Multicolour$APIServiceSecurityConfig {
@@ -22,7 +22,7 @@ export interface Multicolour$APIServiceSecurityConfig {
      * The master key used against all hash based security.
      * this is in addition to per user salting and hashing.
      */
-    masterKey: string,
+    masterKey: string
 
     /**
      * For each service, there can be many auth methods.
@@ -44,7 +44,7 @@ export interface Multicolour$APIServiceSecurityConfig {
          * If using an OAuth service like Facebook you can provide
          * your app or client secret here.
          */
-        clientSecret?: string,
+        clientSecret?: string
 
         /**
          * If you want to redirect XHR or multipart/form-data requests
@@ -54,15 +54,15 @@ export interface Multicolour$APIServiceSecurityConfig {
          *
          * @default "return"
          */
-        redirectURLs?: string[],
+        redirectURLs?: string[]
 
         /**
          * The type of auth you want to use for this provider.
          */
-        technology: "oath" | "token" | "basic",
+        technology: "oath" | "token" | "basic"
 
         // @TODO remove this if its not needed.
-        secure?: boolean,
+        secure?: boolean
       },
     },
   },
@@ -72,7 +72,7 @@ export interface Multicolour$APIServiceSecurityConfig {
    * by adding your FQDN/URIs here to be validated.
    */
   cors?: {
-    allowedDomains: string[],
+    allowedDomains: string[]
   },
 }
 
@@ -86,14 +86,14 @@ export interface Multicolour$DatabaseServiceConfig
     | "mysql"
     | "mysql2"
     | "oracle"
-    | "mssql",
+    | "mssql"
 
   /**
    * The host this database is at.
    *
    * @default "localhost"
    */
-  host?: string,
+  host?: string
 
   /**
    * The port this database is on. Will default to
@@ -103,21 +103,21 @@ export interface Multicolour$DatabaseServiceConfig
    * mysql: 3306
    * etc
    */
-  port?: number,
+  port?: number
 
   /**
    * The username used to auth with the database.
    *
    * @default "root"
    */
-  username?: string,
+  username?: string
 
   /**
    * The password to auth eith the database.
    *
    * @default ""
    */
-  password?: string,
+  password?: string
 }
 
 export interface Multicolour$APIServiceConfig
@@ -129,7 +129,7 @@ export interface Multicolour$APIServiceConfig
    *
    * @default "0.0.0.0"
    */
-  host?: string,
+  host?: string
 
   /**
    * The port on the `host` to listen for requests on.
@@ -138,19 +138,19 @@ export interface Multicolour$APIServiceConfig
    *
    * @default 1811
    */
-  port?: number,
+  port?: number
 
   /**
    * The external URL of this API service. I.E my-api.com
    *
    * @default ""
    */
-  rootUri?: string,
+  rootUri?: string
 
   /**
    * The security config this API service requests.
    */
-  security?: Multicolour$APIServiceSecurityConfig,
+  security?: Multicolour$APIServiceSecurityConfig
 
   /**
    * Whether or not to use the https module and
@@ -158,14 +158,14 @@ export interface Multicolour$APIServiceConfig
    * Setting this to true requires you to also set
    * `secureServerOptions` config.
    */
-  secure?: boolean,
+  secure?: boolean
 
   /**
    * All API services in production should
    * run a secure server, this is where you
    * configure the NodeJS https module.
    */
-  secureServerOptions?: https.ServerOptions,
+  secureServerOptions?: https.ServerOptions
 }
 
 export interface Multicolour$ServiceGroup {
@@ -173,7 +173,7 @@ export interface Multicolour$ServiceGroup {
    * Your service's definitions.
    */
   [key: string]: Multicolour$DatabaseServiceConfig
-    | Multicolour$APIServiceConfig,
+    | Multicolour$APIServiceConfig
 }
 
 /**
@@ -191,7 +191,7 @@ export interface Multicolour$Config {
    *
    * @default "./models"
    */
-  models?: string,
+  models?: string
 
   /**
    * When an uncaught error occurs or the service

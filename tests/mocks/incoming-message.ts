@@ -4,12 +4,13 @@ import {
   Multicolour$ParsedHeaders,
 } from "@lib/server/incoming-message"
 import { Socket } from "net"
+import { IncomingHttpHeaders } from "http"
 
 interface Options {
-  url: string,
-  method?: string,
-  body?: Buffer,
-  headers?: object,
+  url: string
+  method?: string
+  body?: Buffer
+  headers?: IncomingHttpHeaders
 }
 
 class IncomingMessage
@@ -31,6 +32,7 @@ class IncomingMessage
     this.url = options.url
     this.method = options.method
     this.body = options.body
+    this.headers = options.headers || {}
   }
 }
 

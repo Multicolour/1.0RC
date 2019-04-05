@@ -112,8 +112,6 @@ function HeaderParser(
   const accept = parseAcceptHeader(request.headers.accept)
   const contentType = parseContentTypeHeader(request.headers["content-type"])
 
-  console.log("IN", request.headers["content-type"])
-
   context.contentType = contentType
 
   return {
