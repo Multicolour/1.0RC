@@ -71,28 +71,26 @@ class MulticolourServer {
     // .addContentNegotiator("multipart/form-data", MultipartNegotiator)
   }
 
-  public onResponseError(request: Multicolour$IncomingMessage, response: ServerResponse, error: Multicolour$HttpError, context: Multicolour$ReplyContext) {
-    const reply = this.runResponseParser({
-      statusCode: error.statusCode || 500,
-      // tslint:disable-next-line:max-line-length
-      error: error.message,
+  public async onResponseError(
+    request: Multicolour$IncomingMessage,
+    response: ServerResponse,
+    context: Multicolour$ReplyContext,
+    error: Multicolour$HttpError,
+  ) {
+    const reply = await this.runResponseParser({
+      reply: {
+        error: error.message,
+      },
+      context,
+      response,
+      request,
     })
 
     // tslint:disable-next-line:max-line-length
     debug("An irrecoverable error occured, please fix this and add a test to prevent this error occuring again. If you believe this to be a bug with Multicolour, please submit a bug report to https://github.com/Multicolour/multicolour/issues/new. \n\nError: %O\nMethod: %s,\nStack: %O", error, request.method, error.stack)
 
-
-    this.runResponseParser({
-          reply,
-          context,
-          response,
-          request,
-        })
-
-    response.writeHead(reply.statusCode)
-    response.end(JSON.stringify({
-      error: reply.error,
-    }))
+    response.writeHead(error.statusCode || 500, context.responseHeaders)
+    response.end(reply)
 
     return {
       reply,
@@ -141,7 +139,7 @@ class MulticolourServer {
           context,
           response,
           request,
-        })
+        }),
       )
 
       // Then reply with all of our data.
@@ -172,8 +170,6 @@ class MulticolourServer {
         negotiatorIndex += 1
       }
     }
-
-    console.log(targetNegotiator)
 
     if (!targetNegotiator) {
       return Promise.reject(new Multicolour$HttpError({

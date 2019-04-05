@@ -1,4 +1,4 @@
-import RouterError from "@lib/better-errors/router-error"
+import PrettyErrorWithStack from "@lib/better-errors/pretty-error-with-stack"
 import Router from "@lib/server/router"
 import {
   Multicolour$Route,
@@ -12,24 +12,28 @@ test("Router starts and routing", () => {
   const routes: Multicolour$Route[] = [
     {
       path: "/user",
+      method: Multicolour$RouteVerbs.GET,
       handler: noOp,
     },
     {
       path: "/usurper",
+      method: Multicolour$RouteVerbs.GET,
       handler: noOp,
     },
     {
       path: "/user/:userId",
+      method: Multicolour$RouteVerbs.GET,
       handler: noOp,
     },
     {
       path: "/usurper/*name",
+      method: Multicolour$RouteVerbs.GET,
       handler: noOp,
     },
   ]
 
   routes.forEach((route: Multicolour$Route) => {
-    router.get(route)
+    router.GET(route)
   })
 
   // Do some basic tests on the resulting structure.
@@ -40,8 +44,7 @@ test("Router starts and routing", () => {
 
   // Test some of the parametric uris
   expect(router.match(Multicolour$RouteVerbs.GET, "/user/123")).toEqual({
-    path: "/user/:userId",
-    handler: noOp,
+    handle: noOp,
     params: [
       {
         key: "userId",
@@ -51,8 +54,7 @@ test("Router starts and routing", () => {
   })
 
   expect(router.match(Multicolour$RouteVerbs.GET, "/usurper/dave-mackintosh")).toEqual({
-    path: "/usurper/*name",
-    handler: noOp,
+    handle: noOp,
     params: [
       {
         key: "name",
@@ -64,89 +66,101 @@ test("Router starts and routing", () => {
   // Conflicting paths
   expect(() => {
     const router = new Router()
-    router.get({
+    router.GET({
       path: "/*conflict",
+      method: Multicolour$RouteVerbs.GET,
       handler: noOp,
     })
-    router.get({
+    router.GET({
       path: "/*conflict",
+      method: Multicolour$RouteVerbs.GET,
       handler: noOp,
     })
-  }).toThrow(RouterError)
+  }).toThrow(PrettyErrorWithStack)
 
   // Conflicting wildcard and static paths
   expect(() => {
     const router = new Router()
-    router.get({
+    router.GET({
       path: "/*/errorPlease",
+      method: Multicolour$RouteVerbs.GET,
       handler: noOp,
     })
-    router.get({
+    router.GET({
       path: "/cant/do/error",
+      method: Multicolour$RouteVerbs.GET,
       handler: noOp,
     })
-  }).toThrow(RouterError)
+  }).toThrow(PrettyErrorWithStack)
 
   // The "what are you tryna do"
   expect(() => {
     const router = new Router()
-    router.get({
+    router.GET({
       path: "/*/cant*/do/this",
+      method: Multicolour$RouteVerbs.GET,
       handler: noOp,
     })
-  }).toThrow(RouterError)
+  }).toThrow(PrettyErrorWithStack)
 
   // This isn't glob.
   expect(() => {
     const router = new Router()
-    router.get({
+    router.GET({
       path: "/**",
+      method: Multicolour$RouteVerbs.GET,
       handler: noOp,
     })
-  }).toThrow(RouterError)
+  }).toThrow(PrettyErrorWithStack)
 
   // Param without a name...
   expect(() => {
     const router = new Router()
-    router.get({
+    router.GET({
       path: "/:",
+      method: Multicolour$RouteVerbs.GET,
       handler: noOp,
     })
-  }).toThrow(RouterError)
+  }).toThrow(PrettyErrorWithStack)
 
   // Wildcard without a name
   expect(() => {
     const router = new Router()
-    router.get({
+    router.GET({
       path: "*",
+      method: Multicolour$RouteVerbs.GET,
       handler: noOp,
     })
-  }).toThrow(RouterError)
+  }).toThrow(PrettyErrorWithStack)
 
   // Conflicting param and wildcard paths.
   expect(() => {
     const router = new Router()
-    router.get({
+    router.GET({
       path: "/:param",
+      method: Multicolour$RouteVerbs.GET,
       handler: noOp,
     })
-    router.get({
+    router.GET({
       path: "/*test",
+      method: Multicolour$RouteVerbs.GET,
       handler: noOp,
     })
-  }).toThrow(RouterError)
+  }).toThrow(PrettyErrorWithStack)
 
   expect((() => {
     const router = new Router()
     let string = ""
 
     try {
-      router.get({
+      router.GET({
         path: "/test",
+      method: Multicolour$RouteVerbs.GET,
         handler: noOp,
       })
-      router.get({
+      router.GET({
         path: "/test",
+      method: Multicolour$RouteVerbs.GET,
         handler: noOp,
       })
     } catch (error) {
