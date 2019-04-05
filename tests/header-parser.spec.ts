@@ -1,4 +1,4 @@
-import HttpError from "@lib/better-errors/http-error"
+import PrettyErrorWithStack from "@lib/better-errors/pretty-error-with-stack"
 import {
   HeaderParser,
   parseAcceptHeader,
@@ -112,12 +112,12 @@ test("Bad content type headers", () => {
   const badDirectiveContentType = () =>
     parseContentTypeHeader("application/json; --boundary=" + "1".repeat(256))
 
-  expect(badDirectiveContentType).toThrow(HttpError)
+  expect(badDirectiveContentType).toThrow(PrettyErrorWithStack)
 
   const badDirectiveContentTypeKey = () =>
     parseContentTypeHeader("application/json; " + "a".repeat(101) + "=1")
 
-  expect(badDirectiveContentTypeKey).toThrow(HttpError)
+  expect(badDirectiveContentTypeKey).toThrow(PrettyErrorWithStack)
 })
 
 test("Header parser: HeaderParser", () => {
@@ -130,10 +130,10 @@ test("Header parser: HeaderParser", () => {
   }))
 
   expect(parsedHeaders).toEqual({
-    "accept": {
+    "accept": [{
       contentType: "application/json",
       quality: 1,
-    },
+    }],
     "content-type": {
       contentType: "application/json",
     },
