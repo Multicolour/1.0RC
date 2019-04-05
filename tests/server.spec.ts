@@ -53,11 +53,9 @@ const testableRoutes = [
       },
     },
     expected: (reply: any, response: ServerResponse) => {
-      expect(reply).toEqual({
+      expect(reply.reply).toEqual({
         statusCode: 418,
-        error: {
-          message: "Some kind of error.",
-        },
+        error: "Some kind of error.",
       })
       expect(response.statusCode).toBe(418)
       expect(response.getHeader("content-type")).toBe("application/json")

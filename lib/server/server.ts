@@ -71,16 +71,33 @@ class MulticolourServer {
     // .addContentNegotiator("multipart/form-data", MultipartNegotiator)
   }
 
-  public onResponseError(request: Multicolour$IncomingMessage, response: ServerResponse, error: Multicolour$HttpError) {
+  public onResponseError(request: Multicolour$IncomingMessage, response: ServerResponse, error: Multicolour$HttpError, context: Multicolour$ReplyContext) {
+    const reply = this.runResponseParser({
+      statusCode: error.statusCode || 500,
+      // tslint:disable-next-line:max-line-length
+      error: error.message,
+    })
+
     // tslint:disable-next-line:max-line-length
     debug("An irrecoverable error occured, please fix this and add a test to prevent this error occuring again. If you believe this to be a bug with Multicolour, please submit a bug report to https://github.com/Multicolour/multicolour/issues/new. \n\nError: %O\nMethod: %s,\nStack: %O", error, request.method, error.stack)
-    response.writeHead(error.statusCode || 500)
+
+
+    this.runResponseParser({
+          reply,
+          context,
+          response,
+          request,
+        })
+
+    response.writeHead(reply.statusCode)
     response.end(JSON.stringify({
-      // tslint:disable-next-line:max-line-length
-      error: "Something went wrong server side, there wasn't anything that could be done. This is a developer problem, please contact the owner of this service to remedy this situation.",
+      error: reply.error,
     }))
 
-    return error
+    return {
+      reply,
+      context,
+    }
   }
 
   public async onRequest(request: Multicolour$IncomingMessage, response: ServerResponse) {
@@ -124,7 +141,7 @@ class MulticolourServer {
           context,
           response,
           request,
-        }),
+        })
       )
 
       // Then reply with all of our data.
@@ -137,8 +154,8 @@ class MulticolourServer {
           reply,
           context,
         }
-      }, this.onResponseError.bind(this, request, response))
-      .catch(this.onResponseError.bind(this, request, response))
+      }, this.onResponseError.bind(this, request, response, context))
+      .catch(this.onResponseError.bind(this, request, response, context))
   }
 
   public runResponseParser(responseConfig: Multicolour$ResponseParserArgs): Promise<any> {
