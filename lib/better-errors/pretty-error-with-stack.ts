@@ -13,19 +13,20 @@ class PrettyErrorWithStack extends Error {
    */
   // tslint:disable-next-line:max-line-length
   public static ignoredPackages: RegExp = /(^internal\/process\/|module.js|flow-node|bootstrap_node.js|node_modules\/flow-remove-types|next_tick.js|node_modules\/jest-jasmine2|^events.js$|internal\/(bootstrap|modules)\/.*$)/
-  protected data: object
+  // tslint:disable-next-line:check-format
   public __proto__?: object
   public messageAST: Error$MessageAST
+  protected data: object
 
   constructor(message: string, context: string | object = {}) {
     super(message)
 
-    // restore prototype chain   
-    const actualProto = new.target.prototype;
+    // restore prototype chain
+    const actualProto = new.target.prototype
 
     if (Object.setPrototypeOf) {
       Object.setPrototypeOf(this, actualProto)
-    } 
+    }
     else {
       this.__proto__ = actualProto
     }
