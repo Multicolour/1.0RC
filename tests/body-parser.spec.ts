@@ -30,6 +30,7 @@ import { IncomingMessage } from "./mocks/http"
     request.emit("end")
 
     parser
-      .catch((error: PrettyErrorWithStack) => expect(error.messageAST.message).toEqual("Body size exceeded the maximum body size allowed on this server. Please try again with a smaller payload.")) // eslint-disable-line max-len
+      // tslint:disable-next-line:max-line-length
+      .catch((error: PrettyErrorWithStack) => expect(error.messageAST.message).toEqual("Body size exceeded the maximum body size allowed on this server. Please try again with a smaller payload."))
   })
 }

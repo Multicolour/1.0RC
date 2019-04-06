@@ -52,15 +52,20 @@ class Services {
         const service: Multicolour$ServiceGroup = services[serviceName]
 
         if (service.dependsOn) {
-          return service.dependsOn.map((serviceDependsOnName: string) => {
-            if (configuredServicesNames.indexOf(serviceDependsOnName) < 0) {
-              return {
-                type: "missing-dependency",
-                // tslint:disable-next-line:max-line-length
-                message: `The service "${serviceName}" depends on "${serviceDependsOnName}" but there is no service by that name. Check for a spelling mistake and check cases of service names.`,
+          return service.dependsOn
+            .map((serviceDependsOnName: string) => {
+              if (configuredServicesNames.indexOf(serviceDependsOnName) < 0) {
+                return {
+                  type: "missing-dependency",
+                  // tslint:disable-next-line:max-line-length
+                  message: `The service "${serviceName}" depends on "${serviceDependsOnName}" but there is no service by that name. Check for a spelling mistake and check cases of service names.`,
+                }
               }
-            }
-          })
+              else {
+                return false
+              }
+            })
+            .filter(Boolean)
         }
       })
       .reduce((out: ServiceDeclarationErrorType[], currentError: ServiceDeclarationErrorType[]) =>

@@ -150,7 +150,7 @@ test("Router starts and routing", () => {
 
   expect((() => {
     const router = new Router()
-    let string = ""
+    let error = ""
 
     try {
       router.GET({
@@ -164,10 +164,10 @@ test("Router starts and routing", () => {
         handler: noOp,
       })
     } catch (error) {
-      string = error.prettify()
+      error = error.prettify()
     }
 
-    return string
+    return error
   })()).toContain("A handle is already registered for path '/test'")
 
   // This appears to be an internal method but it's
