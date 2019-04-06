@@ -5,17 +5,32 @@ import {
 
 class PrettyErrorWithStack extends Error {
 
-  public static ignoredPackages: RegExp
-  public data: object
+  /**
+   * Ommit lines in the stack trace that match
+   * these patterns. Can be string or a RegExp.
+   *
+   * @type {RegExp}
+   */
+  // tslint:disable-next-line:max-line-length
+  public static ignoredPackages: RegExp = /(^internal\/process\/|module.js|flow-node|bootstrap_node.js|node_modules\/flow-remove-types|next_tick.js|node_modules\/jest-jasmine2|^events.js$|internal\/(bootstrap|modules)\/.*$)/
+  protected data: object
+  public __proto__?: object
   public messageAST: Error$MessageAST
 
   constructor(message: string, context: string | object = {}) {
     super(message)
 
-    // Fix the prototype chain:
-    this.data = { context }
-    this.name = this.constructor.name
+    // restore prototype chain   
+    const actualProto = new.target.prototype;
 
+    if (Object.setPrototypeOf) {
+      Object.setPrototypeOf(this, actualProto)
+    } 
+    else {
+      this.__proto__ = actualProto
+    }
+
+    this.data = { context }
     this.messageAST = this.getMessageAst()
   }
 
@@ -109,8 +124,9 @@ class PrettyErrorWithStack extends Error {
     }
   }
 
-  public getPrettyStack(): string[] {
-    return this.messageAST
+  protected getPrettyStack(): string[] {
+    const messageAST = this.getMessageAst()
+    return messageAST
       .stack.map((frame: Error$MessageFrameAST, index: number) => {
         let contextLanguage = "called by"
 
@@ -118,7 +134,7 @@ class PrettyErrorWithStack extends Error {
           contextLanguage = "error created at"
         }
 
-        if (index === this.messageAST.stack.length - 1) {
+        if (index === messageAST.stack.length - 1) {
           contextLanguage = "starting at"
         }
 
@@ -134,24 +150,16 @@ class PrettyErrorWithStack extends Error {
   }
 
   public prettify(): string {
+    const messageAST = this.getMessageAst()
     const messages = [
-      "ERROR: " + this.messageAST.message,
+      "ERROR: " + this.message,
       this.getPrettyStack(),
       "\n",
-      "Filtered out " + this.messageAST.framesDropped + " frames from frameworks and Node internals from the stack.",
+      "Filtered out " + messageAST.framesDropped + " frames from frameworks and Node internals from the stack.",
     ]
 
     return messages.join("\n")
   }
 }
-
-/**
- * Ommit lines in the stack trace that match
- * these patterns. Can be string or a RegExp.
- *
- * @type {RegExp}
- */
-// tslint:disable-next-line:max-line-length
-PrettyErrorWithStack.ignoredPackages = /(^internal\/process\/|module.js|flow-node|bootstrap_node.js|node_modules\/flow-remove-types|next_tick.js|node_modules\/jest-jasmine2|^events.js$|internal\/(bootstrap|modules)\/.*$)/
 
 export default PrettyErrorWithStack

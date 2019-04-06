@@ -1,4 +1,4 @@
-const { PrettyErrorWithStack } = require("../lib/better-errors/better-errors")
+import PrettyErrorWithStack from "../lib/better-errors/pretty-error-with-stack"
 
 test("Pretty error parser parses error stacks properly", () => {
   const test1Error = new PrettyErrorWithStack("test 1")

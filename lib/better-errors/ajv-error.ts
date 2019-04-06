@@ -10,19 +10,18 @@ import PrettyErrorWithStack from "./pretty-error-with-stack"
 
 class AJVValidationError extends PrettyErrorWithStack {
   public object: string
-  public validationErrors: ErrorObject[]
+  protected validationErrors: ErrorObject[]
 
-  constructor(message: string, object: string, errors: ErrorObject[] = []) {
-    super(message, `${object} objects validation against JSON schema.`)
+  constructor(message: string, object: string, validationErrors: ErrorObject[] = []) {
+    super(message, `${object} objects validation against JSON schema failed.`)
 
     this.object = object
-
-    this.validationErrors = errors
+    this.validationErrors = validationErrors
 
     Error.captureStackTrace(this, AJVValidationError)
   }
 
-  public getValidationErrorsFromAJVAST(): string[] {
+  private getValidationErrorsFromAJVAST(): string[] {
     return this.validationErrors.reduce((neatErrors: string[], currentError: ErrorObject): string[] => {
       switch (currentError.keyword) {
       case "required":
@@ -46,7 +45,7 @@ class AJVValidationError extends PrettyErrorWithStack {
         break
       /* istanbul ignore next */
       default:
-        neatErrors.push("Couldn't make this message more user friendly. Here it is raw:")
+        neatErrors.push("Couldn't make this message more user friendly. Here it is raw, sorry about that:")
         neatErrors.push(JSON.stringify(currentError, null, 2).split("\n").map((part: string) => `\t${part}`).join("\n"))
       }
 
@@ -56,9 +55,10 @@ class AJVValidationError extends PrettyErrorWithStack {
 
   public prettify(): string {
     const validationErrors = this.getValidationErrorsFromAJVAST()
+    const messageAST = this.getMessageAst()
 
     const messages = [
-      "ERROR: " + this.messageAST.message,
+      "ERROR: " + messageAST.message,
       "\n",
       "Encountered the following validation errors:",
       ...validationErrors.map((error: string, index: number) => `[${index}] * ${error}`),
@@ -68,7 +68,7 @@ class AJVValidationError extends PrettyErrorWithStack {
       "Please review the error above, frame stack below and perhaps visit the documentation https://getmulticolour.com/docs/1.0/config to help fix this issue.",
       this.getPrettyStack(),
       "\n",
-      "Filtered out " + this.messageAST.framesDropped + " frames from frameworks and Node internals from the stack.",
+      "Filtered out " + messageAST.framesDropped + " frames from frameworks and Node internals from the stack.",
     ]
 
     return messages.join("\n")

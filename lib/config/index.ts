@@ -1,6 +1,6 @@
 import { Multicolour$Config } from "@mc-types/multicolour/config"
 import Ajv from "ajv"
-import { ConfigValidationError } from "../better-errors/better-errors"
+import AJVValidationError from "../better-errors/ajv-error"
 import defaultConfig from "./default-config"
 
 import apiConfigSchema from "../../schema/config/api-service.schema.json"
@@ -19,9 +19,9 @@ function configValidator(config: Multicolour$Config): Multicolour$Config {
     ...config,
   }
   const valid = ajv.validate(configSchema, target)
-console.log("VALID", valid)
+  
   if (!valid) {
-    throw new ConfigValidationError("Invalid configuration", ajv.errors || [])
+    throw new AJVValidationError("Invalid configuration", "config", ajv.errors || [])
   }
 
   return target

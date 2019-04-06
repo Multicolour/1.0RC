@@ -21,11 +21,9 @@ test("Config validates and throws expected errors", () => {
     configValidator(configBadMinProperties)
   }
   catch (configError) {
-    console.log(configError)
     error = configError.prettify()
   }
 
-  console.log(error)
   expect(typeof error).toEqual("string")
   expect(error).toContain("Property \"config.services\" requires at least '1' defined properties")
 })

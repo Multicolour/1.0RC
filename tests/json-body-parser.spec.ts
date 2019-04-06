@@ -1,6 +1,6 @@
 import { IncomingMessage } from "./mocks/http"
 
-import JsonParser from "@lib/server/request-parsers/parsers/json"
+import JsonParser from "@lib/content-negotiators/json"
 
 const badPayloads = [
   require("./content/payloads/bad/json/bad-entry-char"),
@@ -17,7 +17,8 @@ test("JSON body parser with known bad payloads", async () => {
     const request = new IncomingMessage({
       url: "test",
     })
-    const parser = JsonParser({ request })
+    const jsonParser = new JsonParser()
+    const parser = jsonParser.parseBody({ request })
 
     request.emit("data", payload)
     request.emit("end")
@@ -25,8 +26,6 @@ test("JSON body parser with known bad payloads", async () => {
     return parser
       .catch(({statusCode}) => statusCode) // Kill the error, we want to test it.
   })
-
-  console.log(await Promise.all(parsers))
 
   const statusCodes = await Promise.all(parsers)
   expect(statusCodes.every((code) => code === 400)).toBe(true)
@@ -37,7 +36,8 @@ test("JSON body parser with known good payloads", async () => {
     const request = new IncomingMessage({
       url: "/test",
     })
-    const parser = JsonParser({ request })
+    const jsonParser = new JsonParser()
+    const parser = jsonParser.parseBody({ request })
 
     request.emit("data", payload)
     request.emit("end")
