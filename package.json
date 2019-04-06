@@ -17,8 +17,6 @@
     "multicolour": "cli.js"
   },
   "scripts": {
-    "linters": "npm run eslint",
-    "eslint": "eslint ./**/*.js",
     "unit-tests": "jest --maxWorkers=8",
     "test": "npm run unit-tests",
     "dev": "ts-node index.ts --watch"
@@ -38,8 +36,7 @@
     "debug": "^4.1.1",
     "formidable": "^1.2.1",
     "knex": "^0.16.3",
-    "toposort": "^2.0.2",
-    "typescript-json-schema": "^0.36.0"
+    "toposort": "^2.0.2"
   },
   "engine-strict": true,
   "engines": {
@@ -56,6 +53,7 @@
     "codacy-coverage": "^3.4.0",
     "jest": "^24.5.0",
     "ts-jest": "^24.0.1",
+    "ts-lint": "^4.5.1",
     "ts-node": "^8.0.3",
     "typescript": "^3.4.1"
   }

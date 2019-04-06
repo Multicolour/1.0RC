@@ -62,7 +62,7 @@ export interface Multicolour$APIServiceSecurityConfig {
         technology: "oath" | "token" | "basic"
 
         // @TODO remove this if its not needed.
-        secure?: boolean
+        secure?: boolean,
       },
     },
   },
@@ -72,7 +72,7 @@ export interface Multicolour$APIServiceSecurityConfig {
    * by adding your FQDN/URIs here to be validated.
    */
   cors?: {
-    allowedDomains: string[]
+    allowedDomains: string[],
   },
 }
 

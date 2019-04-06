@@ -19,7 +19,7 @@ process
     uncaughtPromise.then(() => ({
       statusCode: 500,
       // tslint:disable-next-line:max-line-length
-      errors: "An unexpected error has happened that this service tried to recover from. This is a developer problem, please contact the owner of this service and quote this reference so they can find the cause in their server logs. " + logID
+      errors: "An unexpected error has happened that this service tried to recover from. This is a developer problem, please contact the owner of this service and quote this reference so they can find the cause in their server logs. " + logID,
     }))
   })
 

@@ -19,7 +19,7 @@ function configValidator(config: Multicolour$Config): Multicolour$Config {
     ...config,
   }
   const valid = ajv.validate(configSchema, target)
-  
+
   if (!valid) {
     throw new AJVValidationError("Invalid configuration", "config", ajv.errors || [])
   }

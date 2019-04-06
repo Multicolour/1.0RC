@@ -3,8 +3,8 @@ import {
   Multicolour$ParsedBody,
   Multicolour$ParsedHeaders,
 } from "@lib/server/incoming-message"
-import { Socket } from "net"
 import { IncomingHttpHeaders } from "http"
+import { Socket } from "net"
 
 interface Options {
   url: string
