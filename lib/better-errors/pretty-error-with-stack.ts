@@ -12,10 +12,7 @@ class PrettyErrorWithStack extends Error {
   constructor(message: string, context: string | object = {}) {
     super(message)
 
-    Error.captureStackTrace(this, PrettyErrorWithStack)
-
     // Fix the prototype chain:
-    Object.setPrototypeOf(this, PrettyErrorWithStack.prototype)
     this.data = { context }
     this.name = this.constructor.name
 

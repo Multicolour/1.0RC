@@ -19,9 +19,9 @@ function configValidator(config: Multicolour$Config): Multicolour$Config {
     ...config,
   }
   const valid = ajv.validate(configSchema, target)
-
-  if (!valid && ajv.errors) {
-    throw new ConfigValidationError("Invalid configuration", ajv.errors)
+console.log("VALID", valid)
+  if (!valid) {
+    throw new ConfigValidationError("Invalid configuration", ajv.errors || [])
   }
 
   return target
