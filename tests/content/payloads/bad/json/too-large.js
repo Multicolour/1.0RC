@@ -4,4 +4,6 @@ const buff = new Buffer(size)
 while (buff.length < size)
   buff.write("\u00bd")
 
-module.exports = `{a: "${buff.toString("utf8")}"}`
+consy payload: string = `{a: "${buff.toString("utf8")}"}`
+
+export default payload

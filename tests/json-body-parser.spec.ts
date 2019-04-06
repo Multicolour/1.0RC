@@ -1,15 +1,20 @@
 import { IncomingMessage } from "./mocks/http"
 
 import JsonParser from "@lib/content-negotiators/json"
+import badEntryChar from "./content/payloads/bad/json/bad-entry-char"
+import syntaxError from "./content/payloads/bad/json/syntax-error"
+
+import jsonArray from "./content/payloads/good/json/array"
+import jsonObject from "./content/payloads/good/json/object"
 
 const badPayloads = [
-  require("./content/payloads/bad/json/bad-entry-char"),
-  require("./content/payloads/bad/json/syntax-error"),
+  badEntryChar,
+  syntaxError,
 ]
 
 const goodPayloads = [
-  require("./content/payloads/good/json/array"),
-  require("./content/payloads/good/json/object"),
+  jsonArray,
+  jsonObject,
 ]
 
 test("JSON body parser with known bad payloads", async () => {

@@ -13,7 +13,7 @@ class PrettyErrorWithStack extends Error {
    */
   // tslint:disable-next-line:max-line-length
   public static ignoredPackages: RegExp = /(^internal\/process\/|module.js|flow-node|bootstrap_node.js|node_modules\/flow-remove-types|next_tick.js|node_modules\/jest-jasmine2|^events.js$|internal\/(bootstrap|modules)\/.*$)/
-  // tslint:disable-next-line:check-format
+  // tslint:disable-next-line
   public __proto__?: object
   public messageAST: Error$MessageAST
   protected data: object
@@ -125,6 +125,18 @@ class PrettyErrorWithStack extends Error {
     }
   }
 
+  public prettify(): string {
+    const messageAST = this.getMessageAst()
+    const messages = [
+      "ERROR: " + this.message,
+      this.getPrettyStack(),
+      "\n",
+      "Filtered out " + messageAST.framesDropped + " frames from frameworks and Node internals from the stack.",
+    ]
+
+    return messages.join("\n")
+  }
+
   protected getPrettyStack(): string[] {
     const messageAST = this.getMessageAst()
     return messageAST
@@ -150,17 +162,6 @@ class PrettyErrorWithStack extends Error {
       })
   }
 
-  public prettify(): string {
-    const messageAST = this.getMessageAst()
-    const messages = [
-      "ERROR: " + this.message,
-      this.getPrettyStack(),
-      "\n",
-      "Filtered out " + messageAST.framesDropped + " frames from frameworks and Node internals from the stack.",
-    ]
-
-    return messages.join("\n")
-  }
 }
 
 export default PrettyErrorWithStack

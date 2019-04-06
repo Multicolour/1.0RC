@@ -1,12 +1,15 @@
+import debug from "debug"
+
 {
-  const debug = require("debug")("Multicolour:tests")
+  const log = debug("Multicolour:tests")
+
   process
     .on("uncaughtException", (error: Error) => {
-      debug(error)
-      debug(error.stack)
+      log(error)
+      log(error.stack)
     })
     .on("unhandledRejection", (reason: any, promise: Promise<any>) => {
-      debug(reason)
-      debug(promise)
+      log(reason)
+      log(promise)
     })
 }

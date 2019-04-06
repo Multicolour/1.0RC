@@ -1,4 +1,4 @@
-module.exports = JSON.stringify([
+const payload: string = JSON.stringify([
   {
     a: 1,
   },
@@ -9,3 +9,5 @@ module.exports = JSON.stringify([
     a: 3,
   },
 ])
+
+export default payload

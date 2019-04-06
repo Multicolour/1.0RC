@@ -1,3 +1,5 @@
+import Ajv from "ajv"
+import modelConstraintSchema from "../schema/model/constraint.schema.json"
 import { Multicolour$Model } from "../types/multicolour/model"
 
 import ModelValidationError from "./better-errors/model-error"
@@ -18,14 +20,15 @@ interface ModelFileResult {
 }
 
 function validateModelAgainstSchema(model: Multicolour$Model) {
-  const ajv = new (require("ajv"))()
+  const ajv = new Ajv()
 
-  ajv.addSchema(require("../schema/model/constraint.schema.json"))
+  ajv.addSchema(modelConstraintSchema)
 
   const validModel = ajv.validate(require("../schema/model/model.schema.json"), model.modelConfiguration)
 
   if (!validModel) {
-    throw new ModelValidationError(`Your model "${model.modelName}" contains errors. See below for an explanation:`, ajv.errors)
+    // tslint:disable-next-line:max-line-length
+    throw new ModelValidationError(`Your model "${model.modelName}" contains errors. See below for an explanation:`, ajv.errors || [])
   }
 
   return model

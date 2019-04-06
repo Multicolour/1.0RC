@@ -21,6 +21,27 @@ class AJVValidationError extends PrettyErrorWithStack {
     Error.captureStackTrace(this, AJVValidationError)
   }
 
+  public prettify(): string {
+    const validationErrors = this.getValidationErrorsFromAJVAST()
+    const messageAST = this.getMessageAst()
+
+    const messages = [
+      "ERROR: " + messageAST.message,
+      "\n",
+      "Encountered the following validation errors:",
+      ...validationErrors.map((error: string, index: number) => `[${index}] * ${error}`),
+      "\n",
+      `Validation errors in your ${this.object} are preventing Multicolour from starting up safely.`,
+        // tslint:disable-next-line:max-line-length
+      "Please review the error above, frame stack below and perhaps visit the documentation https://getmulticolour.com/docs/1.0/config to help fix this issue.",
+      this.getPrettyStack(),
+      "\n",
+      "Filtered out " + messageAST.framesDropped + " frames from frameworks and Node internals from the stack.",
+    ]
+
+    return messages.join("\n")
+  }
+
   private getValidationErrorsFromAJVAST(): string[] {
     return this.validationErrors.reduce((neatErrors: string[], currentError: ErrorObject): string[] => {
       switch (currentError.keyword) {
@@ -53,26 +74,6 @@ class AJVValidationError extends PrettyErrorWithStack {
     }, [])
   }
 
-  public prettify(): string {
-    const validationErrors = this.getValidationErrorsFromAJVAST()
-    const messageAST = this.getMessageAst()
-
-    const messages = [
-      "ERROR: " + messageAST.message,
-      "\n",
-      "Encountered the following validation errors:",
-      ...validationErrors.map((error: string, index: number) => `[${index}] * ${error}`),
-      "\n",
-      `Validation errors in your ${this.object} are preventing Multicolour from starting up safely.`,
-        // tslint:disable-next-line:max-line-length
-      "Please review the error above, frame stack below and perhaps visit the documentation https://getmulticolour.com/docs/1.0/config to help fix this issue.",
-      this.getPrettyStack(),
-      "\n",
-      "Filtered out " + messageAST.framesDropped + " frames from frameworks and Node internals from the stack.",
-    ]
-
-    return messages.join("\n")
-  }
 }
 
 export default AJVValidationError

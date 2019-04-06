@@ -1,1 +1,3 @@
-module.exports = "a: 123"
+const payload: string = "a: 123"
+
+export default payload

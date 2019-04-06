@@ -1,9 +1,9 @@
-import { ErrorObject } from "ajv"
-
-const PrettyErrorWithStack = require("./pretty-error-with-stack")
+import PrettyErrorWithStack from "./pretty-error-with-stack"
 
 class AJVSyntaxOrReferenceError extends PrettyErrorWithStack {
-  constructor(message: string, errors: ErrorObject[]) {
+  protected validationErrors: string[]
+
+  constructor(message: string, errors: string[]) {
     super(message, "Schema syntax and relational checks")
 
     this.validationErrors = errors

@@ -1,12 +1,10 @@
-export namespace Multicolour$ModelAttribute {
-  interface IntegerRange<Min, Max> {
-    min: Min,
-    max: Max,
-  }
-
-  interface Relationship<To> {
-    hasMany?: To,
-    hasOne?: To,
-  }
-
+export interface IntegerRange<Min, Max> {
+  min: Min,
+  max: Max,
 }
+
+export interface Relationship<To> {
+  hasMany?: To,
+  hasOne?: To,
+}
+
