@@ -174,22 +174,24 @@ class Node {
               (n.path.length >= path.length || path[n.path.length] === "/")
             ) {
               continue walk
-            } else {
-              // Wildcard conflict
-              let pathSeg = ""
-              if (n.type === CATCH_ALL) {
-                pathSeg = path
-              } else {
-                pathSeg = path.split("/")[0]
-              }
-              const prefix =
-                fullPath.slice(0, fullPath.indexOf(pathSeg)) + n.path
-              throw new Error(
+            }
+
+            // Wildcard conflict
+            let pathSeg = ""
+            if (n.type === CATCH_ALL) {
+              pathSeg = path
+            }
+            else {
+              pathSeg = path.split("/")[0]
+            }
+            const prefix =
+              fullPath.slice(0, fullPath.indexOf(pathSeg)) + n.path
+
+            throw new Error(
                 `'${pathSeg}' in new path '${fullPath}' conflicts with existing wildcard '${
                   n.path
                 }' in existing prefix '${prefix}'`,
               )
-            }
           }
 
           const c = path[0]
@@ -229,7 +231,9 @@ class Node {
           }
           n.insertChild(numParams, path, fullPath, handle)
           return
-        } else if (i === path.length) {
+        }
+
+        if (i === path.length) {
           // Make node a (in-path leaf)
           if (n.handle !== null) {
             throw new Error(
@@ -240,7 +244,8 @@ class Node {
         }
         return
       }
-    } else {
+    }
+    else {
       // Empty tree
       n.insertChild(numParams, path, fullPath, handle)
       n.type = ROOT
@@ -270,14 +275,14 @@ class Node {
         if (path[end] === ":" || path[end] === "*") {
           throw new Error(
             "only one wildcard per path segment is allowed, has: '" +
-              path.slice(i) +
-              "' in path '" +
-              fullPath +
-              "'",
+            path.slice(i) +
+            "' in path '" +
+            fullPath +
+            "'",
           )
-        } else {
-          end++
         }
+
+        end++
       }
 
       // Check if this Node existing children which would be unreachable
@@ -285,10 +290,10 @@ class Node {
       if (n.children.length > 0) {
         throw new Error(
           "wildcard route '" +
-            path.slice(i, end) +
-            "' conflicts with existing children in path '" +
-            fullPath +
-            "'",
+          path.slice(i, end) +
+          "' conflicts with existing children in path '" +
+          fullPath +
+          "'",
         )
       }
 
@@ -296,8 +301,8 @@ class Node {
       if (end - i < 2) {
         throw new Error(
           "wildcards must be named with a non-empty name in path '" +
-            fullPath +
-            "'",
+          fullPath +
+          "'",
         )
       }
 

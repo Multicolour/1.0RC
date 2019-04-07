@@ -76,7 +76,8 @@ testData.forEach((data) => {
     const handle = tree.search(data.route)
     if (data.found) {
       expect(handle).toBeTruthy()
-    } else {
+    }
+    else {
       expect(handle.handle).toBeFalsy()
     }
   })

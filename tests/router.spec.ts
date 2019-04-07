@@ -148,27 +148,20 @@ test("Router starts and routing", () => {
     })
   }).toThrow(PrettyErrorWithStack)
 
-  expect((() => {
+  expect(() => {
     const router = new Router()
-    let error = ""
 
-    try {
-      router.GET({
-        path: "/test",
+    router.GET({
+      path: "/test",
       method: Multicolour$RouteVerbs.GET,
-        handler: noOp,
-      })
-      router.GET({
-        path: "/test",
+      handler: noOp,
+    })
+    router.GET({
+      path: "/test",
       method: Multicolour$RouteVerbs.GET,
-        handler: noOp,
-      })
-    } catch (error) {
-      error = error.prettify()
-    }
-
-    return error
-  })()).toContain("A handle is already registered for path '/test'")
+      handler: noOp,
+    })
+  }).toThrow(PrettyErrorWithStack)
 
   // This appears to be an internal method but it's
   // ran here because of test coverage...
