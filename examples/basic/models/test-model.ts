@@ -1,5 +1,4 @@
-
-module.exports = {
+const model = {
   columns: {
     name: {
       type: "string",

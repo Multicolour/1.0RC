@@ -71,5 +71,5 @@ class Multicolour {
   }
 }
 
-module.exports = Multicolour
+export default Multicolour
 

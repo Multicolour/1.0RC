@@ -34,7 +34,7 @@ function validateModelAgainstSchema(model: Multicolour$Model) {
   return model
 }
 
-function getModels(path: string): Multicolour$ModelObject {
+function getModels(path: string = "./models"): Multicolour$ModelObject {
   const { readdirSync } = require("fs")
   const {
     basename,

@@ -61,9 +61,8 @@ class Services {
                   message: `The service "${serviceName}" depends on "${serviceDependsOnName}" but there is no service by that name. Check for a spelling mistake and check cases of service names.`,
                 }
               }
-              else {
-                return false
-              }
+
+              return false
             })
             .filter(Boolean)
         }
