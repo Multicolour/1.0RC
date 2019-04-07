@@ -1,4 +1,4 @@
-import MultipartNegotiator from "@lib/server/request-parsers/parsers/multipart"
+import MultipartNegotiator from "@lib/content-negotiators/multipart"
 import { IncomingMessage } from "./mocks/http"
 
 const payload = `
@@ -24,10 +24,11 @@ test("Multipart negotiator", () => {
     url: "/test",
     headers: {
       "content-type": "multipart/form-data; boundary=boundery",
-      "content-length": payload.length,
+      "content-length": payload.length.toString(),
     },
   })
-  const parser = MultipartNegotiator({ request })
+  const parserInstance = new MultipartNegotiator()
+  const parser = parserInstance.parseBody({ request })
 
   request.emit("data", Buffer.from(payload, "utf-8"))
   request.emit("end")

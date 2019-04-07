@@ -19,7 +19,8 @@
   "scripts": {
     "unit-tests": "jest --maxWorkers=8",
     "test": "npm run unit-tests",
-    "dev": "ts-node index.ts --watch"
+    "dev": "ts-node index.ts --watch",
+    "lint": "tslint --project . --fix"
   },
   "repository": {
     "type": "git",
