@@ -31,7 +31,8 @@ test("Multipart negotiator", () => {
   const parser = parserInstance.parseBody({ request })
 
   request.emit("data", Buffer.from(payload, "utf-8"))
-  request.emit("end")
+
+  setTimeout(() => request.emit("end"), 1500)
 
   return expect(parser).resolves.toEqual({
     field1: "value1",
