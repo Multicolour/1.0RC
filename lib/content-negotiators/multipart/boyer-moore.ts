@@ -12,8 +12,8 @@ export function boyerMooreSearch(text: string, pattern: string): number {
     return -1
   }
 
-  let charTable = makeCharTable(pattern)
-  let offsetTable = makeOffsetTable(pattern)
+  const charTable = makeCharTable(pattern)
+  const offsetTable = makeOffsetTable(pattern)
 
   for (let i = pattern.length - 1, j; i < text.length; ) {
     for (j = pattern.length - 1; pattern[j] === text[i]; i--, j--) {
@@ -32,8 +32,8 @@ export function boyerMooreSearch(text: string, pattern: string): number {
 /**
  * Creates jump table, based on mismatched character information
  */
-function makeCharTable(pattern: string): number[] {
-  let table = []
+export function makeCharTable(pattern: string): number[] {
+  const table = []
 
   // 65536 being the max value of char + 1
   for (let i = 0; i < 65536; i++) {
@@ -49,8 +49,8 @@ function makeCharTable(pattern: string): number[] {
 }
 
 
-function makeOffsetTable(pattern: string): number[] {
-  let table = []
+export function makeOffsetTable(pattern: string): number[] {
+  const table = []
   table.length = pattern.length
 
   let lastPrefixPosition = pattern.length
@@ -71,7 +71,7 @@ function makeOffsetTable(pattern: string): number[] {
   return table
 }
 
-function isPrefix(pattern: string, p: number): boolean {
+export function isPrefix(pattern: string, p: number): boolean {
   for (let i = p, j = 0; i < pattern.length; i++, j++) {
     if (pattern[i] !== pattern[j]) {
       return false
@@ -83,7 +83,7 @@ function isPrefix(pattern: string, p: number): boolean {
   return false
 }
 
-function suffixLength(pattern: string, p: number): number {
+export function suffixLength(pattern: string, p: number): number {
   let len = 0
 
   for (let i = p, j = pattern.length - 1; i >= 0 && pattern[i] === pattern[j]; i--, j--) {
@@ -92,3 +92,4 @@ function suffixLength(pattern: string, p: number): number {
 
   return len
 }
+
