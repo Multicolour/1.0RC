@@ -1,142 +1,97 @@
 // Unlicensed but from https://gist.github.com/Kamilczak020/f8382eef9777e8f07d47be29a4efc04b.
 
-const boyerMoore = {
+/**
+ * Returns the index of the first occurence of given string in the phrase
+ * In case of no match, returns -1
+ *
+ * @param text string to be searched
+ * @param pattern string to be found in the text
+ */
+export function boyerMooreSearch(text: Buffer, pattern: string): Set<number> {
+  const results = new Set()
 
-  alphabetSize: 256,
+  // Handle edge case
+  if (pattern.length === 0) {
+    return results
+  }
 
-  /*
-    Returns the index of the first occurence of
-    the `needle` buffer within the `haystack` buffer.
+  const charTable = makeCharTable(pattern)
+  const offsetTable = makeOffsetTable(pattern)
 
-    @param {Buffer} needle
-    @param {Buffer} haystack
-    @return {Integer}
-  */
-  indexOf(needle: Buffer, haystack: Buffer) {
-
-    let i
-    let k
-    const n = needle.length
-    const m = haystack.length
-
-    if ( n === 0 ) { return n }
-
-    const charTable = this.makeCharTable( needle )
-    const offsetTable = this.makeOffsetTable( needle )
-
-    for ( i = n - 1; i < m; ) {
-      for ( k = n - 1; needle[k] === haystack[i]; --i, --k ) {
-        if ( k === 0 ) { return i }
+  for (let i = pattern.length - 1, j; i <= text.length;) {
+    for (j = pattern.length - 1; pattern.charCodeAt(j) === text[i]; i--, j--) {
+      console.log(j, i)
+      if (j === 0) {
+        results.add(i)
       }
-      // i += n - k; // for naive method
-      i += Math.max( offsetTable[ n - 1 - k ], charTable[ haystack[i] ] )
     }
 
-    return -1
+    i += Math.max(offsetTable[pattern.length - 1 - j], charTable[text[i]])
+  }
 
-  },
+  return results
+}
 
-  /*
-    Makes the jump table based on the
-    mismatched character information.
+/**
+ * Creates jump table, based on mismatched character information
+ */
+function makeCharTable(pattern: string): number[] {
+  const table = []
 
-    @param {Buffer} needle
-    @return {Buffer}
-  */
-  makeCharTable(needle: Buffer): Uint32Array {
+  // 65536 being the max value of char + 1
+  for (let i = 0; i < 65536; i++) {
+    table.push(pattern.length)
+  }
 
-    const table = new Uint32Array( this.alphabetSize )
-    let n = needle.length
-    const t = table.length
-    let i = 0
+  for (let i = 0; i < pattern.length - 1; i++) {
+    const charCode = pattern.charCodeAt(i)
+    table[charCode] = pattern.length - 1 - i
+  }
 
-    for ( ; i < t; ++i ) {
-      table[i] = n
+  return table
+}
+
+
+function makeOffsetTable(pattern: string): number[] {
+  const table = []
+  table.length = pattern.length
+
+  let lastPrefixPosition = pattern.length
+
+  for (let i = pattern.length; i > 0; i--) {
+    if (isPrefix(pattern, i)) {
+      lastPrefixPosition = i
     }
 
-    n--
+    table[pattern.length - i] = lastPrefixPosition - 1 + pattern.length
+  }
 
-    for ( i = 0; i < n; ++i ) {
-      table[ needle[i] ] = n - i
-    }
+  for (let i = 0; i < pattern.length - 1; i++) {
+    const slen = suffixLength(pattern, i)
+    table[slen] = pattern.length - 1 - i + slen
+  }
 
-    return table
+  return table
+}
 
-  },
-
-  /*
-    Makes the jump table based on the
-    scan offset which mismatch occurs.
-
-    @param {Buffer} needle
-  */
-  makeOffsetTable(needle: Buffer) {
-
-    let i
-    let suffix
-    const n = needle.length
-    const m = n - 1
-    let lastPrefix = n
-    const table = new Uint32Array( n )
-
-    for ( i = m; i >= 0; --i ) {
-      if ( this.isPrefix( needle, i + 1 ) ) {
-        lastPrefix = i + 1
-      }
-      table[ m - i ] = lastPrefix - i + m
-    }
-
-    for ( i = 0; i < n; ++i ) {
-      suffix = this.suffixLength( needle, i )
-      table[ suffix ] = m - i + suffix
-    }
-
-    return table
-
-  },
-
-  /*
-    Is `needle[i:end]` a prefix of `needle`?
-
-    @param {Buffer} needle
-    @param {Integer} i
-  */
-  isPrefix(needle: Buffer, i: number): boolean {
-
-    let k = 0
-    const n = needle.length
-
-    for ( ; i < n; ++i, ++k ) {
-      if ( needle[i] !== needle[k] ) {
-        return false
-      }
+function isPrefix(pattern: string, p: number): boolean {
+  for (let i = p, j = 0; i < pattern.length; i++, j++) {
+    if (pattern[i] !== pattern[j]) {
+      return false
     }
 
     return true
+  }
 
-  },
-
-  /*
-    Returns the maximum length of the
-    substring ends at `i` and is a suffix.
-
-    @param {Buffer} needle
-    @param {Integer} i
-  */
-  suffixLength(needle: Buffer, i: number): number {
-
-    let k = 0
-    const n = needle.length
-    let m = n - 1
-
-    for ( ; i >= 0 && needle[i] === needle[m]; --i, --m ) {
-      k += 1
-    }
-
-    return k
-
-  },
-
+  return false
 }
 
-export default boyerMoore
+function suffixLength(pattern: string, p: number) {
+  let len = 0
+
+  for (let i = p, j = pattern.length - 1; i >= 0 && pattern[i] === pattern[j]; i--, j--) {
+    len += 1
+  }
+
+  return len
+}

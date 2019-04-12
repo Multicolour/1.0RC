@@ -1,21 +1,22 @@
 import http from "http"
-import boyerMoore from "./lib/content-negotiators/multipart/boyer-moore"
+import { boyerMooreSearch } from "./lib/content-negotiators/multipart/boyer-moore"
 
 http
   .createServer((request, response) => {
-    const boundaryIndexes: number[] = []
-    const boundary = "--X-INSOMNIA-BOUNDARY--"
+    const boundary = "--X-INSOMNIA-BOUNDARY"
+    let indexes: number[] = []
 
     request.on("data", (data: Buffer) => {
-      const index = boyerMoore.indexOf(data, Buffer.from(boundary))
-      console.log(index)
-      if (index > -1) {
-        boundaryIndexes.push(index)
+      const results = boyerMooreSearch(data, boundary)
+      if (results.size) {
+        indexes = [
+          ...indexes,
+          ...results,
+        ]
       }
     })
-    request.on("end", () => {
-      console.log(boundaryIndexes)
-    })
-    response.end("123")
+    request.on("end", () =>
+      response.end(JSON.stringify(indexes, null, 2)),
+    )
   })
   .listen(5000)
