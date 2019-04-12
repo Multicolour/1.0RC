@@ -7,29 +7,26 @@
  * @param text string to be searched
  * @param pattern string to be found in the text
  */
-export function boyerMooreSearch(text: Buffer, pattern: string): Set<number> {
-  const results = new Set()
-
+export function boyerMooreSearch(text: Buffer, pattern: string): number {
   // Handle edge case
   if (pattern.length === 0) {
-    return results
+    return -1
   }
 
   const charTable = makeCharTable(pattern)
   const offsetTable = makeOffsetTable(pattern)
 
-  for (let i = pattern.length - 1, j; i <= text.length;) {
+  for (let i = pattern.length - 1, j; i <= text.length; ) {
     for (j = pattern.length - 1; pattern.charCodeAt(j) === text[i]; i--, j--) {
-      console.log(j, i)
       if (j === 0) {
-        results.add(i)
+        return i
       }
     }
 
     i += Math.max(offsetTable[pattern.length - 1 - j], charTable[text[i]])
   }
 
-  return results
+  return -1
 }
 
 /**

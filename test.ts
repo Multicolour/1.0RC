@@ -7,7 +7,21 @@ http
     let indexes: number[] = []
 
     request.on("data", (data: Buffer) => {
-      const results = boyerMooreSearch(data, boundary)
+      let size = data.length
+      let buffer = data
+      
+      while (size > 0) {
+        const result = boyerMooreSearch(data, boundary)
+
+        if (result !== -1) {
+          indexes.push(result)
+          buffer = Buffer.copy(Buffer.allocUnsafe(buffer.length - (result + boundary.length)), 0, result, buffer.length))
+          
+        }
+
+        
+      }
+      
       if (results.size) {
         indexes = [
           ...indexes,
