@@ -4,42 +4,38 @@ import { boyerMooreSearch } from "./lib/content-negotiators/multipart/boyer-moor
 let boundary = "--X-INSOMNIA-BOUNDARY"
 
 function parseBufferData(data: Buffer): number[] {
-  let size = data.length
   let buffer = data
+  let lastResult = 0
   const indexes: number[] = []
-  let i = 0
 
-  console.log(data.toString())
-  console.log("\n".repeat(3))
-
-  // As long as there's content to check, loop.
-  while (size > 0 && i < 5) {
+  // As long as there's matches, keep searching.
+  while (lastResult !== -1) {
     const result = boyerMooreSearch(buffer, boundary)
-    if (result !== -1) {
-      // Create a new buffer without this match for the next loop.
-      const tempBuffer = Buffer.allocUnsafe(buffer.length - result)
-      buffer.copy(
-        tempBuffer,
-        0,
-        0,
-        result,
-      )
+    const newBufferSize = buffer.length - (result + boundary.length)
+    console.log(buffer.length, result)
+    console.log("\n".repeat(3))
+    // console.log("nb:", result, buffer.toString(), newBufferSize, "\n".repeat(2))
 
-      // Add this result to our collector.
-      indexes.push(result)
-      console.log(i)
-      console.log(tempBuffer.toString(), "\n".repeat(3))
-      // console.log(result, ":", buffer.toString().substr(result, result + boundary.length))
+    if (newBufferSize < 0) {
+      break
+    }
 
-      // update the size buffer.
-      size = tempBuffer.length
-      buffer = tempBuffer
-    }
-    else {
-      // No match inthe entire string. exit loop.
-      size = 0
-    }
-    i++
+    // Create a new buffer without this match for the next loop.
+    const tempBuffer = Buffer.allocUnsafe(newBufferSize)
+
+    buffer.copy(
+      tempBuffer,
+      0,
+      0,
+      newBufferSize,
+    )
+
+    // Add this result to our collector.
+    indexes.push(result)
+
+    // update the buffer.
+    buffer = tempBuffer
+    lastResult = result
   }
 
   return indexes
@@ -50,6 +46,7 @@ http
     const bodyParts: number[][] = []
     const ct = request.headers["content-type"] || ""
     boundary = ct.split(";")[1].split("=")[1]
+    console.log("boundary is:\n%s\n", boundary)
     request.on("data", (chunk: Buffer) => bodyParts.push(parseBufferData(chunk)))
     request.on("end", () => {
 

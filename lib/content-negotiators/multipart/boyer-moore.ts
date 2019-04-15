@@ -92,3 +92,4 @@ function suffixLength(pattern: string, p: number) {
 
   return len
 }
+
