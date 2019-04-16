@@ -9,7 +9,7 @@
  */
 export function boyerMooreSearch(text: Buffer, pattern: string): number {
   // Handle edge case
-  if (pattern.length === 0) {
+  if (pattern.length === 0 || text.length === 0) {
     return -1
   }
 

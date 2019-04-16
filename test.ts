@@ -5,17 +5,18 @@ let boundary = "--X-INSOMNIA-BOUNDARY"
 
 function parseBufferData(data: Buffer): number[] {
   let buffer = data
-  let lastResult = 0
+  let lastResult: number | null = null
   const indexes: number[] = []
 
   // As long as there's matches, keep searching.
   while (lastResult !== -1) {
-    // Do the search.
-    const result = boyerMooreSearch(buffer, boundary)
-
-    if (result === -1) {
-      break
+    // Add the last result to our collector.
+    if (lastResult !== null) {
+      indexes.push(lastResult)
     }
+
+    // Do another search.
+    const result = boyerMooreSearch(buffer, boundary)
 
     // Get the next offset.
     const resultOffsetNum = result + boundary.length + 2
@@ -23,7 +24,7 @@ function parseBufferData(data: Buffer): number[] {
     // Calculate how big the next buffer needs to be
     const newBufferSize = buffer.length - resultOffsetNum
 
-    console.log("r", result,  "bs", buffer.length, "nbs", newBufferSize, "ro", resultOffsetNum)
+    console.log("r", result,  "bl", boundary.length, "bs", buffer.length, "nbs", newBufferSize, "ro", resultOffsetNum)
     console.log("nb:\n")
     console.log(JSON.stringify(buffer.toString()), "\n".repeat(2))
 
@@ -34,14 +35,14 @@ function parseBufferData(data: Buffer): number[] {
     }
 
     // Create a new buffer without this match for the next loop.
-    const tempBuffer = Buffer.allocUnsafe(newBufferSize)
+    const tempBuffer = Buffer.alloc(newBufferSize)
 
     // Copy the contents of the current buffer into a new one
     // using the calculated result offset to shrink it.
     buffer.copy(
       tempBuffer,
-      resultOffsetNum,
       0,
+      resultOffsetNum,
       newBufferSize,
     )
 
@@ -49,8 +50,6 @@ function parseBufferData(data: Buffer): number[] {
     console.log(tempBuffer.toString())
     console.log("\n".repeat(3))
 
-    // Add this result to our collector.
-    indexes.push(result)
 
     // update the buffer.
     buffer = tempBuffer
