@@ -1,58 +1,27 @@
 import http from "http"
-import { boyerMooreSearch } from "./lib/content-negotiators/multipart/boyer-moore"
+import BoyerMooreHorspool from "./lib/content-negotiators/multipart/boyer-moore"
 
 let boundary = "--X-INSOMNIA-BOUNDARY"
 
 function parseBufferData(data: Buffer): number[] {
-  let buffer = data
-  let lastResult: number | null = null
+  let lastResult: number | void
   const indexes: number[] = []
+  const algo = new BoyerMooreHorspool(boundary)
 
   // As long as there's matches, keep searching.
   while (lastResult !== -1) {
+    let result = -1
     // Add the last result to our collector.
-    if (lastResult !== null) {
+    if (typeof lastResult !== "undefined") {
       indexes.push(lastResult)
+      result = algo.search(data, lastResult + boundary.length + 2)
+      console.log(result, data.toString().substr(lastResult + boundary.length + 2, data.length))
+    }
+    else {
+      result = algo.search(data)
     }
 
-    // Do another search.
-    const result = boyerMooreSearch(buffer, boundary)
-
-    // Get the next offset.
-    const resultOffsetNum = result + boundary.length + 2
-
-    // Calculate how big the next buffer needs to be
-    const newBufferSize = buffer.length - resultOffsetNum
-
-    console.log("r", result,  "bl", boundary.length, "bs", buffer.length, "nbs", newBufferSize, "ro", resultOffsetNum)
-    console.log("nb:\n")
-    console.log(JSON.stringify(buffer.toString()), "\n".repeat(2))
-
-    // Check the new buffer will have a positive size.
-    // Exit if it doesn't, there's nowt left to search.
-    if (newBufferSize < 0) {
-      break
-    }
-
-    // Create a new buffer without this match for the next loop.
-    const tempBuffer = Buffer.alloc(newBufferSize)
-
-    // Copy the contents of the current buffer into a new one
-    // using the calculated result offset to shrink it.
-    buffer.copy(
-      tempBuffer,
-      0,
-      resultOffsetNum,
-      newBufferSize,
-    )
-
-    console.log("NEW BUFFER", tempBuffer.length)
-    console.log(tempBuffer.toString())
-    console.log("\n".repeat(3))
-
-
-    // update the buffer.
-    buffer = tempBuffer
+    console.log(result)
     lastResult = result
   }
 
