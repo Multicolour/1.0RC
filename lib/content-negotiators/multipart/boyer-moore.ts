@@ -10,6 +10,7 @@ export default class BoyerMooreHorspool {
   }
 
   public search(haystack: Buffer, start: number = 0) {
+    const results = []
     let skip = 1
     for (
       let haystackChar = start, maxHaystackChar = haystack.length;
@@ -23,12 +24,12 @@ export default class BoyerMooreHorspool {
             : this.needle.length
         }
         else if (needleChar === 0) {
-          return haystackChar
+          results.push(haystackChar)
         }
       }
     }
 
-    return -1
+    return results
   }
 
   private makeBadCharTable(): BadCharTable {
