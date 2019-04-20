@@ -7,7 +7,6 @@ export default class BoyerMooreHorspool {
 
   constructor(public needle: string) {
     this.badCharTable = this.makeBadCharTable()
-    console.log("badCharTable", this.badCharTable)
   }
 
   public search(haystack: Buffer, start: number = 0) {

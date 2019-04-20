@@ -36,22 +36,23 @@ test("ensuring Boyer Moore Hoorspool algorithm works with static payload: " + pa
   })
 })
 
-function getRandomString(length = Math.floor(1000 * Math.random())): string {
+/*
+function getRandomString(): string {
   let out = ""
-  while (length--) {
+  for (let i = 1, max = 500; i < max; i++) {
     out += String.fromCharCode( 48 + ~~(Math.random() * 42))
   }
   return out
 }
 
 for (let testIndex = 0, maxTests = 25; testIndex <= maxTests; testIndex++) {
-  console.log(testIndex)
   const testText = getRandomString()
   const expected = Math.floor(Math.random() * testText.length)
-  const pattern = testText.substr(expected, Math.floor(Math.random() * testText.length))
+  const pattern = testText.substr(expected, Math.floor(Math.random() * 51))
 
   test("ensuring Boyer Moore Hoorspool algorithm works with random payload" + pattern, () => {
     const instance = new BoyerMooreHorspool(pattern)
     expect(instance.search(Buffer.from(testText))).toEqual([expected])
   })
-}
+}*/
+
