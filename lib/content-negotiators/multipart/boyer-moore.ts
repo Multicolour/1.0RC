@@ -7,6 +7,7 @@ export default class BoyerMooreHorspool {
 
   constructor(public needle: string) {
     this.badCharTable = this.makeBadCharTable()
+    console.log(this.badCharTable)
   }
 
   public search(haystack: Buffer, start: number = 0) {
@@ -17,9 +18,12 @@ export default class BoyerMooreHorspool {
       haystackChar < maxHaystackChar;
       haystackChar += skip
     ) {
+      /*console.log("skip", skip)
+      console.log("haystack", haystack[haystackChar])*/
       needle: for (let needleChar: number = this.needle.length - 1; needleChar >= 0; needleChar--) {
+        // console.log("needle", this.needle.charCodeAt(needleChar))
         if (haystack[haystackChar + needleChar] !== this.needle.charCodeAt(needleChar)) {
-          skip = this.badCharTable.hasOwnProperty(haystack[haystackChar])
+          skip = this.badCharTable.hasOwnProperty(haystack[haystackChar].toString())
             ? this.badCharTable[haystack[haystackChar]]
             : this.needle.length - 1
           break needle
@@ -37,18 +41,18 @@ export default class BoyerMooreHorspool {
 
   private makeBadCharTable(): BadCharTable {
     const badCharTable: BadCharTable = {}
-    for (let char: number = 0, max = this.needle.length - 1; char < max; char++) {
-      if (char === max - 1 && badCharTable.hasOwnProperty(this.needle[char])) {
+    for (let char: number = 0, max = this.needle.length; char < max; char++) {
+      const charCode = this.needle.charCodeAt(char)
+      if (char === max - 1 && badCharTable.hasOwnProperty(charCode)) {
         break
       }
 
       if (char === max - 1) {
-        badCharTable[this.needle.charCodeAt(char)] = max
+        badCharTable[charCode] = max
       }
       else {
-        badCharTable[this.needle.charCodeAt(char)] = max - char - 1
+        badCharTable[charCode] = max - char - 1
       }
-
     }
 
     return badCharTable
