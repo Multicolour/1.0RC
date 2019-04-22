@@ -19,8 +19,8 @@ export default class BoyerMooreHorspool {
     ) {
       needle: for (let needleChar: number = this.needle.length - 1; needleChar >= 0; needleChar--) {
         if (haystack[haystackChar + needleChar] !== this.needle.charCodeAt(needleChar)) {
-          skip = this.badCharTable.hasOwnProperty(this.needle.charCodeAt(this.needle.length - 1))
-            ? this.badCharTable[this.needle.charCodeAt(this.needle.length - 1)]
+          skip = this.badCharTable.hasOwnProperty(haystack[haystackChar + needleChar])
+            ? this.badCharTable[haystack[haystackChar + needleChar]]
             : this.needle.length
           break needle
         }

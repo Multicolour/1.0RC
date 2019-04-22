@@ -18,14 +18,14 @@ import BoyerMooreHorspool from "@lib/content-negotiators/multipart/boyer-moore"
     expected: [0, 3, 6],
   },
   {
-    text: "trusthardtoothbrushes",
-    pattern: "tooth",
-    expected: [10],
-  },
-  {
     text: "toothbrushestoothbrushes",
     pattern: "tooth",
     expected: [0, 12],
+  },
+  {
+    text: "trusthardtoothbrushes",
+    pattern: "tooth",
+    expected: [9],
   },
 ].forEach((payload) => {
 test("ensuring Boyer Moore Hoorspool algorithm works with static payload: " + payload.text, () => {
@@ -36,7 +36,6 @@ test("ensuring Boyer Moore Hoorspool algorithm works with static payload: " + pa
   })
 })
 
-/*
 function getRandomString(): string {
   let out = ""
   for (let i = 1, max = 500; i < max; i++) {
@@ -50,9 +49,14 @@ for (let testIndex = 0, maxTests = 25; testIndex <= maxTests; testIndex++) {
   const expected = Math.floor(Math.random() * testText.length)
   const pattern = testText.substr(expected, Math.floor(Math.random() * 51))
 
-  test("ensuring Boyer Moore Hoorspool algorithm works with random payload" + pattern, () => {
+  // Skip over tiny payloads.
+  if (testText.length < 5 || pattern.length === 0) {
+    continue
+  }
+
+  test("ensuring Boyer Moore Hoorspool algorithm works with random payload: " + pattern, () => {
     const instance = new BoyerMooreHorspool(pattern)
     expect(instance.search(Buffer.from(testText))).toEqual([expected])
   })
-}*/
+}
 
