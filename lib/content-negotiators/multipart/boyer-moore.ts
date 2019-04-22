@@ -7,30 +7,26 @@ export default class BoyerMooreHorspool {
 
   constructor(public needle: string) {
     this.badCharTable = this.makeBadCharTable()
-    console.log(this.badCharTable)
   }
 
-  public search(haystack: Buffer, start: number = 0) {
+  public search(haystack: Buffer) {
     const results: number[] = []
     let skip = 1
     for (
-      let haystackChar = start, maxHaystackChar = haystack.length - 1;
-      haystackChar < maxHaystackChar;
+      let haystackChar = 0, maxHaystackChar = haystack.length - 1;
+      haystackChar <= maxHaystackChar;
       haystackChar += skip
     ) {
-      /*console.log("skip", skip)
-      console.log("haystack", haystack[haystackChar])*/
       needle: for (let needleChar: number = this.needle.length - 1; needleChar >= 0; needleChar--) {
-        // console.log("needle", this.needle.charCodeAt(needleChar))
         if (haystack[haystackChar + needleChar] !== this.needle.charCodeAt(needleChar)) {
-          skip = this.badCharTable.hasOwnProperty(haystack[haystackChar].toString())
-            ? this.badCharTable[haystack[haystackChar]]
-            : this.needle.length - 1
+          skip = this.badCharTable.hasOwnProperty(this.needle.charCodeAt(this.needle.length - 1))
+            ? this.badCharTable[this.needle.charCodeAt(this.needle.length - 1)]
+            : this.needle.length
           break needle
         }
         else if (needleChar === 0) {
           results.push(haystackChar)
-          skip = this.needle.length - 1
+          skip = this.needle.length
           break needle
         }
       }
