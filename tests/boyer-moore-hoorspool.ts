@@ -27,6 +27,11 @@ import BoyerMooreHorspool from "@lib/content-negotiators/multipart/boyer-moore"
     pattern: "tooth",
     expected: [9],
   },
+  {
+    text: "👍👎🖐❤🌷🍀🌱🐕",
+    pattern: "👍",
+    expected: [0],
+  },
 ].forEach((payload) => {
 test("ensuring Boyer Moore Hoorspool algorithm works with static payload: " + payload.text, () => {
     const instance = new BoyerMooreHorspool(payload.pattern)
@@ -39,7 +44,7 @@ test("ensuring Boyer Moore Hoorspool algorithm works with static payload: " + pa
 function getRandomString(): string {
   let out = ""
   for (let i = 1, max = 500; i < max; i++) {
-    out += String.fromCharCode( 48 + ~~(Math.random() * 42))
+    out += String.fromCharCode(48 + ~~(Math.random() * 42))
   }
   return out
 }
@@ -47,10 +52,15 @@ function getRandomString(): string {
 for (let testIndex = 0, maxTests = 25; testIndex <= maxTests; testIndex++) {
   const testText = getRandomString()
   const expected = Math.floor(Math.random() * testText.length)
-  const pattern = testText.substr(expected, Math.floor(Math.random() * 51))
 
   // Skip over tiny payloads.
-  if (testText.length < 5 || pattern.length === 0) {
+  if (testText.length < 5) {
+    continue
+  }
+
+  const pattern = testText.substr(expected, Math.floor(Math.random() * 51))
+
+  if (pattern.length < 5) {
     continue
   }
 

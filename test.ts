@@ -3,9 +3,9 @@ import BoyerMooreHorspool from "./lib/content-negotiators/multipart/boyer-moore"
 
 let boundary = "--X-INSOMNIA-BOUNDARY"
 let indexes: number[] = []
+const algo = new BoyerMooreHorspool(boundary)
 
 function parseBufferData(data: Buffer): number[] {
-  const algo = new BoyerMooreHorspool(boundary)
 
   indexes = indexes.concat(algo.search(data))
 
@@ -17,7 +17,6 @@ http
     const bodyParts: number[][] = []
     const ct = request.headers["content-type"] || ""
     boundary = "--" + ct.split(";")[1].split("=")[1]
-    console.log("boundary is:\n%s\n", JSON.stringify(boundary))
     request.on("data", (chunk: Buffer) => bodyParts.push(parseBufferData(chunk)))
     request.on("end", () => {
       response.end(JSON.stringify(bodyParts, null, 2))

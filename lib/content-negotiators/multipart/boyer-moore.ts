@@ -2,12 +2,22 @@ interface BadCharTable {
   [char: string]: number,
 }
 
+/*interface ParsedFields {
+  [field: string]: any | File,
+}*/
+
 export default class BoyerMooreHorspool {
+  public needle: Buffer
   private badCharTable: BadCharTable = {}
 
-  constructor(public needle: string) {
+  constructor(needle: string) {
+    this.needle = Buffer.from(needle)
     this.badCharTable = this.makeBadCharTable()
   }
+
+    /*public getBodyFields(body: Buffer, boundaryIndices: number[]): ParsedFields {
+
+  }*/
 
   public search(haystack: Buffer) {
     const results: number[] = []
@@ -18,7 +28,7 @@ export default class BoyerMooreHorspool {
       haystackChar += skip
     ) {
       needle: for (let needleChar: number = this.needle.length - 1; needleChar >= 0; needleChar--) {
-        if (haystack[haystackChar + needleChar] !== this.needle.charCodeAt(needleChar)) {
+        if (haystack[haystackChar + needleChar] !== this.needle[needleChar]) {
           skip = this.badCharTable.hasOwnProperty(haystack[haystackChar + needleChar])
             ? this.badCharTable[haystack[haystackChar + needleChar]]
             : this.needle.length
@@ -38,7 +48,7 @@ export default class BoyerMooreHorspool {
   private makeBadCharTable(): BadCharTable {
     const badCharTable: BadCharTable = {}
     for (let char: number = 0, max = this.needle.length; char < max; char++) {
-      const charCode = this.needle.charCodeAt(char)
+      const charCode = this.needle[char]
       if (char === max - 1 && badCharTable.hasOwnProperty(charCode)) {
         break
       }
