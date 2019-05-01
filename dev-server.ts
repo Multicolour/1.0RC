@@ -19,6 +19,7 @@ http
     boundary = "--" + ct.split(";")[1].split("=")[1]
     request.on("data", (chunk: Buffer) => bodyParts.push(parseBufferData(chunk)))
     request.on("end", () => {
+      algo.getBodyFieldStrings(body, indices)
       response.end(JSON.stringify(bodyParts, null, 2))
     })
   })

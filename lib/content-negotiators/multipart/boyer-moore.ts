@@ -2,9 +2,11 @@ interface BadCharTable {
   [char: string]: number,
 }
 
-/*interface ParsedFields {
+interface ParsedFields {
   [field: string]: any | File,
-}*/
+}
+
+type SeparatedBodyParts = string[]
 
 export default class BoyerMooreHorspool {
   public needle: Buffer
@@ -15,9 +17,23 @@ export default class BoyerMooreHorspool {
     this.badCharTable = this.makeBadCharTable()
   }
 
-    /*public getBodyFields(body: Buffer, boundaryIndices: number[]): ParsedFields {
+  public getBodyFieldStrings(body: Buffer, boundaryIndices: number[]): SeparatedBodyParts {
+    const bodyParts = []
+    for (let currentMatchIndex = 0, max = boundaryIndices.length; currentMatchIndex <= max; currentMatchIndex += 1) {
+      const bodyPiece = Buffer.alloc(boundaryIndices[currentMatchIndex + 1])
 
-  }*/
+      body.copy(bodyPiece, boundaryIndices[currentMatchIndex], boundaryIndices[currentMatchIndex + 1])
+
+      bodyParts.push(bodyPiece.toString())
+    }
+
+    return bodyParts
+  }
+
+  public parseBodyFields(bodyParts: string[]): ParsedFields {
+    console.log(bodyParts)
+    return {}
+  }
 
   public search(haystack: Buffer) {
     const results: number[] = []

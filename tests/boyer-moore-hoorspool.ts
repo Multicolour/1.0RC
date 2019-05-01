@@ -33,11 +33,11 @@ import BoyerMooreHorspool from "@lib/content-negotiators/multipart/boyer-moore"
     expected: [0],
   },
 ].forEach((payload) => {
-test("ensuring Boyer Moore Hoorspool algorithm works with static payload: " + payload.text, () => {
+  test("ensuring Boyer Moore Hoorspool algorithm works with static payload: " + payload.text, () => {
     const instance = new BoyerMooreHorspool(payload.pattern)
+    const indices = instance.search(Buffer.from(payload.text))
 
-    expect(instance.search(Buffer.from(payload.text))).toEqual(payload.expected)
-
+    expect(indices).toEqual(payload.expected)
   })
 })
 
