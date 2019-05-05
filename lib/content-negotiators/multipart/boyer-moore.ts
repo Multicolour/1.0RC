@@ -13,16 +13,27 @@ export default class BoyerMooreHorspool {
   private badCharTable: BadCharTable = {}
 
   constructor(needle: string) {
-    this.needle = Buffer.from(needle)
+    this.needle = Buffer.from(needle.trim())
     this.badCharTable = this.makeBadCharTable()
   }
 
   public getBodyFieldStrings(body: Buffer, boundaryIndices: number[]): SeparatedBodyParts {
+    console.log("BI", boundaryIndices, "\n", body.toString())
     const bodyParts = []
-    for (let currentMatchIndex = 0, max = boundaryIndices.length; currentMatchIndex <= max; currentMatchIndex += 1) {
-      const bodyPiece = Buffer.alloc(boundaryIndices[currentMatchIndex + 1])
+    for (
+      let currentMatchIndex = 0,
+          max = boundaryIndices.length - 1;
+      currentMatchIndex <= max;
+      currentMatchIndex += 1
+    ) {
+      const index = currentMatchIndex === max
+        ? currentMatchIndex
+        : currentMatchIndex + 1
+      const size = body.length - boundaryIndices[index] - this.needle.length
+      console.log("SIZE", size)
+      const bodyPiece = Buffer.alloc(size)
 
-      body.copy(bodyPiece, boundaryIndices[currentMatchIndex], boundaryIndices[currentMatchIndex + 1])
+      body.copy(bodyPiece, boundaryIndices[currentMatchIndex] + this.needle.length, boundaryIndices[index])
 
       bodyParts.push(bodyPiece.toString())
     }
