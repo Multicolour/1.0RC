@@ -26,14 +26,21 @@ export default class BoyerMooreHorspool {
       currentMatchIndex <= max;
       currentMatchIndex += 1
     ) {
-      const index = currentMatchIndex === max
+      // We can exit here since the last index is the closing boundary.
+      if (currentMatchIndex === max) {
+        break
+      }
+
+      const nextIndex = currentMatchIndex === max
         ? currentMatchIndex
         : currentMatchIndex + 1
-      const size = body.length - boundaryIndices[index] - this.needle.length
-      console.log("SIZE", size)
+
+      // const size = body.length - boundaryIndices[index] - this.needle.length
+      const size = boundaryIndices[nextIndex] - (boundaryIndices[currentMatchIndex] + this.needle.length)
+      console.log(currentMatchIndex, nextIndex, "SIZE", size)
       const bodyPiece = Buffer.alloc(size)
 
-      body.copy(bodyPiece, boundaryIndices[currentMatchIndex] + this.needle.length, boundaryIndices[index])
+      body.copy(bodyPiece, 0, boundaryIndices[currentMatchIndex] + this.needle.length, boundaryIndices[nextIndex])
 
       bodyParts.push(bodyPiece.toString())
     }
