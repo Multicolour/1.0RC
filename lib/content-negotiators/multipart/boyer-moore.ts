@@ -6,19 +6,19 @@ interface ParsedFields {
   [field: string]: any | File,
 }
 
-type SeparatedBodyParts = string[]
+type SeparatedBodyParts = Buffer[]
 
 export default class BoyerMooreHorspool {
   public needle: Buffer
   private badCharTable: BadCharTable = {}
 
   constructor(needle: string) {
-    this.needle = Buffer.from(needle.trim())
+    this.needle = Buffer.from(needle)
+    console.log(this.needle.toString())
     this.badCharTable = this.makeBadCharTable()
   }
 
   public getBodyFieldStrings(body: Buffer, boundaryIndices: number[]): SeparatedBodyParts {
-    console.log("BI", boundaryIndices, "\n", body.toString())
     const bodyParts = []
     for (
       let currentMatchIndex = 0,
@@ -35,28 +35,39 @@ export default class BoyerMooreHorspool {
         ? currentMatchIndex
         : currentMatchIndex + 1
 
-      // const size = body.length - boundaryIndices[index] - this.needle.length
       const size = boundaryIndices[nextIndex] - (boundaryIndices[currentMatchIndex] + this.needle.length)
-      console.log(currentMatchIndex, nextIndex, "SIZE", size)
       const bodyPiece = Buffer.alloc(size)
 
       body.copy(bodyPiece, 0, boundaryIndices[currentMatchIndex] + this.needle.length, boundaryIndices[nextIndex])
 
-      bodyParts.push(bodyPiece.toString())
+      bodyParts.push(bodyPiece)
     }
 
     return bodyParts
   }
 
-  public parseBodyFields(bodyParts: string[]): ParsedFields {
-    console.log(bodyParts)
+  public parseBodyFields(bodyParts: Buffer[]): ParsedFields {
+    const lineBreakerAlgo = new BoyerMooreHorspool("\r\n\r\n")
+    for (let bodyPartIndex = 0, max = bodyParts.length; bodyPartIndex < max; bodyPartIndex += 1) {
+      const headerBodyBreakIndex = lineBreakerAlgo.search(bodyParts[bodyPartIndex], 1)
+
+      console.log(headerBodyBreakIndex, bodyParts[bodyPartIndex].toString())
+    }
     return {}
   }
 
-  public search(haystack: Buffer) {
+  /**
+   * Perform a search on the `haystack`
+   *
+   * @param {Buffer} haystack - The haystack to search.
+   * @param {number} limit - The max number of results. a 0 means no limit.
+   *
+   * @return number[] array of indices where needle starts.
+   */
+  public search(haystack: Buffer, limit: number = 0) {
     const results: number[] = []
     let skip = 1
-    for (
+    haystackLoop: for (
       let haystackChar = 0, maxHaystackChar = haystack.length - 1;
       haystackChar <= maxHaystackChar;
       haystackChar += skip
@@ -70,6 +81,12 @@ export default class BoyerMooreHorspool {
         }
         else if (needleChar === 0) {
           results.push(haystackChar)
+
+          // Exit if there's a limit.
+          if (limit !== 0 && results.length >= limit) {
+            break haystackLoop
+          }
+
           skip = this.needle.length
           break needle
         }

@@ -1,27 +1,32 @@
+import { readFileSync } from "fs"
 import http from "http"
 import BoyerMooreHorspool from "./lib/content-negotiators/multipart/boyer-moore"
 
-let boundary = "--X-INSOMNIA-BOUNDARY"
-let indexes: number[] = []
-const body: Buffer[] = []
-let algo: BoyerMooreHorspool
-
-function parseBufferData(data: Buffer): void {
-  body.push(data)
-  indexes = indexes.concat(algo.search(data))
-}
-
 http
   .createServer((request, response) => {
+    if ((request.method || "").toLowerCase() === "get") {
+      return response.end(readFileSync("./dev-form.html"))
+    }
+
     const ct = request.headers["content-type"] || ""
-    boundary = "--" + ct.split(";")[1].split("=")[1]
-    algo = new BoyerMooreHorspool(boundary)
+    const boundary = "--" + ct.split(";")[1].split("=")[1]
+    const body: Buffer[] = []
+    const algo = new BoyerMooreHorspool(boundary)
+    let indexes: number[] = []
+
+    function parseBufferData(data: Buffer): void {
+      body.push(data)
+      indexes = indexes.concat(algo.search(data))
+    }
+
     request.on("data", parseBufferData)
 
     request.on("end", () => {
       const buf = Buffer.concat(body)
-      console.log(algo.getBodyFieldStrings(buf, indexes))
-      response.end(JSON.stringify(indexes, null, 2))
+      const rawFields = algo.getBodyFieldStrings(buf, indexes)
+      const parsedBodyParts = algo.parseBodyFields(rawFields)
+      console.log(parsedBodyParts)
+      response.end(JSON.stringify(rawFields, null, 2))
     })
   })
   .listen(5000, () => console.log("listening on 5000"))

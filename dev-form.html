@@ -1,0 +1,65 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Multicolour body parser form</title>
+  </head>
+
+  <body>
+    <form 
+      enctype="multipart/form-data"
+      method="POST"
+      action="http://localhost:5000">
+      <button type="submit">test</button>
+      <fieldset>
+        <!--<pre>
+          <textarea name="json">
+            {
+              "json": "field",
+              "another": {
+                "nested": "💥🔥"
+              }
+            }
+          </textarea>
+        </pre>-->
+
+        <input type="file" name="file" />
+        <input type="text" value="text field" name="text" />
+      </fieldset>
+    </form>
+
+    <pre>
+      <code>
+      </code>
+    </pre>
+
+  <script>
+    alert("farts")
+    window.onerror = alert
+    window.addEventListener("DOMContentLoaded", function() {
+    var json = {
+      "json": "field",
+      "another": {
+        "nested": "💥🔥"
+      }
+    }
+document.querySelector("form").addEventListener("submit", function SubmitFileAndJson(event) {
+      event.preventDefault()
+
+
+      var data = new FormData(event.target)
+
+      data.append("json", new Blob([JSON.stringify(json)], {type: "application/json"}))
+
+      alert(event.target.action)
+
+      fetch(event.target.action, {
+        method: "POST",
+        body:data
+      })
+        .then(res => res.json())
+        .then(r => document.querySelector("code").innerHTML = (JSON.stringify(r, null, 2)))
+    })
+    })
+  </script>
+  </body>
+</html>

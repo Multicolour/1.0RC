@@ -32,6 +32,11 @@ import BoyerMooreHorspool from "@lib/content-negotiators/multipart/boyer-moore"
     pattern: "👍",
     expected: [0],
   },
+  {
+    text: "aaaaaaaa\r\n\r\niiii",
+    pattern: "\r\n\r\n",
+    expected: [8],
+  },
 ].forEach((payload) => {
   test("ensuring Boyer Moore Hoorspool algorithm works with static payload: " + payload.text, () => {
     const instance = new BoyerMooreHorspool(payload.pattern)
