@@ -4,6 +4,7 @@ import BoyerMooreHorspool from "./lib/content-negotiators/multipart/boyer-moore"
 
 http
   .createServer((request, response) => {
+    const start = Date.now()
     if ((request.method || "").toLowerCase() === "get") {
       return response.end(readFileSync("./dev-form.html"))
     }
@@ -25,8 +26,8 @@ http
       const buf = Buffer.concat(body)
       const rawFields = algo.getBodyFieldStrings(buf, indexes)
       const parsedBodyParts = algo.parseBodyFields(rawFields)
-      console.log(parsedBodyParts)
-      response.end(JSON.stringify(rawFields, null, 2))
+      response.end(JSON.stringify(parsedBodyParts, null, 2))
+      console.log("Response took: %dms", Date.now() - start)
     })
   })
   .listen(5000, () => console.log("listening on 5000"))

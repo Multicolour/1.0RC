@@ -2,11 +2,14 @@ interface BadCharTable {
   [char: string]: number,
 }
 
-interface ParsedFields {
-  [field: string]: any | File,
+interface ParsedField {
+  headers: object,
+  value: any,
 }
 
-type SeparatedBodyParts = Buffer[]
+interface ParsedFields {
+  [field: string]: ParsedField | ParsedField[],
+}
 
 export default class BoyerMooreHorspool {
   public needle: Buffer
@@ -14,11 +17,18 @@ export default class BoyerMooreHorspool {
 
   constructor(needle: string) {
     this.needle = Buffer.from(needle)
-    console.log(this.needle.toString())
     this.badCharTable = this.makeBadCharTable()
   }
 
-  public getBodyFieldStrings(body: Buffer, boundaryIndices: number[]): SeparatedBodyParts {
+  /**
+   * Use the resulting indices from BoyerMooreHorspool.search(buffer: Buffer)
+   * to split out the fields of the request ready for parsing.
+   *
+   * @param {Buffer} body to split fields out of
+   * @param {number[]} boundaryIndices to split body at.
+   * @return {Buffer[]} Array of newly created buffers containing raw field data ready to be parsed.
+   */
+  public getBodyFieldStrings(body: Buffer, boundaryIndices: number[]): Buffer[] {
     const bodyParts = []
     for (
       let currentMatchIndex = 0,
@@ -46,14 +56,43 @@ export default class BoyerMooreHorspool {
     return bodyParts
   }
 
+  /**
+   * Perform another search for the Multipart header/field separator
+   * and split the headers from the field value.
+   *
+   * @param {Buffer[]} bodyParts from running
+   *  BoyerMooreHorspool.getBodyFieldStrings(body: Buffer, boundaryIndices: number[])
+   * @return {ParsedFields} object of fields parsed from the request.
+   */
   public parseBodyFields(bodyParts: Buffer[]): ParsedFields {
     const lineBreakerAlgo = new BoyerMooreHorspool("\r\n\r\n")
-    for (let bodyPartIndex = 0, max = bodyParts.length; bodyPartIndex < max; bodyPartIndex += 1) {
-      const headerBodyBreakIndex = lineBreakerAlgo.search(bodyParts[bodyPartIndex], 1)
+    const out = {}
 
-      console.log(headerBodyBreakIndex, bodyParts[bodyPartIndex].toString())
+    // Split each field into two parts. Headers and field value.
+    for (let bodyPartIndex = 0, max = bodyParts.length; bodyPartIndex < max; bodyPartIndex += 1) {
+      const field = bodyParts[bodyPartIndex]
+      const headerBodyBreakIndex = lineBreakerAlgo.search(field, 1)
+
+      // @FIXME DO NOT LEAVE THIS HERE.
+      if (!headerBodyBreakIndex.length) {
+        console.error("DID NOT FIND HEADER BREAKER IN FIELD", JSON.stringify(field.toString()))
+        continue
+      }
+
+      // Create new target buffers to copy into
+      const headersBuffer = Buffer.alloc(headerBodyBreakIndex[0])
+      const fieldValueBuffer = Buffer.alloc(field.length - (headerBodyBreakIndex[0] + 4))
+
+      // Copy the field data into the new buffers.
+      field.copy(headersBuffer, 0, 0, headerBodyBreakIndex[0])
+      field.copy(fieldValueBuffer, 0, headerBodyBreakIndex[0] + 4, field.length)
+
+
+      console.log(headerBodyBreakIndex)
+      console.log("HEADERS", JSON.stringify(headersBuffer.toString()))
+      console.log("FIELD VALUE", JSON.stringify(fieldValueBuffer.toString()))
     }
-    return {}
+    return out
   }
 
   /**

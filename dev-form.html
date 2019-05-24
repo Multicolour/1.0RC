@@ -11,19 +11,32 @@
       action="http://localhost:5000">
       <button type="submit">test</button>
       <fieldset>
-        <!--<pre>
-          <textarea name="json">
-            {
-              "json": "field",
-              "another": {
-                "nested": "💥🔥"
-              }
-            }
-          </textarea>
-        </pre>-->
-
         <input type="file" name="file" />
-        <input type="text" value="text field" name="text" />
+        <pre>
+          <textarea name="json">
+            I am some text with multiple 
+
+            line
+
+
+            breaks
+
+            and stuff \\
+
+            And I do things.
+          </textarea>
+        </pre>
+
+        <input type="text" value="text field" name="text[]" />
+        <input type="text" value="text field" name="text[]" />
+        <input type="text" value="text field" name="text[]" />
+        <input type="text" value="text field" name="text[]" />
+        <input type="text" value="text field" name="text[]" />
+        <input type="text" value="text field" name="text[]" />
+
+        <input type="text" value="text field" name="other" />
+
+        <input type="date" />
       </fieldset>
     </form>
 
