@@ -105,17 +105,22 @@ export default class BoyerMooreHorspool {
    */
   public search(haystack: Buffer, limit: number = 0) {
     const results: number[] = []
-    let skip = 1
+    const asString = haystack.toString()
+    let skip = 0
     haystackLoop: for (
       let haystackChar = 0, maxHaystackChar = haystack.length - 1;
       haystackChar <= maxHaystackChar;
       haystackChar += skip
     ) {
       needle: for (let needleChar: number = this.needle.length - 1; needleChar >= 0; needleChar--) {
-        if (haystack[haystackChar + needleChar] !== this.needle[needleChar]) {
-          skip = this.badCharTable.hasOwnProperty(haystack[haystackChar + needleChar])
-            ? this.badCharTable[haystack[haystackChar + needleChar]]
+        const lookupIndex = haystackChar + needleChar
+        if (haystack[lookupIndex] !== this.needle[needleChar]) {
+          skip = this.badCharTable.hasOwnProperty(haystack[lookupIndex])
+            ? this.badCharTable[haystack[lookupIndex]]
             : this.needle.length
+
+          // tslint:disable-next-line
+          console.log("%s\n Skipping %d,\n mismatch was %s !== %s.\n Char %d in table? %s,\n Portion %s", JSON.stringify(this.needle.toString()), skip, String.fromCharCode(haystack[lookupIndex]), String.fromCharCode(this.needle[needleChar]), haystackChar, this.badCharTable.hasOwnProperty(haystack[lookupIndex]), JSON.stringify(asString.substring(haystackChar, haystackChar + this.needle.length)))
           break needle
         }
         else if (needleChar === 0) {
