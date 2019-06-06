@@ -55,7 +55,7 @@ import BoyerMooreHorspool from "@lib/content-negotiators/multipart/boyer-moore"
 ].forEach((payload) => {
   test("ensuring Boyer Moore Hoorspool algorithm works with static payload: " + payload.pattern, () => {
     const instance = new BoyerMooreHorspool(payload.pattern)
-    const indices = instance.search(Buffer.from(payload.text),/* instanceof Buffer
+    const indices = instance.search(Buffer.from(payload.text), /* instanceof Buffer
       ? payload.text
       : Buffer.from(payload.text),
     */)

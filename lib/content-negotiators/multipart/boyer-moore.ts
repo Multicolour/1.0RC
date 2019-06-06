@@ -104,6 +104,10 @@ export default class BoyerMooreHorspool {
    * @return number[] array of indices where needle starts.
    */
   public search(haystack: Buffer, limit: number = 0) {
+    console.table(JSON.stringify(Object.keys(this.badCharTable).reduce((out, key) => ({
+      ...out,
+      [String.fromCharCode(Number(key))]: this.badCharTable[key],
+    }), {}), null, 2))
     const results: number[] = []
     const asString = haystack.toString()
     let skip = 0
@@ -117,7 +121,7 @@ export default class BoyerMooreHorspool {
         if (haystack[lookupIndex] !== this.needle[needleChar]) {
           skip = this.badCharTable.hasOwnProperty(haystack[lookupIndex])
             ? this.badCharTable[haystack[lookupIndex]]
-            : this.needle.length
+            : this.needle.length - 1
 
           // tslint:disable-next-line
           console.log("%s\n Skipping %d,\n mismatch was %s !== %s.\n Char %d in table? %s,\n Portion %s", JSON.stringify(this.needle.toString()), skip, String.fromCharCode(haystack[lookupIndex]), String.fromCharCode(this.needle[needleChar]), haystackChar, this.badCharTable.hasOwnProperty(haystack[lookupIndex]), JSON.stringify(asString.substring(haystackChar, haystackChar + this.needle.length)))
