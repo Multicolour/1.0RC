@@ -1,6 +1,6 @@
-interface BadCharTable {
-  [char: string]: number,
-}
+// interface BadCharTable {
+//  [char: string]: number,
+// }
 
 interface ParsedField {
   headers: object,
@@ -11,13 +11,13 @@ interface ParsedFields {
   [field: string]: ParsedField | ParsedField[],
 }
 
-export default class BoyerMooreHorspool {
+class BoyerMooreHorspool {
   public needle: Buffer
-  private badCharTable: BadCharTable = {}
+  private badCharShift: Buffer
 
   constructor(needle: string) {
     this.needle = Buffer.from(needle)
-    this.badCharTable = this.makeBadCharTable()
+    this.badCharShift = this.makeBadCharTable()
   }
 
   /**
@@ -71,6 +71,8 @@ export default class BoyerMooreHorspool {
     // Split each field into two parts. Headers and field value.
     for (let bodyPartIndex = 0, max = bodyParts.length; bodyPartIndex < max; bodyPartIndex += 1) {
       const field = bodyParts[bodyPartIndex]
+
+      // Get the index at which the headers break from the body.
       const headerBodyBreakIndex = lineBreakerAlgo.search(field, 1)
 
       // @FIXME DO NOT LEAVE THIS HERE.
@@ -86,7 +88,6 @@ export default class BoyerMooreHorspool {
       // Copy the field data into the new buffers.
       field.copy(headersBuffer, 0, 0, headerBodyBreakIndex[0])
       field.copy(fieldValueBuffer, 0, headerBodyBreakIndex[0] + 4, field.length)
-
 
       console.log(headerBodyBreakIndex)
       console.log("HEADERS", JSON.stringify(headersBuffer.toString()))
@@ -104,13 +105,9 @@ export default class BoyerMooreHorspool {
    * @return number[] array of indices where needle starts.
    */
   public search(haystack: Buffer, limit: number = 0) {
-    console.table(JSON.stringify(Object.keys(this.badCharTable).reduce((out, key) => ({
-      ...out,
-      [String.fromCharCode(Number(key))]: this.badCharTable[key],
-    }), {}), null, 2))
     const results: number[] = []
-    const asString = haystack.toString()
     let skip = 0
+
     haystackLoop: for (
       let haystackChar = 0, maxHaystackChar = haystack.length - 1;
       haystackChar <= maxHaystackChar;
@@ -118,13 +115,9 @@ export default class BoyerMooreHorspool {
     ) {
       needle: for (let needleChar: number = this.needle.length - 1; needleChar >= 0; needleChar--) {
         const lookupIndex = haystackChar + needleChar
-        if (haystack[lookupIndex] !== this.needle[needleChar]) {
-          skip = this.badCharTable.hasOwnProperty(haystack[lookupIndex])
-            ? this.badCharTable[haystack[lookupIndex]]
-            : this.needle.length - 1
+        skip = this.badCharShift[haystack[lookupIndex]]
 
-          // tslint:disable-next-line
-          console.log("%s\n Skipping %d,\n mismatch was %s !== %s.\n Char %d in table? %s,\n Portion %s", JSON.stringify(this.needle.toString()), skip, String.fromCharCode(haystack[lookupIndex]), String.fromCharCode(this.needle[needleChar]), haystackChar, this.badCharTable.hasOwnProperty(haystack[lookupIndex]), JSON.stringify(asString.substring(haystackChar, haystackChar + this.needle.length)))
+        if (haystack[lookupIndex] !== this.needle[needleChar]) {
           break needle
         }
         else if (needleChar === 0) {
@@ -135,7 +128,6 @@ export default class BoyerMooreHorspool {
             break haystackLoop
           }
 
-          skip = this.needle.length
           break needle
         }
       }
@@ -144,22 +136,27 @@ export default class BoyerMooreHorspool {
     return results
   }
 
-  private makeBadCharTable(): BadCharTable {
-    const badCharTable: BadCharTable = {}
-    for (let char: number = 0, max = this.needle.length; char < max; char++) {
-      const charCode = this.needle[char]
-      if (char === max - 1 && badCharTable.hasOwnProperty(charCode)) {
-        break
-      }
+  private makeBadCharTable(): Buffer {
+    const badCharShift: Buffer = Buffer.alloc(256)
 
-      if (char === max - 1) {
-        badCharTable[charCode] = max
-      }
-      else {
-        badCharTable[charCode] = max - char - 1
-      }
+    // Populate the table with the default.
+    for (let i = 0; i <= 256; i++) {
+      badCharShift[i] = this.needle.length
     }
 
-    return badCharTable
+    // Add our offsets.
+    for (
+      let char: number = 0,
+      max = this.needle.length;
+      char < max;
+      ++char
+    ) {
+      badCharShift[this.needle[char]] = (max - 1) - char
+    }
+
+    return badCharShift
   }
 }
+
+export default BoyerMooreHorspool
+
