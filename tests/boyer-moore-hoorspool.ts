@@ -52,6 +52,12 @@ import {readFileSync} from "fs"
     pattern: "9R>SI:21>C;X2VKT6L5DESDXSJ8=9RY?<2RL:VP0O<YRUC",
     expected: [176],
   },
+  {
+    // tslint:disable-next-line:max-line-length
+    text: "0S:R4EP8N2O9>R@D3HOPAD=711XY93D?KCBFAT;6J;?0H0PUGI?1UQ>3RHNKYO0QXHX?M8JF9AWP2UJ6AQH@QOTH0SG4GQJO?38Q:8@9EV2A0YMH18ILKQ1>IS6>952XEITT3AK0L;D30I@5FN<WUQ8QOGX2HW91LVYBY:V7P2FXS87B>@6DYU=VK6L1Y6X?;<BR9887M;=2=L<4:@4P65F39W6NPO8635VB8QH<0UURNX1V5BXLQLG@MG7TE17VCO0=YULK:5QJYRUMGO7T?=W=BVB?AUNH@0KC<B8T><37@VO6TF<GK;?F5<AJI;S;J<0:PA4@=OD04:U2<UV:=ELXKNO4;2=;QE3===;GDMIEJ9DI=;WO?>B:Y4YBB=GXE463SXP<JUIFHX7KP?CDN:2R;LYYFD3KXEOIJX:OMA8IHJXYARXS1B8D16G;UCJGBK=@LLU0L?D@EB@B5F73YL7@I2>H>0TOQ3KS6JU4OTI=QI9AV2D",
+    pattern: "<AJI;S;J<0:PA4@=OD04:U2<UV:=ELXKNO4;2=;QE3===",
+    expected: [200],
+  },
 ].forEach((payload) => {
   test("ensuring Boyer Moore Hoorspool algorithm works with static payload: " + payload.pattern, () => {
     const instance = new BoyerMooreHorspool(payload.pattern)

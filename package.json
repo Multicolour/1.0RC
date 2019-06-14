@@ -35,28 +35,28 @@
   "dependencies": {
     "ajv": "^6.10.0",
     "debug": "^4.1.1",
-    "knex": "^0.16.5",
+    "knex": "^0.17.6",
     "npm": "^6.9.0",
     "toposort": "^2.0.2",
-    "tslint": "^5.16.0"
+    "tslint": "^5.17.0"
   },
   "engine-strict": true,
   "engines": {
     "node": ">= 11.1.0"
   },
   "devDependencies": {
-    "@types/bluebird": "^3.5.26",
+    "@types/bluebird": "^3.5.27",
     "@types/debug": "^4.1.4",
     "@types/formidable": "^1.0.31",
-    "@types/jest": "^24.0.11",
+    "@types/jest": "^24.0.14",
     "@types/json-schema": "^7.0.3",
-    "@types/node": "^11.13.4",
+    "@types/node": "^12.0.8",
     "big-list-of-naughty-strings": "^1.0.0",
     "codacy-coverage": "^3.4.0",
-    "jest": "^24.7.1",
+    "jest": "^24.8.0",
     "ts-jest": "^24.0.2",
     "ts-lint": "^4.5.1",
-    "ts-node": "^8.1.0",
-    "typescript": "^3.4.5"
+    "ts-node": "^8.2.0",
+    "typescript": "^3.5.2"
   }
 }
