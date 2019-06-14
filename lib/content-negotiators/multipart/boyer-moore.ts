@@ -1,7 +1,3 @@
-// interface BadCharTable {
-//  [char: string]: number,
-// }
-
 interface ParsedField {
   headers: object,
   value: any,
@@ -12,11 +8,11 @@ interface ParsedFields {
 }
 
 class BoyerMooreHorspool {
-  public needle: Buffer
+  public pattern: Buffer
   private badCharShift: Buffer
 
-  constructor(needle: string) {
-    this.needle = Buffer.from(needle)
+  constructor(pattern: string) {
+    this.pattern = Buffer.from(pattern, "utf-8")
     this.badCharShift = this.makeBadCharTable()
   }
 
@@ -45,10 +41,10 @@ class BoyerMooreHorspool {
         ? currentMatchIndex
         : currentMatchIndex + 1
 
-      const size = boundaryIndices[nextIndex] - (boundaryIndices[currentMatchIndex] + this.needle.length)
+      const size = boundaryIndices[nextIndex] - (boundaryIndices[currentMatchIndex] + this.pattern.length)
       const bodyPiece = Buffer.alloc(size)
 
-      body.copy(bodyPiece, 0, boundaryIndices[currentMatchIndex] + this.needle.length, boundaryIndices[nextIndex])
+      body.copy(bodyPiece, 0, boundaryIndices[currentMatchIndex] + this.pattern.length, boundaryIndices[nextIndex])
 
       bodyParts.push(bodyPiece)
     }
@@ -97,28 +93,28 @@ class BoyerMooreHorspool {
   }
 
   /**
-   * Perform a search on the `haystack`
+   * Perform a search on the `text`
    *
-   * @param {Buffer} haystack - The haystack to search.
+   * @param {Buffer} text - The text to search.
    * @param {number} limit - The max number of results. a 0 means no limit.
    *
-   * @return number[] array of indices where needle starts.
+   * @return number[] array of indices where pattern starts.
    */
-  public search(haystack: Buffer, limit: number = 0) {
+  public search(text: Buffer, limit: number = 0) {
     const results: number[] = []
     let skip = 0
 
     haystackLoop: for (
-      let haystackChar = 0, maxHaystackChar = haystack.length - 1;
-      haystackChar <= maxHaystackChar;
+      let haystackChar = 0, maxTextChar = text.length - 1;
+      haystackChar <= maxTextChar;
       haystackChar += skip
     ) {
-      needle: for (let needleChar: number = this.needle.length - 1; needleChar >= 0; needleChar--) {
+      pattern: for (let needleChar: number = this.pattern.length - 1; needleChar >= 0; needleChar--) {
         const lookupIndex = haystackChar + needleChar
-        skip = this.badCharShift[haystack[lookupIndex]]
+        skip = this.badCharShift[text[lookupIndex]]
 
-        if (haystack[lookupIndex] !== this.needle[needleChar]) {
-          break needle
+        if (text[lookupIndex] !== this.pattern[needleChar]) {
+          break pattern
         }
         else if (needleChar === 0) {
           results.push(haystackChar)
@@ -128,7 +124,7 @@ class BoyerMooreHorspool {
             break haystackLoop
           }
 
-          break needle
+          break pattern
         }
       }
     }
@@ -141,17 +137,17 @@ class BoyerMooreHorspool {
 
     // Populate the table with the default.
     for (let i = 0; i <= 256; i++) {
-      badCharShift[i] = this.needle.length
+      badCharShift[i] = this.pattern.length
     }
 
     // Add our offsets.
     for (
       let char: number = 0,
-      max = this.needle.length;
+      max = this.pattern.length - 1;
       char < max;
-      ++char
+      char++
     ) {
-      badCharShift[this.needle[char]] = (max - 1) - char
+      badCharShift[this.pattern[char]] = Math.max(max - 1 - char, 1)
     }
 
     return badCharShift
