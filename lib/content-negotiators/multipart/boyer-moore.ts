@@ -12,7 +12,8 @@ class BoyerMooreHorspool {
   private badCharShift: Buffer
 
   constructor(pattern: string) {
-    this.pattern = Buffer.from(pattern, "utf-8")
+    this.pattern = Buffer.from(pattern)
+    console.log("PATL", this.pattern.length, this.pattern.length - 1)
     this.badCharShift = this.makeBadCharTable()
   }
 
@@ -69,7 +70,7 @@ class BoyerMooreHorspool {
       const field = bodyParts[bodyPartIndex]
 
       // Get the index at which the headers break from the body.
-      const headerBodyBreakIndex = lineBreakerAlgo.search(field, 1)
+      const headerBodyBreakIndex = lineBreakerAlgo.search(field)
 
       // @FIXME DO NOT LEAVE THIS HERE.
       if (!headerBodyBreakIndex.length) {
@@ -100,7 +101,7 @@ class BoyerMooreHorspool {
    *
    * @return number[] array of indices where pattern starts.
    */
-  public search(text: Buffer, limit: number = 0) {
+  public search(text: Buffer) {
     const results: number[] = []
     let skip = 0
 
@@ -109,20 +110,21 @@ class BoyerMooreHorspool {
       haystackChar <= maxTextChar;
       haystackChar += skip
     ) {
-      pattern: for (let needleChar: number = this.pattern.length - 1; needleChar >= 0; needleChar--) {
+      pattern: for (
+        let needleChar = this.pattern.length - 1; 
+        needleChar >= 0; 
+        needleChar--
+      ) {
         const lookupIndex = haystackChar + needleChar
         skip = this.badCharShift[text[lookupIndex]]
 
+        console.log("SKIP %d\nHSC: %d\nC: %s\nP: %s", skip, haystackChar, text.slice(haystackChar, haystackChar + this.pattern.length - 1), this.pattern)
         if (text[lookupIndex] !== this.pattern[needleChar]) {
           break pattern
         }
         else if (needleChar === 0) {
+          //console.log("M: %s\nP: %s", JSON.stringify(text.slice(haystackChar, haystackChar + this.pattern.length).toString()), JSON.stringify(this.pattern.toString()))
           results.push(haystackChar)
-
-          // Exit if there's a limit.
-          if (limit !== 0 && results.length >= limit) {
-            break haystackLoop
-          }
 
           break pattern
         }
@@ -133,10 +135,11 @@ class BoyerMooreHorspool {
   }
 
   private makeBadCharTable(): Buffer {
-    const badCharShift: Buffer = Buffer.alloc(256)
+    const badCharShift: Buffer = Buffer.allocUnsafe(65535)
+    const truePatternLength = this.pattern.length - 1
 
     // Populate the table with the default.
-    for (let i = 0; i <= 256; i++) {
+    for (let i = 0; i <= 65535; i++) {
       badCharShift[i] = this.pattern.length
     }
 
@@ -145,9 +148,10 @@ class BoyerMooreHorspool {
       let char: number = 0,
       max = this.pattern.length - 1;
       char < max;
-      char++
+      ++char
     ) {
-      badCharShift[this.pattern[char]] = Math.max(max - 1 - char, 1)
+      
+      badCharShift[this.pattern[char]] = truePatternLength - char
     }
 
     return badCharShift
