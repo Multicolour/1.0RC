@@ -13,7 +13,6 @@ class BoyerMooreHorspool {
 
   constructor(pattern: string) {
     this.pattern = Buffer.from(pattern)
-    console.log("PATL", this.pattern.length, this.pattern.length - 1)
     this.badCharShift = this.makeBadCharTable()
   }
 
@@ -70,7 +69,7 @@ class BoyerMooreHorspool {
       const field = bodyParts[bodyPartIndex]
 
       // Get the index at which the headers break from the body.
-      const headerBodyBreakIndex = lineBreakerAlgo.search(field)
+      const headerBodyBreakIndex = lineBreakerAlgo.search(field, 1)
 
       // @FIXME DO NOT LEAVE THIS HERE.
       if (!headerBodyBreakIndex.length) {
@@ -101,7 +100,7 @@ class BoyerMooreHorspool {
    *
    * @return number[] array of indices where pattern starts.
    */
-  public search(text: Buffer) {
+  public search(text: Buffer, limit: number = 0) {
     const results: number[] = []
     let skip = 0
 
@@ -119,14 +118,16 @@ class BoyerMooreHorspool {
         const lookupIndex = haystackChar + needleChar
         skip = this.badCharShift[text[haystackChar + (this.pattern.length - 1)]]
 
-        console.log("SKIP %d\nHSC: %d '%s'\nC: %s\nP: %s", skip, haystackChar, String.fromCharCode(text[lookupIndex]), text.slice(haystackChar, haystackChar + this.pattern.length), this.pattern)
-
         if (text[lookupIndex] !== this.pattern[needleChar]) {
           break pattern
         }
         else if (needleChar === 0) {
-          //console.log("M: %s\nP: %s", JSON.stringify(text.slice(haystackChar, haystackChar + this.pattern.length).toString()), JSON.stringify(this.pattern.toString()))
           results.push(haystackChar)
+          skip = this.pattern.length
+
+          if (limit !== 0 && results.length >= limit) {
+            break haystackLoop
+          }
 
           break pattern
         }
