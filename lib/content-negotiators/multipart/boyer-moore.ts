@@ -106,7 +106,8 @@ class BoyerMooreHorspool {
     let skip = 0
 
     haystackLoop: for (
-      let haystackChar = 0, maxTextChar = text.length - 1;
+      let haystackChar = 0, 
+          maxTextChar = text.length - 1;
       haystackChar <= maxTextChar;
       haystackChar += skip
     ) {
@@ -116,9 +117,10 @@ class BoyerMooreHorspool {
         needleChar--
       ) {
         const lookupIndex = haystackChar + needleChar
-        skip = this.badCharShift[text[lookupIndex]]
+        skip = this.badCharShift[text[haystackChar + (this.pattern.length - 1)]]
 
-        console.log("SKIP %d\nHSC: %d\nC: %s\nP: %s", skip, haystackChar, text.slice(haystackChar, haystackChar + this.pattern.length - 1), this.pattern)
+        console.log("SKIP %d\nHSC: %d '%s'\nC: %s\nP: %s", skip, haystackChar, String.fromCharCode(text[lookupIndex]), text.slice(haystackChar, haystackChar + this.pattern.length), this.pattern)
+
         if (text[lookupIndex] !== this.pattern[needleChar]) {
           break pattern
         }
@@ -135,20 +137,20 @@ class BoyerMooreHorspool {
   }
 
   private makeBadCharTable(): Buffer {
-    const badCharShift: Buffer = Buffer.allocUnsafe(65535)
+    const DICT_SIZE = 65535
+    const badCharShift: Buffer = Buffer.allocUnsafe(DICT_SIZE)
     const truePatternLength = this.pattern.length - 1
 
     // Populate the table with the default.
-    for (let i = 0; i <= 65535; i++) {
+    for (let i = 0; i <= DICT_SIZE; i++) {
       badCharShift[i] = this.pattern.length
     }
 
     // Add our offsets.
     for (
-      let char: number = 0,
-      max = this.pattern.length - 1;
-      char < max;
-      ++char
+      let char: number = 0;
+      char < truePatternLength;
+      char++
     ) {
       
       badCharShift[this.pattern[char]] = truePatternLength - char
