@@ -26,25 +26,14 @@ class BoyerMooreHorspool {
    */
   public getBodyFieldStrings(body: Buffer, boundaryIndices: number[]): Buffer[] {
     const bodyParts = []
+    // Loop over the indices - 2 (-1 for true length, -1 to ignore body terminator.
     for (
       let currentMatchIndex = 0,
-          max = boundaryIndices.length - 1;
-      currentMatchIndex <= max;
-      currentMatchIndex += 1
+          max = boundaryIndices.length - 2;
+      currentMatchIndex < max;
+      currentMatchIndex++
     ) {
-      // We can exit here since the last index is the closing boundary.
-      if (currentMatchIndex === max) {
-        break
-      }
-
-      const nextIndex = currentMatchIndex === max
-        ? currentMatchIndex
-        : currentMatchIndex + 1
-
-      const size = boundaryIndices[nextIndex] - (boundaryIndices[currentMatchIndex] + this.pattern.length)
-      const bodyPiece = Buffer.alloc(size)
-
-      body.copy(bodyPiece, 0, boundaryIndices[currentMatchIndex] + this.pattern.length, boundaryIndices[nextIndex])
+      const bodyPiece = body.slice(boundaryIndices[currentMatchIndex] + this.pattern.length - 1, boundaryIndices[currentMatchIndex + 1])
 
       bodyParts.push(bodyPiece)
     }
@@ -65,7 +54,7 @@ class BoyerMooreHorspool {
     const out = {}
 
     // Split each field into two parts. Headers and field value.
-    for (let bodyPartIndex = 0, max = bodyParts.length; bodyPartIndex < max; bodyPartIndex += 1) {
+    for (let bodyPartIndex = 0, max = bodyParts.length; bodyPartIndex < max; bodyPartIndex++) {
       const field = bodyParts[bodyPartIndex]
 
       // Get the index at which the headers break from the body.
@@ -73,21 +62,17 @@ class BoyerMooreHorspool {
 
       // @FIXME DO NOT LEAVE THIS HERE.
       if (!headerBodyBreakIndex.length) {
-        console.error("DID NOT FIND HEADER BREAKER IN FIELD", JSON.stringify(field.toString()))
+        console.error("DID NOT FIND HEADER BREAKER IN FIELD", headerBodyBreakIndex, JSON.stringify(field.toString()))
+        console.log("\n".repeat(4))
         continue
       }
 
       // Create new target buffers to copy into
-      const headersBuffer = Buffer.alloc(headerBodyBreakIndex[0])
-      const fieldValueBuffer = Buffer.alloc(field.length - (headerBodyBreakIndex[0] + 4))
+      const headersBuffer = field.slice(0, headerBodyBreakIndex[0])
+      // const fieldValueBuffer = field.slice(headerBodyBreakIndex[0] + 4, field.length - 1)
 
-      // Copy the field data into the new buffers.
-      field.copy(headersBuffer, 0, 0, headerBodyBreakIndex[0])
-      field.copy(fieldValueBuffer, 0, headerBodyBreakIndex[0] + 4, field.length)
-
-      console.log(headerBodyBreakIndex)
-      console.log("HEADERS", JSON.stringify(headersBuffer.toString()))
-      console.log("FIELD VALUE", JSON.stringify(fieldValueBuffer.toString()))
+      console.log("HEADERS", JSON.stringify(headersBuffer.toString().split(";")))
+      console.log("\n".repeat(4))
     }
     return out
   }

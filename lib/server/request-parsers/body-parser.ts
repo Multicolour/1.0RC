@@ -7,7 +7,7 @@ async function BodyParser(config: Multicolour$RequestParserArgs): Promise<string
       statusCode: 500,
       error: {
         // tslint:disable-next-line:max-line-length
-        message: "The body parser was invoked without a request in which to parse. This is a developer problem, please contact the owner of this API to resolve this issue.",
+        message: "The body parser was invoked without a request with which to parse. This is a developer problem, please contact the owner of this API to resolve this issue.",
       },
     }))
   }

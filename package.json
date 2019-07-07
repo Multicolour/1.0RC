@@ -36,9 +36,11 @@
     "ajv": "^6.10.0",
     "debug": "^4.1.1",
     "knex": "^0.17.6",
+    "neovim": "^4.5.0",
     "npm": "^6.9.0",
     "toposort": "^2.0.2",
-    "tslint": "^5.17.0"
+    "tslint": "^5.17.0",
+    "typescript-language-server": "^0.3.8"
   },
   "engine-strict": true,
   "engines": {

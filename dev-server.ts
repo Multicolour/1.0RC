@@ -26,7 +26,7 @@ http
       const buf = Buffer.concat(body)
       const rawFields = algo.getBodyFieldStrings(buf, indexes)
       const parsedBodyParts = algo.parseBodyFields(rawFields)
-      response.end(JSON.stringify(parsedBodyParts, null, 2))
+      setImmediate(() => response.end(JSON.stringify(parsedBodyParts, null, 2)))
       console.log("Response took: %dms", Date.now() - start)
     })
   })
