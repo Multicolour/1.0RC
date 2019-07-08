@@ -6,19 +6,12 @@ import {
   SearchTrie,
 } from "@lib/server/radix-trie"
 
-interface TestableLeaf extends Node<TestableLeaf> {
-  handler: () => Promise<any>,
-}
-
-const testData: TestableLeaf[] = [
-  {
-    text: "/a",
-  },
-  {
-    text: "/",
-  },
+const testData: Node[] = [
   {
     text: "/hi",
+  },
+  {
+    text: "/cats",
   },
   {
     text: "/contact",
@@ -29,29 +22,39 @@ const testData: TestableLeaf[] = [
   {
     text: "/cona",
   },
-  {
-    text: "/no",
-  },
-  {
-    text: "/ab",
-  },
-  {
-    text: "/α",
-  },
-  {
-    text: "/β",
-  },
-].map((node) => ({
-  ...node,
-  handler: () => Promise.resolve({}),
-}))
+]
 
-const testTrieA = CreateTrie<TestableLeaf>()
-testTrieA.nodes = testData.map((node: TestableLeaf) => ({ ...node, nodes: []}))
+const testTrieA = CreateTrie()
+testTrieA.nodes = [
+  {
+    text: "/",
+    nodes: [
+      {
+        text: "c",
+        nodes: [
+          {
+            text: "ats",
+          },
+          {
+            text: "on",
+            nodes: [
+              {
+                text: "a",
+              },
+              {
+                text: "tact",
+              },
+            ],
+          },
+        ],
+      },
+    ],
+  },
+]
 
-testData.forEach((node: TestableLeaf) => {
+testData.forEach((node: Node) => {
   test("Searching for " + node.text, () => {
-    SearchTrie<TestableLeaf>(testTrieA, node.text)
+    expect(SearchTrie(testTrieA, node.text)).toBeTruthy()
   })
 })
 

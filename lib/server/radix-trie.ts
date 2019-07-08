@@ -20,7 +20,7 @@ function isPrefix(text: string, comparitor: string) {
   return result
 }
 
-export interface Node<Values extends object> {
+export interface Node<Values extends {} = {}> {
   readonly text: string,
   nodes?: Array<Node<Values>>,
   data?: Values,
@@ -34,6 +34,11 @@ export function CreateTrie<Values>(): Node<Values> {
 }
 
 export function SearchTrie<Values>(trie: Node<Values>, search: string): Node<Values> | void {
+  // Exit early with static info.
+  if (!trie.nodes || !trie.nodes.length) {
+    return
+  }
+
   let result: Node<Values> | void
   for (
     let nodeIndex = 0,
