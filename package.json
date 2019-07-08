@@ -18,7 +18,7 @@
   },
   "scripts": {
     "unit-tests": "jest",
-    "test": "npm run unit-tests",
+    "test": "npm run lint && npm run unit-tests",
     "dev": "ts-node index.ts --watch",
     "lint": "tslint --project . --fix"
   },
@@ -34,13 +34,8 @@
   "homepage": "https://github.com/Multicolour/multicolour#readme",
   "dependencies": {
     "ajv": "^6.10.0",
-    "debug": "^4.1.1",
     "knex": "^0.17.6",
-    "neovim": "^4.5.0",
-    "npm": "^6.9.0",
-    "toposort": "^2.0.2",
-    "tslint": "^5.17.0",
-    "typescript-language-server": "^0.3.8"
+    "toposort": "^2.0.2"
   },
   "engine-strict": true,
   "engines": {
@@ -57,8 +52,8 @@
     "codacy-coverage": "^3.4.0",
     "jest": "^24.8.0",
     "ts-jest": "^24.0.2",
-    "ts-lint": "^4.5.1",
     "ts-node": "^8.2.0",
-    "typescript": "^3.5.2"
+    "typescript": "^3.5.2",
+    "tslint": "^5.17.0"
   }
 }

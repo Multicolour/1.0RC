@@ -1,11 +1,11 @@
 import {
-  Multicolour$SingleDatabaseConnectionConfig,
+  Multicolour$DatabaseServiceConfig,
 } from "../types/multicolour/config"
 
 
 class Database {
-  constructor(config: Multicolour$SingleDatabaseConnectionConfig) {
-
+  constructor(config: Multicolour$DatabaseServiceConfig) {
+    console.log("DB config", config)
   }
 }
 

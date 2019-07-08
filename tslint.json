@@ -29,5 +29,10 @@
     "max-line-length": {
       "options": [120]
     }
+  },
+  "linterOptions": {
+    "exclude": [
+      "examples/**/*"
+    ]
   }
 }

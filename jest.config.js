@@ -11,6 +11,7 @@ module.exports = {
   "coveragePathIgnorePatterns": [
     "/node_modules/",
     "/tests/mocks",
+    "<rootDir>/examples",
     "<rootDir>/lib/better-errors/ajv-syntax-or-reference-error.ts",
     "tests/content/uncaught-error-handlers.ts"
   ],

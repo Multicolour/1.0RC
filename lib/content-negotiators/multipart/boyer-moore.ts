@@ -33,7 +33,10 @@ class BoyerMooreHorspool {
       currentMatchIndex < max;
       currentMatchIndex++
     ) {
-      const bodyPiece = body.slice(boundaryIndices[currentMatchIndex] + this.pattern.length - 1, boundaryIndices[currentMatchIndex + 1])
+      const bodyPiece = body.slice(
+        boundaryIndices[currentMatchIndex] + this.pattern.length - 1,
+        boundaryIndices[currentMatchIndex + 1],
+      )
 
       bodyParts.push(bodyPiece)
     }
@@ -90,14 +93,14 @@ class BoyerMooreHorspool {
     let skip = 0
 
     haystackLoop: for (
-      let haystackChar = 0, 
+      let haystackChar = 0,
           maxTextChar = text.length - 1;
       haystackChar <= maxTextChar;
       haystackChar += skip
     ) {
       pattern: for (
-        let needleChar = this.pattern.length - 1; 
-        needleChar >= 0; 
+        let needleChar = this.pattern.length - 1;
+        needleChar >= 0;
         needleChar--
       ) {
         const lookupIndex = haystackChar + needleChar
@@ -138,7 +141,6 @@ class BoyerMooreHorspool {
       char < truePatternLength;
       char++
     ) {
-      
       badCharShift[this.pattern[char]] = truePatternLength - char
     }
 
