@@ -34,26 +34,29 @@ export function CreateTrie<Values>(): Node<Values> {
 }
 
 export function SearchTrie<Values>(trie: Node<Values>, search: string): Node<Values> | void {
-  // Exit early with static info.
-  if (!trie.nodes || !trie.nodes.length) {
-    return
-  }
-
   let result: Node<Values> | void
-  for (
-    let nodeIndex = 0,
-        maxChildIndex = trie.nodes.length;
-    nodeIndex < maxChildIndex;
-    nodeIndex++
-  ) {
-    const node = trie.nodes[nodeIndex]
-
-    // If this node's text isnt a match, exit.
-    if (!isPrefix(node.text, search)) {
+  const nodesToSearchOrNoMatch = trie.nodes && trie.nodes.length > 0
+  while (nodesToSearchOrNoMatch) {
+    if (!trie.nodes || !trie.nodes.length) {
       continue
     }
 
-    result = SearchTrie(node, search.substring(0, node.text.length - 1))
+    for (
+      let nodeIndex = 0,
+      maxNodeIndex = trie.nodes.length - 1;
+      nodeIndex <= maxNodeIndex;
+      nodeIndex++
+    ) {
+      const node = trie.nodes[nodeIndex]
+      console.log("NODE text %s / %d, search %s & cut %s. ISP", node.text, node.text.length, search, search.substr(0, node.text.length), isPrefix(node.text, search), trie.nodes.length)
+
+      // If this node's text isnt a match, exit.
+      if (!isPrefix(node.text, search)) {
+        continue
+      }
+
+      result = SearchTrie(node, search.substring(0, node.text.length))
+    }
   }
 
   return result
