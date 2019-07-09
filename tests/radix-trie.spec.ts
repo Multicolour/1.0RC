@@ -1,12 +1,12 @@
 import {
   CreateTrie,
   // InsertNodeIntoTrie,
-  Node,
+  // Node,
   // RemoveNodeFromTrie,
   SearchTrie,
 } from "@lib/server/radix-trie"
 
-const testData: Node[] = [
+/*const testData: Node[] = [
   {
     text: "/hi",
   },
@@ -22,7 +22,7 @@ const testData: Node[] = [
   {
     text: "/cona",
   },
-]
+]*/
 
 const testTrieA = CreateTrie()
 testTrieA.nodes = [
@@ -39,9 +39,6 @@ testTrieA.nodes = [
             text: "on",
             nodes: [
               {
-                text: "a",
-              },
-              {
                 text: "tact",
               },
             ],
@@ -52,9 +49,12 @@ testTrieA.nodes = [
   },
 ]
 
-testData.forEach((node: Node) => {
+/*testData.forEach((node: Node) => {
   test("Searching for " + node.text, () => {
     expect(SearchTrie(testTrieA, node.text)).toBeTruthy()
   })
+})*/
+test("Basic cats", () => {
+  expect(SearchTrie(testTrieA, "/cats")).toBeTruthy()
 })
 

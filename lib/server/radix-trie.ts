@@ -34,31 +34,38 @@ export function CreateTrie<Values>(): Node<Values> {
 }
 
 export function SearchTrie<Values>(trie: Node<Values>, search: string): Node<Values> | void {
+  if (!trie.nodes) {
+    return undefined
+  }
+
   let result: Node<Values> | void
-  const nodesToSearchOrNoMatch = trie.nodes && trie.nodes.length > 0
-  while (nodesToSearchOrNoMatch) {
-    if (!trie.nodes || !trie.nodes.length) {
+  for (
+    let nodeIndex = 0,
+        maxNodeIndex = trie.nodes.length - 1;
+    nodeIndex <= maxNodeIndex;
+    nodeIndex++
+  ) {
+    const node = trie.nodes[nodeIndex]
+    const cutSearch = search.slice(0, node.text.length - 1)
+    // console.log("Node text", node.text)
+    console.log("Search", search)
+    console.log("Cut %d '%s' - '%s'", node.text.length, node.text, cutSearch)
+
+    // If this node's text isnt a match,
+    // exit this iteration.
+    if (!isPrefix(node.text, search)) {
       continue
     }
 
-    for (
-      let nodeIndex = 0,
-      maxNodeIndex = trie.nodes.length - 1;
-      nodeIndex <= maxNodeIndex;
-      nodeIndex++
-    ) {
-      const node = trie.nodes[nodeIndex]
-      console.log("NODE text %s / %d, search %s & cut %s. ISP", node.text, node.text.length, search, search.substr(0, node.text.length), isPrefix(node.text, search), trie.nodes.length)
-
-      // If this node's text isnt a match, exit.
-      if (!isPrefix(node.text, search)) {
-        continue
-      }
-
-      result = SearchTrie(node, search.substring(0, node.text.length))
+    console.log("Cut length", cutSearch.length - 1)
+    if (cutSearch.length === 0) {
+      break
     }
+
+    result = SearchTrie(node, cutSearch)
   }
 
+  console.log("RESULT", result)
   return result
 }
 
