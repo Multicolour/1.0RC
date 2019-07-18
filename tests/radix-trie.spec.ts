@@ -34,12 +34,14 @@ testTrieA.nodes = [
         nodes: [
           {
             text: "ats",
+            data: "CATS",
           },
           {
             text: "on",
             nodes: [
               {
                 text: "tact",
+                data: "CONTACT",
               },
             ],
           },
@@ -54,7 +56,16 @@ testTrieA.nodes = [
     expect(SearchTrie(testTrieA, node.text)).toBeTruthy()
   })
 })*/
-test("Basic cats", () => {
-  expect(SearchTrie(testTrieA, "/cats")).toBeTruthy()
+test("Basic /cats", () => {
+  expect(SearchTrie(testTrieA, "/cats")).toEqual({
+    text: "ats",
+    data: "CATS",
+  })
 })
 
+test("Basic /contact", () => {
+  expect(SearchTrie(testTrieA, "/contact")).toEqual({
+    text: "tact",
+    data: "CONTACT",
+  })
+})

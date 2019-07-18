@@ -35,7 +35,7 @@ export function CreateTrie<Values>(): Node<Values> {
 
 export function SearchTrie<Values>(trie: Node<Values>, search: string): Node<Values> | void {
   if (!trie.nodes) {
-    return undefined
+    return trie
   }
 
   let result: Node<Values> | void
@@ -46,10 +46,7 @@ export function SearchTrie<Values>(trie: Node<Values>, search: string): Node<Val
     nodeIndex++
   ) {
     const node = trie.nodes[nodeIndex]
-    const cutSearch = search.slice(0, node.text.length - 1)
-    // console.log("Node text", node.text)
-    console.log("Search", search)
-    console.log("Cut %d '%s' - '%s'", node.text.length, node.text, cutSearch)
+    const cutSearch = search.slice(node.text.length, search.length)
 
     // If this node's text isnt a match,
     // exit this iteration.
@@ -57,15 +54,13 @@ export function SearchTrie<Values>(trie: Node<Values>, search: string): Node<Val
       continue
     }
 
-    console.log("Cut length", cutSearch.length - 1)
-    if (cutSearch.length === 0) {
+    result = SearchTrie(node, cutSearch)
+
+    if (cutSearch.length <= 0) {
       break
     }
-
-    result = SearchTrie(node, cutSearch)
   }
 
-  console.log("RESULT", result)
   return result
 }
 
