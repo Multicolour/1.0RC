@@ -7,7 +7,7 @@ export enum NodeType {
 
 export interface Node<Values extends {} = {}> {
   readonly text: string,
-  readonly type: NodeType,
+  readonly type?: NodeType,
   nodes?: Array<Node<Values>>,
   data?: Values,
 }
