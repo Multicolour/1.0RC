@@ -108,11 +108,31 @@ export function SearchTrie<Values>(trie: Node<Values>, search: string): Node<Val
   return result
 }
 
-export function InsertNodeIntoTrie<Values>(trie: Node<Values>, text: string, values: Values): Node<Values> {
+/**
+ * Insert a new entry into another Node (or root Node AKA: Trie).
+ *
+ * Takes a Generic type to specify the type of the `data` attribute of this node.
+ * Insertion `values` *must* be the same _type_ as the generic passed into this function.
+ *
+ * @param {Node<Values>} trie to insert new entry into.
+ * @param {string} text to insert into the `trie`
+ * @param {Values} values to apply to this string within the trie.
+ * @return {Node<Values>} updated node.
+ */
+export function InsertNodeIntoTrie<Values = any>(trie: Node<Values>, text: string, values: Values): Node<Values> {
   console.log("Inserting", values, "at", text, "in", trie)
   return trie
 }
 
+/**
+ * Remove a `Node` from the `trie` and recompress it.
+ *
+ * Takes a Generic type to specify the type of the `data` attribute of this node.
+ *
+ * @param {Node<Values>} trie to remove node from.
+ * @param {Node<Values>} node to remove to the trie.
+ * @return {Node<Values>} Updated and recompressed trie.
+ */
 export function RemoveNodeFromTrie<Values>(trie: Node<Values>, node: Node<Values>): Node<Values> {
   console.log("Removing", node, "from", trie)
   return trie

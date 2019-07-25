@@ -1,32 +1,41 @@
 import {
   CreateTrie,
-  // InsertNodeIntoTrie,
-  // Node,
-  // RemoveNodeFromTrie,
+  InsertNodeIntoTrie,
   SearchTrie,
 } from "@lib/server/radix-trie"
 
 type TestData = string
 
-/*const testData: Node[] = [
-  {
-    text: "/hi",
-  },
-  {
-    text: "/cats",
-  },
-  {
-    text: "/contact",
-  },
-  {
-    text: "/con",
-  },
-  {
-    text: "/cona",
-  },
-]*/
+test("Insert super", () => {
+  const testTrie = CreateTrie<TestData>()
 
-const testTrieA = CreateTrie<TestData>()
+  InsertNodeIntoTrie<TestData>(testTrie, "/super", "SUPER")
+
+  expect(testTrie).toEqual({
+    text: "/super",
+    data: "SUPER",
+    nodes: [],
+  })
+
+
+  InsertNodeIntoTrie<TestData>(testTrie, "/cats", "CATS")
+
+  expect(testTrie).toEqual({
+    text: "/",
+    nodes: [
+      {
+        text: "super",
+        data: "SUPER",
+      },
+      {
+        text: "cats",
+        data: "CATS",
+      },
+    ],
+  })
+})
+
+const testTrieA = CreateTrie<TestData>("/")
 testTrieA.nodes = [
   {
     text: "/",
@@ -75,11 +84,6 @@ testTrieA.nodes = [
   },
 ]
 
-/*testData.forEach((node: Node) => {
-  test("Searching for " + node.text, () => {
-    expect(SearchTrie(testTrieA, node.text)).toBeTruthy()
-  })
-})*/
 test("Basic /cats", () => {
   expect(SearchTrie<TestData>(testTrieA, "/cats")).toEqual({
     text: "ats",
