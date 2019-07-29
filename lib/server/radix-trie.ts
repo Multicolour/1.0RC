@@ -1,5 +1,3 @@
-// import { Multicolour$RouteHandler } from "@mc-types/multicolour/route"
-
 export enum NodeType {
   PLAIN,
   PARAM,
@@ -53,6 +51,7 @@ function isPrefix(text: string, comparitor: string): boolean {
  *   CreateTrie("/") -> { text: "/", type: NodeType.PLAIN, nodes: [] }
  *
  * @param {string} rootText
+ * @param {Values} to add data to root node.
  * @return {Node<Values>} Newly created node.
  */
 export function CreateTrie<Values>(rootText: string = ""): Node<Values> {
@@ -87,19 +86,22 @@ export function SearchTrie<Values>(trie: Node<Values>, search: string): Node<Val
     nodeIndex++
   ) {
     const node = trie.nodes[nodeIndex]
-    const cutSearch = search.slice(node.text.length, search.length)
 
     // If this node's text isnt a match,
-    // exit this iteration.
+    // exit this iteration and move onto
+    // the next node.
     if (!isPrefix(node.text, search)) {
       continue
     }
 
+    const cutSearch = search.slice(node.text.length, search.length)
+
     // It's a prefix, dig deeper...
     result = SearchTrie(node, cutSearch)
 
-    // If we've run out of string, we should return what we
-    // already have as our match or miss.
+    // If we've run out of string, we
+    // should return what we already
+    // have as our match or miss.
     if (cutSearch.length <= 0) {
       break
     }
@@ -120,7 +122,53 @@ export function SearchTrie<Values>(trie: Node<Values>, search: string): Node<Val
  * @return {Node<Values>} updated node.
  */
 export function InsertNodeIntoTrie<Values = any>(trie: Node<Values>, text: string, values: Values): Node<Values> {
-  console.log("Inserting", values, "at", text, "in", trie)
+  // If there are no nodes to check
+  // just do some static checks and
+  // whack it in as a first node.
+  console.log(trie.nodes)
+  if (!trie.nodes || !trie.nodes.length) {
+    if (!trie.nodes) {
+      trie.nodes = []
+    }
+
+    // if theres either
+    //   no text to compare
+    //     OR
+    //   the root text is a successful
+    //   prefix to our input text.
+    // then we can safely add as a first node.
+    if (!trie.text.length) {
+      trie.nodes.push({
+        text,
+        data: values,
+        type: NodeType.PLAIN,
+      })
+    }
+    else if (isPrefix(trie.text, text)) {
+      const cutText = text.slice(trie.text.length, text.length)
+      console.log(cutText)
+
+      trie.nodes.push({
+        text: cutText,
+        data: values,
+        type: NodeType.PLAIN,
+      })
+    }
+
+    return trie
+  }
+
+  /*for (
+    let nodeIndex = 0,
+        maxNodeIndex = trie.nodes.length - 1;
+    nodeIndex <= maxNodeIndex;
+    nodeIndex++
+  ) {
+    const node = trie.nodes[nodeIndex]
+
+  }*/
+
+  console.log(JSON.stringify(trie, null, 2))
   return trie
 }
 

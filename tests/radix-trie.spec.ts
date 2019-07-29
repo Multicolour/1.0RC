@@ -1,35 +1,48 @@
 import {
   CreateTrie,
   InsertNodeIntoTrie,
+  NodeType,
   SearchTrie,
 } from "@lib/server/radix-trie"
 
 type TestData = string
 
-test("Insert super", () => {
+test("Insertion", () => {
   const testTrie = CreateTrie<TestData>()
 
   InsertNodeIntoTrie<TestData>(testTrie, "/super", "SUPER")
 
   expect(testTrie).toEqual({
-    text: "/super",
-    data: "SUPER",
-    nodes: [],
+    text: "",
+    type: NodeType.PLAIN,
+    nodes: [{
+      text: "/super",
+      data: "SUPER",
+      type: NodeType.PLAIN,
+    }],
   })
 
 
   InsertNodeIntoTrie<TestData>(testTrie, "/cats", "CATS")
 
   expect(testTrie).toEqual({
-    text: "/",
+    text: "",
+    type: NodeType.PLAIN,
     nodes: [
       {
-        text: "super",
-        data: "SUPER",
-      },
-      {
-        text: "cats",
-        data: "CATS",
+        text: "/",
+        nodes: [
+          {
+            text: "super",
+            data: "SUPER",
+            type: NodeType.PLAIN,
+          },
+          {
+            text: "cats",
+            data: "CATS",
+            type: NodeType.PLAIN,
+          },
+        ],
       },
     ],
   })
