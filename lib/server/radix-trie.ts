@@ -4,10 +4,11 @@ export enum NodeType {
 }
 
 export interface Node<Values extends {} = {}> {
-  readonly text: string,
-  readonly type?: NodeType,
-  nodes?: Array<Node<Values>>,
-  data?: Values,
+  readonly text: string
+  readonly type?: NodeType
+  nodes?: Array<Node<Values>>
+  data?: Values
+  isEnd?: boolean
 }
 
 /**
@@ -122,53 +123,41 @@ export function SearchTrie<Values>(trie: Node<Values>, search: string): Node<Val
  * @return {Node<Values>} updated node.
  */
 export function InsertNodeIntoTrie<Values = any>(trie: Node<Values>, text: string, values: Values): Node<Values> {
-  // If there are no nodes to check
-  // just do some static checks and
-  // whack it in as a first node.
-  console.log(trie.nodes)
-  if (!trie.nodes || !trie.nodes.length) {
-    if (!trie.nodes) {
-      trie.nodes = []
-    }
-
-    // if theres either
-    //   no text to compare
-    //     OR
-    //   the root text is a successful
-    //   prefix to our input text.
-    // then we can safely add as a first node.
-    if (!trie.text.length) {
-      trie.nodes.push({
-        text,
-        data: values,
-        type: NodeType.PLAIN,
-      })
-    }
-    else if (isPrefix(trie.text, text)) {
-      const cutText = text.slice(trie.text.length, text.length)
-      console.log(cutText)
-
-      trie.nodes.push({
-        text: cutText,
-        data: values,
-        type: NodeType.PLAIN,
-      })
-    }
+  if (!trie.nodes || trie.nodes.length === 0) {
+    trie.nodes = [{
+      text,
+      data: values,
+    }]
 
     return trie
   }
 
-  /*for (
+  for (
     let nodeIndex = 0,
-        maxNodeIndex = trie.nodes.length - 1;
+    maxNodeIndex = trie.nodes.length - 1;
     nodeIndex <= maxNodeIndex;
     nodeIndex++
   ) {
     const node = trie.nodes[nodeIndex]
+    for (
+      let nodeCharIndex = 0,
+          max = node.text.length,
+          maxTextChar = text.length - 1;
+      nodeCharIndex < max;
+      nodeCharIndex += 1
+    ) {
+      if (nodeCharIndex > maxTextChar) {
+        if (!node.nodes) {
+          node.nodes = []
+        }
 
-  }*/
-
-  console.log(JSON.stringify(trie, null, 2))
+        node.nodes.push({
+          text,
+          data: values,
+        })
+      }
+    }
+  }
   return trie
 }
 
