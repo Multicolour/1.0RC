@@ -9,4 +9,3 @@ class RouterError extends PrettyErrorWithStack {
 }
 
 export default RouterError
-

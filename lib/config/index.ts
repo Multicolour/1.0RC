@@ -10,9 +10,7 @@ import databaseConfigSchema from "../../schema/config/database-service.schema.js
 function configValidator(config: Multicolour$Config): Multicolour$Config {
   const ajv = new Ajv()
 
-  ajv
-    .addSchema(apiConfigSchema)
-    .addSchema(databaseConfigSchema)
+  ajv.addSchema(apiConfigSchema).addSchema(databaseConfigSchema)
 
   const target = {
     ...defaultConfig,
@@ -21,7 +19,11 @@ function configValidator(config: Multicolour$Config): Multicolour$Config {
   const valid = ajv.validate(configSchema, target)
 
   if (!valid) {
-    throw new AJVValidationError("Invalid configuration", "config", ajv.errors || [])
+    throw new AJVValidationError(
+      "Invalid configuration",
+      "config",
+      ajv.errors || [],
+    )
   }
 
   return target

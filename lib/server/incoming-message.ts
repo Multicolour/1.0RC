@@ -7,12 +7,12 @@ import {
 } from "@mc-types/multicolour/reply"
 
 export interface Multicolour$ParsedHeaders {
-  accept: Multicolour$AcceptHeader,
-  "content-type"?: Multicolour$ContentTypeHeader,
+  accept: Multicolour$AcceptHeader
+  "content-type"?: Multicolour$ContentTypeHeader
 }
 
 export interface Multicolour$ParsedBody {
-  [key: string]: string,
+  [key: string]: string
 }
 
 export class Multicolour$IncomingMessage extends IncomingMessage {
@@ -22,10 +22,12 @@ export class Multicolour$IncomingMessage extends IncomingMessage {
   constructor(socket: Socket) {
     super(socket)
     this.parsedHeaders = {
-      "accept": [{
-        contentType: "application/json",
-        quality: 1.0,
-      }],
+      "accept": [
+        {
+          contentType: "application/json",
+          quality: 1.0,
+        },
+      ],
       "content-type": {
         contentType: "application/json",
       },

@@ -1,7 +1,4 @@
-import {
-  Multicolour$DatabaseServiceConfig,
-} from "../types/multicolour/config"
-
+import { Multicolour$DatabaseServiceConfig } from "../types/multicolour/config"
 
 class Database {
   constructor(config: Multicolour$DatabaseServiceConfig) {
@@ -10,4 +7,3 @@ class Database {
 }
 
 export default Database
-

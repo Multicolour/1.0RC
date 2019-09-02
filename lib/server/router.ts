@@ -7,13 +7,13 @@ import RouterError from "@lib/better-errors/router-error"
 import RadixTrie from "./radix-trie"
 
 export interface Tries {
-  [Multicolour$RouteVerbs.GET]: RadixTrie,
-  [Multicolour$RouteVerbs.POST]: RadixTrie,
-  [Multicolour$RouteVerbs.PATCH]: RadixTrie,
-  [Multicolour$RouteVerbs.PUT]: RadixTrie,
-  [Multicolour$RouteVerbs.DELETE]: RadixTrie,
-  [Multicolour$RouteVerbs.HEAD]: RadixTrie,
-  [Multicolour$RouteVerbs.OPTIONS]: RadixTrie,
+  [Multicolour$RouteVerbs.GET]: RadixTrie
+  [Multicolour$RouteVerbs.POST]: RadixTrie
+  [Multicolour$RouteVerbs.PATCH]: RadixTrie
+  [Multicolour$RouteVerbs.PUT]: RadixTrie
+  [Multicolour$RouteVerbs.DELETE]: RadixTrie
+  [Multicolour$RouteVerbs.HEAD]: RadixTrie
+  [Multicolour$RouteVerbs.OPTIONS]: RadixTrie
 }
 
 class Router {
@@ -30,8 +30,7 @@ class Router {
   public on(method: Multicolour$RouteVerbs, route: Multicolour$Route) {
     try {
       this.tries[method].addRoute(route.path, route.handler)
-    }
-    catch (error) {
+    } catch (error) {
       throw new RouterError(error)
     }
     return this

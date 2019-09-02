@@ -6,10 +6,14 @@ import {
 import APIServer from "./api-server"
 
 class Service {
-  constructor(serviceDeclaration: Multicolour$SingleDatabaseConnectionConfig | Multicolour$APIServiceConfig) {
+  constructor(
+    serviceDeclaration:
+      | Multicolour$SingleDatabaseConnectionConfig
+      | Multicolour$APIServiceConfig,
+  ) {
     switch (serviceDeclaration.type) {
-    case "api":
-      return new APIServer(serviceDeclaration)
+      case "api":
+        return new APIServer(serviceDeclaration)
     }
   }
 }

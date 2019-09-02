@@ -1,15 +1,20 @@
 import HttpError from "@lib/better-errors/http-error"
 import { Multicolour$RequestParserArgs } from "@mc-types/multicolour/route"
 
-async function BodyParser(config: Multicolour$RequestParserArgs): Promise<string> {
+async function BodyParser(
+  config: Multicolour$RequestParserArgs,
+): Promise<string> {
   if (!config.request) {
-    return Promise.reject(new HttpError({
-      statusCode: 500,
-      error: {
-        // tslint:disable-next-line:max-line-length
-        message: "The body parser was invoked without a request with which to parse. This is a developer problem, please contact the owner of this API to resolve this issue.",
-      },
-    }))
+    return Promise.reject(
+      new HttpError({
+        statusCode: 500,
+        error: {
+          // tslint:disable-next-line:max-line-length
+          message:
+            "The body parser was invoked without a request with which to parse. This is a developer problem, please contact the owner of this API to resolve this issue.",
+        },
+      }),
+    )
   }
 
   return new Promise((resolve, reject) => {
@@ -24,13 +29,16 @@ async function BodyParser(config: Multicolour$RequestParserArgs): Promise<string
       const dataSize = Buffer.byteLength(data)
 
       if (maxBodySize && bodySize + dataSize > maxBodySize) {
-        return reject(new HttpError({
-          statusCode: 400,
-          error: {
-            // tslint:disable-next-line:max-line-length
-            message: "Body size exceeded the maximum body size allowed on this server. Please try again with a smaller payload.",
-          },
-        }))
+        return reject(
+          new HttpError({
+            statusCode: 400,
+            error: {
+              // tslint:disable-next-line:max-line-length
+              message:
+                "Body size exceeded the maximum body size allowed on this server. Please try again with a smaller payload.",
+            },
+          }),
+        )
       }
 
       bodySize += dataSize
@@ -42,4 +50,3 @@ async function BodyParser(config: Multicolour$RequestParserArgs): Promise<string
 }
 
 export default BodyParser
-

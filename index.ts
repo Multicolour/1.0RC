@@ -9,7 +9,6 @@ import configValidator from "./lib/config"
 import { getModels } from "./lib/models"
 import Services from "./lib/services/services"
 
-
 class Multicolour {
   public config!: Multicolour$Config
   public serviceBridge!: ServiceNetworkBridge
@@ -25,7 +24,9 @@ class Multicolour {
     }
 
     // tslint:disable-next-line:max-line-length no-console
-    console.info("Config syntax looks good, nice work.\nNow, on to resolving, compiling and setting up your models")
+    console.info(
+      "Config syntax looks good, nice work.\nNow, on to resolving, compiling and setting up your models",
+    )
 
     try {
       this.models = this.getModels()
@@ -35,7 +36,9 @@ class Multicolour {
     }
 
     // tslint:disable-next-line:max-line-length no-console
-    console.info("Models syntax checked and set up, now service dependency sorting and resolution.")
+    console.info(
+      "Models syntax checked and set up, now service dependency sorting and resolution.",
+    )
 
     try {
       this.sortServicesAndPrepareWorkers()
@@ -45,7 +48,9 @@ class Multicolour {
     }
 
     // tslint:disable-next-line:max-line-length no-console
-    console.info("All services check out okay, dependencies all resolve and service workers are ready to be prepared.")
+    console.info(
+      "All services check out okay, dependencies all resolve and service workers are ready to be prepared.",
+    )
   }
 
   public getModels(): Multicolour$ModelsObject {
@@ -55,11 +60,14 @@ class Multicolour {
   public sortServicesAndPrepareWorkers() {
     const servicesManager = new Services()
 
-    const startOrder = servicesManager
-      .validateAndSortServicesByDependencies(this.config.services)
+    const startOrder = servicesManager.validateAndSortServicesByDependencies(
+      this.config.services,
+    )
 
-    this.serviceBridge = servicesManager
-      .getServiceNetworkBridge(this.config.services, startOrder)
+    this.serviceBridge = servicesManager.getServiceNetworkBridge(
+      this.config.services,
+      startOrder,
+    )
   }
 
   public async start() {
@@ -72,4 +80,3 @@ class Multicolour {
 }
 
 export default Multicolour
-

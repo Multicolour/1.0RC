@@ -17,4 +17,3 @@ class ClientRequestError extends PrettyErrorWithStack {
 }
 
 export default ClientRequestError
-

@@ -50,24 +50,37 @@ class MulticolourServer {
     }
 
     if (!this.config.secure) {
-      debug("Creating insecure server because this.config.secure either isn't set or is set to a falsey value.")
-      this.server = createInsecureServer(serverOptions, this.onRequest.bind(this))
-    }
-    else if (this.config.secure && this.config.secureServerOptions) {
-      debug("Creating a secure server with %O.", this.config.secureServerOptions)
-      this.server = createSecureServer({
-        ...this.config.secureServerOptions,
-        ...serverOptions,
-      }, this.onRequest.bind(this))
-    }
-    else {
+      debug(
+        "Creating insecure server because this.config.secure either isn't set or is set to a falsey value.",
+      )
+      this.server = createInsecureServer(
+        serverOptions,
+        this.onRequest.bind(this),
+      )
+    } else if (this.config.secure && this.config.secureServerOptions) {
+      debug(
+        "Creating a secure server with %O.",
+        this.config.secureServerOptions,
+      )
+      this.server = createSecureServer(
+        {
+          ...this.config.secureServerOptions,
+          ...serverOptions,
+        },
+        this.onRequest.bind(this),
+      )
+    } else {
       // tslint:disable-next-line:max-line-length
-      debug("Creating insecure server because this.config.secure either isn't set or is set to a falsey value or you havent set secureServerOptions in this servervice config.")
-      this.server = createInsecureServer(serverOptions, this.onRequest.bind(this))
+      debug(
+        "Creating insecure server because this.config.secure either isn't set or is set to a falsey value or you havent set secureServerOptions in this servervice config.",
+      )
+      this.server = createInsecureServer(
+        serverOptions,
+        this.onRequest.bind(this),
+      )
     }
 
-    this
-      .addContentNegotiator("application/json", JsonNegotiator)
+    this.addContentNegotiator("application/json", JsonNegotiator)
     // .addContentNegotiator("multipart/form-data", MultipartNegotiator)
   }
 
@@ -87,7 +100,12 @@ class MulticolourServer {
     })
 
     // tslint:disable-next-line:max-line-length
-    debug("An irrecoverable error occured, please fix this and add a test to prevent this error occuring again. If you believe this to be a bug with Multicolour, please submit a bug report to https://github.com/Multicolour/multicolour/issues/new. \n\nError: %O\nMethod: %s,\nStack: %O", error, request.method, error.stack)
+    debug(
+      "An irrecoverable error occured, please fix this and add a test to prevent this error occuring again. If you believe this to be a bug with Multicolour, please submit a bug report to https://github.com/Multicolour/multicolour/issues/new. \n\nError: %O\nMethod: %s,\nStack: %O",
+      error,
+      request.method,
+      error.stack,
+    )
 
     response.writeHead(error.statusCode || 500, context.responseHeaders)
     response.end(reply)
@@ -98,8 +116,14 @@ class MulticolourServer {
     }
   }
 
-  public async onRequest(request: Multicolour$IncomingMessage, response: ServerResponse) {
-    const routeMatch = this.router.match(this.getEnumValueFromRequest(request.method), request.url)
+  public async onRequest(
+    request: Multicolour$IncomingMessage,
+    response: ServerResponse,
+  ) {
+    const routeMatch = this.router.match(
+      this.getEnumValueFromRequest(request.method),
+      request.url,
+    )
     const context: Multicolour$ReplyContext = {
       statusCode: 200,
       responseHeaders: {
@@ -109,18 +133,23 @@ class MulticolourServer {
 
     if (!routeMatch || !routeMatch.handle) {
       response.writeHead(404)
-      response.end(JSON.stringify({
-        error: "Not found",
-      }))
+      response.end(
+        JSON.stringify({
+          error: "Not found",
+        }),
+      )
       return
     }
 
     if (!routeMatch.handle.call) {
       response.writeHead(500)
-      response.end(JSON.stringify({
-        // tslint:disable-next-line:max-line-length
-        error: "A handler is present to handle this request but it is not a callable function. This is a developer problem and you should contact the owner of this service to rectify this issue.",
-      }))
+      response.end(
+        JSON.stringify({
+          // tslint:disable-next-line:max-line-length
+          error:
+            "A handler is present to handle this request but it is not a callable function. This is a developer problem and you should contact the owner of this service to rectify this issue.",
+        }),
+      )
 
       return
     }
@@ -129,57 +158,66 @@ class MulticolourServer {
     request.parsedHeaders = HeaderParser(request, context)
 
     // Run the registered handler for this route.
-    return routeMatch
-      .handle(request, context)
+    return (
+      routeMatch
+        .handle(request, context)
 
-      // Then run the response parser.
-      .then((reply: any) =>
-        this.runResponseParser({
-          reply,
-          context,
-          response,
-          request,
-        }),
-      )
+        // Then run the response parser.
+        .then((reply: any) =>
+          this.runResponseParser({
+            reply,
+            context,
+            response,
+            request,
+          }),
+        )
 
-      // Then reply with all of our data.
-      .then((reply: string) => {
-        response.writeHead(context.statusCode || 200, context.responseHeaders)
+        // Then reply with all of our data.
+        .then((reply: string) => {
+          response.writeHead(context.statusCode || 200, context.responseHeaders)
 
-        response.end(reply)
+          response.end(reply)
 
-        return {
-          reply,
-          context,
-        }
-      }, this.onResponseError.bind(this, request, response, context))
-      .catch(this.onResponseError.bind(this, request, response, context))
+          return {
+            reply,
+            context,
+          }
+        }, this.onResponseError.bind(this, request, response, context))
+        .catch(this.onResponseError.bind(this, request, response, context))
+    )
   }
 
-  public runResponseParser(responseConfig: Multicolour$ResponseParserArgs): Promise<any> {
+  public runResponseParser(
+    responseConfig: Multicolour$ResponseParserArgs,
+  ): Promise<any> {
     let negotiatorIndex = 0
     let targetNegotiator
     const requestedNegotiators = responseConfig.request.parsedHeaders.accept
 
-    while (negotiatorIndex <= requestedNegotiators.length && !targetNegotiator) {
+    while (
+      negotiatorIndex <= requestedNegotiators.length &&
+      !targetNegotiator
+    ) {
       const contentType = requestedNegotiators[negotiatorIndex].contentType
       if (this.negotiators.hasOwnProperty(contentType)) {
         targetNegotiator = this.negotiators[contentType]
-      }
-      else {
+      } else {
         negotiatorIndex += 1
       }
     }
 
     if (!targetNegotiator) {
-      return Promise.reject(new Multicolour$HttpError({
-        statusCode: 400,
-        error: {
-          // tslint:disable-next-line:max-line-length
-          message: "Couldn't find a content negotiator that could confidently handle this request for you, your accept header in the request either has a typo or the creator of this API server has not included the appropriate plugin to handle the requested content format.",
-          acceptHeaderRecieved: responseConfig.request.parsedHeaders.accept,
-        },
-      }))
+      return Promise.reject(
+        new Multicolour$HttpError({
+          statusCode: 400,
+          error: {
+            // tslint:disable-next-line:max-line-length
+            message:
+              "Couldn't find a content negotiator that could confidently handle this request for you, your accept header in the request either has a typo or the creator of this API server has not included the appropriate plugin to handle the requested content format.",
+            acceptHeaderRecieved: responseConfig.request.parsedHeaders.accept,
+          },
+        }),
+      )
     }
 
     return targetNegotiator.parseResponse(responseConfig)
@@ -192,9 +230,11 @@ class MulticolourServer {
 
   /* istanbul ignore next */
   public async listenToHTTP() {
-    return Promise.resolve(this.server.listen(this.config.port))
-      // tslint:disable-next-line:no-console
-      .then(() => console.log(`Server started on ${this.config.port}`))
+    return (
+      Promise.resolve(this.server.listen(this.config.port))
+        // tslint:disable-next-line:no-console
+        .then(() => console.log(`Server started on ${this.config.port}`))
+    )
   }
 
   /* istanbul ignore next */
@@ -202,14 +242,20 @@ class MulticolourServer {
     return Promise.resolve(this.server.close())
   }
 
-  public addContentNegotiator(negotiationAccept: string, Negotiator: typeof Multicolour$ContentNegotiator) {
+  public addContentNegotiator(
+    negotiationAccept: string,
+    Negotiator: typeof Multicolour$ContentNegotiator,
+  ) {
     this.negotiators[negotiationAccept] = new Negotiator()
 
     return this
   }
 
-  private getEnumValueFromRequest(inputMethod?: string): Multicolour$RouteVerbs {
-    const method: Multicolour$RouteVerbs = Multicolour$RouteVerbs[inputMethod as keyof typeof Multicolour$RouteVerbs]
+  private getEnumValueFromRequest(
+    inputMethod?: string,
+  ): Multicolour$RouteVerbs {
+    const method: Multicolour$RouteVerbs =
+      Multicolour$RouteVerbs[inputMethod as keyof typeof Multicolour$RouteVerbs]
     if (!method) {
       return Multicolour$RouteVerbs.GET
     }
@@ -218,4 +264,3 @@ class MulticolourServer {
 }
 
 export default MulticolourServer
-

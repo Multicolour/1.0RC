@@ -25,19 +25,17 @@ export interface Node<Values extends {} = {}> {
 function isPrefix(text: string, comparitor: string): boolean {
   let result = false
   for (
-    let charIndex = 0,
-        maxCharIndex = text.length;
+    let charIndex = 0, maxCharIndex = text.length;
     charIndex < maxCharIndex;
     charIndex++
   ) {
-      if (text[charIndex] !== comparitor[charIndex]) {
-        result = false
-        break
-      }
-      else {
-        result = true
-      }
+    if (text[charIndex] !== comparitor[charIndex]) {
+      result = false
+      break
+    } else {
+      result = true
     }
+  }
 
   return result
 }
@@ -74,15 +72,17 @@ export function CreateTrie<Values>(rootText: string = ""): Node<Values> {
  * @param {string} search term to search trie for.
  * @return {Node<Values> | void} The final matching Node or undefined for no match.
  */
-export function SearchTrie<Values>(trie: Node<Values>, search: string): Node<Values> | void {
+export function SearchTrie<Values>(
+  trie: Node<Values>,
+  search: string,
+): Node<Values> | void {
   if (!trie.nodes) {
     return trie
   }
 
   let result: Node<Values> | void
   for (
-    let nodeIndex = 0,
-        maxNodeIndex = trie.nodes.length - 1;
+    let nodeIndex = 0, maxNodeIndex = trie.nodes.length - 1;
     nodeIndex <= maxNodeIndex;
     nodeIndex++
   ) {
@@ -122,27 +122,32 @@ export function SearchTrie<Values>(trie: Node<Values>, search: string): Node<Val
  * @param {Values} values to apply to this string within the trie.
  * @return {Node<Values>} updated node.
  */
-export function InsertNodeIntoTrie<Values = any>(trie: Node<Values>, text: string, values: Values): Node<Values> {
+export function InsertNodeIntoTrie<Values = any>(
+  trie: Node<Values>,
+  text: string,
+  values: Values,
+): Node<Values> {
   if (!trie.nodes || trie.nodes.length === 0) {
-    trie.nodes = [{
-      text,
-      data: values,
-    }]
+    trie.nodes = [
+      {
+        text,
+        data: values,
+      },
+    ]
 
     return trie
   }
 
   for (
-    let nodeIndex = 0,
-    maxNodeIndex = trie.nodes.length - 1;
+    let nodeIndex = 0, maxNodeIndex = trie.nodes.length - 1;
     nodeIndex <= maxNodeIndex;
     nodeIndex++
   ) {
     const node = trie.nodes[nodeIndex]
     for (
       let nodeCharIndex = 0,
-          max = node.text.length,
-          maxTextChar = text.length - 1;
+        max = node.text.length,
+        maxTextChar = text.length - 1;
       nodeCharIndex < max;
       nodeCharIndex += 1
     ) {
@@ -170,7 +175,10 @@ export function InsertNodeIntoTrie<Values = any>(trie: Node<Values>, text: strin
  * @param {Node<Values>} node to remove to the trie.
  * @return {Node<Values>} Updated and recompressed trie.
  */
-export function RemoveNodeFromTrie<Values>(trie: Node<Values>, node: Node<Values>): Node<Values> {
+export function RemoveNodeFromTrie<Values>(
+  trie: Node<Values>,
+  node: Node<Values>,
+): Node<Values> {
   console.log("Removing", node, "from", trie)
   return trie
 }

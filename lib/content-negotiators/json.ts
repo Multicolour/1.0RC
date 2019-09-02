@@ -6,8 +6,7 @@ import { Multicolour$ContentNegotiator } from "./base"
 
 export default class JSONContentNegotiator extends Multicolour$ContentNegotiator {
   public async parseBody(args: Multicolour$RequestParserArgs): Promise<object> {
-    return bodyParser({ request: args.request })
-    .then((json: string) => {
+    return bodyParser({ request: args.request }).then((json: string) => {
       let outwardBody
 
       if (json[0] !== "{" && json[0] !== "[") {

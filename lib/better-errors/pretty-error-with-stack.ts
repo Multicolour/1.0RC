@@ -4,7 +4,6 @@ import {
 } from "@mc-types/multicolour/error-ast"
 
 class PrettyErrorWithStack extends Error {
-
   /**
    * Ommit lines in the stack trace that match
    * these patterns. Can be string or a RegExp.
@@ -12,7 +11,7 @@ class PrettyErrorWithStack extends Error {
    * @type {RegExp}
    */
   // tslint:disable-next-line:max-line-length
-  public static ignoredPackages: RegExp = /(^internal\/process\/|module.js|flow-node|bootstrap_node.js|node_modules\/flow-remove-types|next_tick.js|node_modules\/jest-jasmine2|^events.js$|internal\/(bootstrap|modules)\/.*$)/
+  public static ignoredPackages = /(^internal\/process\/|module.js|flow-node|bootstrap_node.js|node_modules\/flow-remove-types|next_tick.js|node_modules\/jest-jasmine2|^events.js$|internal\/(bootstrap|modules)\/.*$)/
   // tslint:disable-next-line
   public __proto__?: object
   public messageAST: Error$MessageAST
@@ -26,8 +25,7 @@ class PrettyErrorWithStack extends Error {
 
     if (Object.setPrototypeOf) {
       Object.setPrototypeOf(this, actualProto)
-    }
-    else {
+    } else {
       this.__proto__ = actualProto
     }
 
@@ -71,23 +69,23 @@ class PrettyErrorWithStack extends Error {
     const partsRaw = frame
       .split(/\s+(?=[^\])}]*([[({]|$))/g)
       .slice(1)
-      .filter((part) => !(new Set(["", "(", "["]).has(part)))
+      .filter((part: string): boolean => !new Set(["", "(", "["]).has(part))
 
     const namedParts: Error$MessageFrameAST = {}
 
     if (partsRaw.length !== 1) {
       switch (partsRaw.length) {
-      case 3:
-        namedParts.caller = `${partsRaw[0]} ${partsRaw[1]}`
-        partsRaw.splice(0, 1)
-        break
-      default:
-        namedParts.caller = partsRaw[0]
-        partsRaw.splice(0, 1)
+        case 3:
+          namedParts.caller = `${partsRaw[0]} ${partsRaw[1]}`
+          partsRaw.splice(0, 1)
+          break
+        default:
+          namedParts.caller = partsRaw[0]
+          partsRaw.splice(0, 1)
       }
     }
 
-    partsRaw.forEach((part) => {
+    partsRaw.forEach((part: string): void => {
       this.parseStackFramePart(part, namedParts)
     })
 
@@ -103,16 +101,21 @@ class PrettyErrorWithStack extends Error {
   public getMessageAst(): Error$MessageAST {
     const parsedStack = this.stack
       ? this.stack
-        .split("\n")
-        .map((line) => line.trim())
-        .filter(Boolean)
-        .slice(1)
-        .map((frame: string) => this.parseStackFrame(frame))
-        .filter((frameAST: Error$MessageFrameAST) => Object.keys(frameAST).length > 0)
+          .split("\n")
+          .map((line) => line.trim())
+          .filter(Boolean)
+          .slice(1)
+          .map((frame: string) => this.parseStackFrame(frame))
+          .filter(
+            (frameAST: Error$MessageFrameAST) =>
+              Object.keys(frameAST).length > 0,
+          )
       : []
 
-    const filteredStack = parsedStack
-      .filter((frameAST: Error$MessageFrameAST) => !PrettyErrorWithStack.ignoredPackages.test(frameAST.file || ""))
+    const filteredStack = parsedStack.filter(
+      (frameAST: Error$MessageFrameAST) =>
+        !PrettyErrorWithStack.ignoredPackages.test(frameAST.file || ""),
+    )
 
     return {
       message: this.message,
@@ -131,7 +134,9 @@ class PrettyErrorWithStack extends Error {
       "ERROR: " + this.message,
       this.getPrettyStack(),
       "\n",
-      "Filtered out " + messageAST.framesDropped + " frames from frameworks and Node internals from the stack.",
+      "Filtered out " +
+        messageAST.framesDropped +
+        " frames from frameworks and Node internals from the stack.",
     ]
 
     return messages.join("\n")
@@ -139,8 +144,8 @@ class PrettyErrorWithStack extends Error {
 
   protected getPrettyStack(): string[] {
     const messageAST = this.getMessageAst()
-    return messageAST
-      .stack.map((frame: Error$MessageFrameAST, index: number) => {
+    return messageAST.stack.map(
+      (frame: Error$MessageFrameAST, index: number) => {
         let contextLanguage = "called by"
 
         if (index === 0) {
@@ -159,9 +164,9 @@ class PrettyErrorWithStack extends Error {
           " * line: " + frame.line,
           " * column: " + frame.column,
         ].join("\n")
-      })
+      },
+    )
   }
-
 }
 
 export default PrettyErrorWithStack

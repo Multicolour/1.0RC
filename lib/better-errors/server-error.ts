@@ -17,10 +17,11 @@ class ServerError extends PrettyErrorWithStack {
       "\n",
       this.getPrettyStack(),
       "\n",
-      "Filtered out " + this.messageAST.framesDropped + " frames from frameworks and Node internals from the stack.",
+      "Filtered out " +
+        this.messageAST.framesDropped +
+        " frames from frameworks and Node internals from the stack.",
     ].join("\n")
   }
-
 }
 
 export default ServerError

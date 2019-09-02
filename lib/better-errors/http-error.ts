@@ -4,12 +4,12 @@ export interface HttpErrorMessage {
   statusCode: number
   headers?: object
   error: {
-    message: string,
+    message: string
     [extra: string]: any,
   }
 }
 
-class Multicolour$HttpError extends PrettyErrorWithStack {
+class MulticolourHttpError extends PrettyErrorWithStack {
   public statusCode: number
 
   constructor(error: HttpErrorMessage) {
@@ -21,12 +21,8 @@ class Multicolour$HttpError extends PrettyErrorWithStack {
   }
 
   public prettify() {
-    return [
-      this.statusCode,
-      this.message,
-    ].join("\n")
+    return [this.statusCode, this.message].join("\n")
   }
-
 }
 
-export default Multicolour$HttpError
+export default MulticolourHttpError

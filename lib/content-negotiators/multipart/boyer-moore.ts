@@ -1,10 +1,10 @@
 interface ParsedField {
-  headers: object,
-  value: any,
+  headers: object
+  value: any
 }
 
 interface ParsedFields {
-  [field: string]: ParsedField | ParsedField[],
+  [field: string]: ParsedField | ParsedField[]
 }
 
 class BoyerMooreHorspool {
@@ -24,12 +24,14 @@ class BoyerMooreHorspool {
    * @param {number[]} boundaryIndices to split body at.
    * @return {Buffer[]} Array of newly created buffers containing raw field data ready to be parsed.
    */
-  public getBodyFieldStrings(body: Buffer, boundaryIndices: number[]): Buffer[] {
+  public getBodyFieldStrings(
+    body: Buffer,
+    boundaryIndices: number[],
+  ): Buffer[] {
     const bodyParts = []
     // Loop over the indices - 2 (-1 for true length, -1 to ignore body terminator.
     for (
-      let currentMatchIndex = 0,
-          max = boundaryIndices.length - 2;
+      let currentMatchIndex = 0, max = boundaryIndices.length - 2;
       currentMatchIndex < max;
       currentMatchIndex++
     ) {
@@ -57,7 +59,11 @@ class BoyerMooreHorspool {
     const out = {}
 
     // Split each field into two parts. Headers and field value.
-    for (let bodyPartIndex = 0, max = bodyParts.length; bodyPartIndex < max; bodyPartIndex++) {
+    for (
+      let bodyPartIndex = 0, max = bodyParts.length;
+      bodyPartIndex < max;
+      bodyPartIndex++
+    ) {
       const field = bodyParts[bodyPartIndex]
 
       // Get the index at which the headers break from the body.
@@ -65,7 +71,11 @@ class BoyerMooreHorspool {
 
       // @FIXME DO NOT LEAVE THIS HERE.
       if (!headerBodyBreakIndex.length) {
-        console.error("DID NOT FIND HEADER BREAKER IN FIELD", headerBodyBreakIndex, JSON.stringify(field.toString()))
+        console.error(
+          "DID NOT FIND HEADER BREAKER IN FIELD",
+          headerBodyBreakIndex,
+          JSON.stringify(field.toString()),
+        )
         console.log("\n".repeat(4))
         continue
       }
@@ -74,7 +84,10 @@ class BoyerMooreHorspool {
       const headersBuffer = field.slice(0, headerBodyBreakIndex[0])
       // const fieldValueBuffer = field.slice(headerBodyBreakIndex[0] + 4, field.length - 1)
 
-      console.log("HEADERS", JSON.stringify(headersBuffer.toString().split(";")))
+      console.log(
+        "HEADERS",
+        JSON.stringify(headersBuffer.toString().split(";")),
+      )
       console.log("\n".repeat(4))
     }
     return out
@@ -93,8 +106,7 @@ class BoyerMooreHorspool {
     let skip = 0
 
     haystackLoop: for (
-      let haystackChar = 0,
-          maxTextChar = text.length - 1;
+      let haystackChar = 0, maxTextChar = text.length - 1;
       haystackChar <= maxTextChar;
       haystackChar += skip
     ) {
@@ -108,8 +120,7 @@ class BoyerMooreHorspool {
 
         if (text[lookupIndex] !== this.pattern[needleChar]) {
           break pattern
-        }
-        else if (needleChar === 0) {
+        } else if (needleChar === 0) {
           results.push(haystackChar)
           skip = this.pattern.length
 
@@ -136,11 +147,7 @@ class BoyerMooreHorspool {
     }
 
     // Add our offsets.
-    for (
-      let char: number = 0;
-      char < truePatternLength;
-      char++
-    ) {
+    for (let char: number = 0; char < truePatternLength; char++) {
       badCharShift[this.pattern[char]] = truePatternLength - char
     }
 
@@ -149,4 +156,3 @@ class BoyerMooreHorspool {
 }
 
 export default BoyerMooreHorspool
-

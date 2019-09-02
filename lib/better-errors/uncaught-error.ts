@@ -21,7 +21,9 @@ class UncaughtError extends PrettyErrorWithStack {
       `"${this.originalErrorMessage}"`,
       this.getPrettyStack(),
       "\n",
-      "Filtered out " + this.messageAST.framesDropped + " frames from frameworks and Node internals from the stack.",
+      "Filtered out " +
+        this.messageAST.framesDropped +
+        " frames from frameworks and Node internals from the stack.",
     ]
 
     return messages.join("\n")
@@ -29,4 +31,3 @@ class UncaughtError extends PrettyErrorWithStack {
 }
 
 export default UncaughtError
-

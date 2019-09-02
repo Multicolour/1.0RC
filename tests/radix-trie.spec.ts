@@ -7,7 +7,23 @@ import {
 
 type TestData = string
 
-test("Insertion", () => {
+test("Insert first node", () => {
+  const testTrie = CreateTrie<TestData>()
+
+  InsertNodeIntoTrie<TestData>(testTrie, "/super", "SUPER")
+
+  expect(testTrie).toEqual({
+    text: "",
+    type: NodeType.PLAIN,
+    nodes: [{
+      text: "/super",
+      data: "SUPER",
+      type: NodeType.PLAIN,
+    }],
+  })
+})
+
+test("Insert second node", () => {
   const testTrie = CreateTrie<TestData>()
 
   InsertNodeIntoTrie<TestData>(testTrie, "/super", "SUPER")

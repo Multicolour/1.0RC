@@ -4,22 +4,36 @@ import ServiceDeclarationError from "@lib/better-errors/service-declaration-erro
 import ServiceBridge from "./service-bridge"
 
 class Services {
-  public getServiceNetworkBridge(services: Multicolour$ServiceGroup, startOrder: string[]) {
+  public getServiceNetworkBridge(
+    services: Multicolour$ServiceGroup,
+    startOrder: string[],
+  ) {
     return new ServiceBridge(services, startOrder)
   }
 
-  public validateAndSortServicesByDependencies(services: Multicolour$ServiceGroup) {
+  public validateAndSortServicesByDependencies(
+    services: Multicolour$ServiceGroup,
+  ) {
     const configuredServicesNames = Object.keys(services)
 
     // This will throw an error if any service has an unmet dependency.
-    const missingDependencies = this.validateServicesHaveAllDependencies(services, configuredServicesNames)
+    const missingDependencies = this.validateServicesHaveAllDependencies(
+      services,
+      configuredServicesNames,
+    )
 
     if (missingDependencies.length !== 0) {
-      throw new ServiceDeclarationError("Error during service dependency resolution", missingDependencies)
+      throw new ServiceDeclarationError(
+        "Error during service dependency resolution",
+        missingDependencies,
+      )
     }
 
     // Get a topological graph of the services and sort them.
-    const topologicalGraph = this.getTopologicalGraphOfServiceDependencies(services, configuredServicesNames)
+    const topologicalGraph = this.getTopologicalGraphOfServiceDependencies(
+      services,
+      configuredServicesNames,
+    )
     const startOrder = this.sortDependenciesTopologically(topologicalGraph)
 
     return startOrder
@@ -31,22 +45,30 @@ class Services {
     return toposort(topologicalGraph).reverse()
   }
 
-  public getTopologicalGraphOfServiceDependencies(services: Multicolour$ServiceGroup, serviceNames: string[]) {
-    return serviceNames
-      .reduceRight((topology: string[][], serviceName: string) => {
+  public getTopologicalGraphOfServiceDependencies(
+    services: Multicolour$ServiceGroup,
+    serviceNames: string[],
+  ) {
+    return serviceNames.reduceRight(
+      (topology: string[][], serviceName: string) => {
         const dependants = services[serviceName].dependsOn
 
         if (dependants && dependants.length) {
           dependants.forEach((dependency: string) =>
-            topology.push([ serviceName, dependency ]),
+            topology.push([serviceName, dependency]),
           )
         }
 
         return topology
-      }, [])
+      },
+      [],
+    )
   }
 
-  public validateServicesHaveAllDependencies(services: Multicolour$ServiceGroup, configuredServicesNames: string[]) {
+  public validateServicesHaveAllDependencies(
+    services: Multicolour$ServiceGroup,
+    configuredServicesNames: string[],
+  ) {
     return Object.keys(services)
       .map((serviceName: string) => {
         const service: Multicolour$ServiceGroup = services[serviceName]
@@ -67,9 +89,13 @@ class Services {
             .filter(Boolean)
         }
       })
-      .reduce((out: ServiceDeclarationErrorType[], currentError: ServiceDeclarationErrorType[]) =>
-        out.concat(currentError)
-        , [])
+      .reduce(
+        (
+          out: ServiceDeclarationErrorType[],
+          currentError: ServiceDeclarationErrorType[],
+        ) => out.concat(currentError),
+        [],
+      )
       .filter(Boolean)
   }
 }
