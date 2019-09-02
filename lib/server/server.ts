@@ -70,8 +70,8 @@ class MulticolourServer {
         this.onRequest.bind(this),
       )
     } else {
-      // tslint:disable-next-line:max-line-length
       debug(
+        // tslint:disable-next-line:max-line-length
         "Creating insecure server because this.config.secure either isn't set or is set to a falsey value or you havent set secureServerOptions in this servervice config.",
       )
       this.server = createInsecureServer(
@@ -99,8 +99,8 @@ class MulticolourServer {
       request,
     })
 
-    // tslint:disable-next-line:max-line-length
     debug(
+      // tslint:disable-next-line:max-line-length
       "An irrecoverable error occured, please fix this and add a test to prevent this error occuring again. If you believe this to be a bug with Multicolour, please submit a bug report to https://github.com/Multicolour/multicolour/issues/new. \n\nError: %O\nMethod: %s,\nStack: %O",
       error,
       request.method,
@@ -145,8 +145,8 @@ class MulticolourServer {
       response.writeHead(500)
       response.end(
         JSON.stringify({
-          // tslint:disable-next-line:max-line-length
           error:
+            // tslint:disable-next-line:max-line-length
             "A handler is present to handle this request but it is not a callable function. This is a developer problem and you should contact the owner of this service to rectify this issue.",
         }),
       )
@@ -211,8 +211,8 @@ class MulticolourServer {
         new Multicolour$HttpError({
           statusCode: 400,
           error: {
-            // tslint:disable-next-line:max-line-length
             message:
+              // tslint:disable-next-line:max-line-length
               "Couldn't find a content negotiator that could confidently handle this request for you, your accept header in the request either has a typo or the creator of this API server has not included the appropriate plugin to handle the requested content format.",
             acceptHeaderRecieved: responseConfig.request.parsedHeaders.accept,
           },

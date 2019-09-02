@@ -160,6 +160,7 @@ export function InsertNodeIntoTrie<Values = any>(
           text,
           data: values,
         })
+        break
       }
     }
   }

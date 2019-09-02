@@ -9,8 +9,8 @@ async function BodyParser(
       new HttpError({
         statusCode: 500,
         error: {
-          // tslint:disable-next-line:max-line-length
           message:
+            // tslint:disable-next-line:max-line-length
             "The body parser was invoked without a request with which to parse. This is a developer problem, please contact the owner of this API to resolve this issue.",
         },
       }),
@@ -33,8 +33,8 @@ async function BodyParser(
           new HttpError({
             statusCode: 400,
             error: {
-              // tslint:disable-next-line:max-line-length
               message:
+                // tslint:disable-next-line:max-line-length
                 "Body size exceeded the maximum body size allowed on this server. Please try again with a smaller payload.",
             },
           }),

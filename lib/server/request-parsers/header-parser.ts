@@ -106,8 +106,8 @@ function HeaderParser(
     throw new Multicolour$HttpError({
       statusCode: 500,
       error: {
-        // tslint:disable-next-line:max-line-length
         message:
+          // tslint:disable-next-line:max-line-length
           "The request handler tried to parse the request headers but failed to pass the request. This is a developer problem. Please contact the owner of this API.",
       },
     })

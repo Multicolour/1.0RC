@@ -74,13 +74,14 @@ class AJVValidationError extends PrettyErrorWithStack {
             )
             break
           case "enum":
-            // tslint:disable-next-line:max-line-length
+            // tslint:disable:max-line-length
             neatErrors.push(
               `Property "${this.object}${
                 currentError.dataPath
               }" has an incorrect value, expected a value matching one of '${(currentError.params as EnumParams).allowedValues.join(
                 "', '",
               )}'`,
+              // tslint:enable:max-line-length
             )
 
             break

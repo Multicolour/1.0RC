@@ -15,13 +15,13 @@ process.on("uncaughtException", (error: Error) => {
 
 process.on(
   "unhandledRejection",
-  (reason: {} | null | undefined, uncaughtPromise: Promise<any>) => {
+  async (reason: {} | null | undefined, uncaughtPromise: Promise<any>) => {
     const logID = Date.now().toString(16)
 
-    // tslint:disable-next-line:max-line-length
     console.error(
       new UncaughtError(
         logID +
+          // tslint:disable-next-line:max-line-length
           ": An promise rejection occured, please add a .catch((error: Error) => handler) to your code where the stack below instructs.",
         reason,
       ).prettify(),
@@ -29,8 +29,8 @@ process.on(
 
     return uncaughtPromise.then(() => ({
       statusCode: 500,
-      // tslint:disable-next-line:max-line-length
       errors:
+        // tslint:disable-next-line:max-line-length
         "An unexpected error has happened that this service tried to recover from. This is a developer problem, please contact the owner of this service and quote this reference so they can find the cause in their server logs. " +
         logID,
     }))

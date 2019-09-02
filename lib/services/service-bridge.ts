@@ -19,8 +19,8 @@ class ServiceNetworkBridge {
         [
           {
             type: "bridge-on-child-thread",
-            // tslint:disable-next-line:max-line-length
             message:
+              // tslint:disable-next-line:max-line-length
               "Cannot create a new bridge off a sub-thread. You can only do this from the main thread. Try making a plugin and let Multicolour handle the Multi-threading of services.", // eslint-disable-line max-len
           },
         ],
