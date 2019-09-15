@@ -7,10 +7,11 @@ import {
 
 type TestData = string
 
-test("Insert first node", () => {
-  const testTrie = CreateTrie<TestData>()
+const testTrie = CreateTrie<TestData>()
 
+test("Insert first node", () => {
   InsertNodeIntoTrie<TestData>(testTrie, "/super", "SUPER")
+  console.log(testTrie)
 
   expect(testTrie).toEqual({
     text: "",
@@ -24,17 +25,26 @@ test("Insert first node", () => {
 })
 
 test("Insert second node", () => {
-  const testTrie = CreateTrie<TestData>()
-
-  InsertNodeIntoTrie<TestData>(testTrie, "/super", "SUPER")
+  InsertNodeIntoTrie<TestData>(testTrie, "/sucky", "SUCKY")
 
   expect(testTrie).toEqual({
     text: "",
     type: NodeType.PLAIN,
     nodes: [{
-      text: "/super",
-      data: "SUPER",
+      text: "/su",
       type: NodeType.PLAIN,
+      nodes: [
+        {
+          text: "per",
+          data: "SUPER",
+          type: NodeType.PLAIN,
+        },
+        {
+          text: "cky",
+          data: "SUCKY",
+          type: NodeType.PLAIN,
+        },
+      ],
     }],
   })
 

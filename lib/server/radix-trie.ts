@@ -40,6 +40,24 @@ function isPrefix(text: string, comparitor: string): boolean {
   return result
 }
 
+function getPrefixDetailsFromNodes(trieNode: Node, searchText: string): boolean | number {
+  let result: boolean | number = false
+  for (
+    let charIndex = 0, maxCharIndex = trieNode.text.length;
+    charIndex < maxCharIndex;
+    charIndex++
+  ) {
+    if (trieNode.text[charIndex] !== searchText[charIndex]) {
+      result = false
+      break
+    } else {
+      result = charIndex
+    }
+  }
+
+  return result
+}
+
 /**
  * Create a basic trie, with the specified root node.
  *
@@ -128,9 +146,11 @@ export function InsertNodeIntoTrie<Values = any>(
   values: Values,
 ): Node<Values> {
   if (!trie.nodes || trie.nodes.length === 0) {
+    console.log("NO NODES", trie, text, values)
     trie.nodes = [
       {
         text,
+        type: NodeType.PLAIN,
         data: values,
       },
     ]
@@ -139,31 +159,17 @@ export function InsertNodeIntoTrie<Values = any>(
   }
 
   for (
-    let nodeIndex = 0, maxNodeIndex = trie.nodes.length - 1;
-    nodeIndex <= maxNodeIndex;
-    nodeIndex++
+    let nodeIndex = 0,
+    maxNodeIndex = trie.nodes.length;
+    nodeIndex < maxNodeIndex;
+    nodeIndex += 1
   ) {
-    const node = trie.nodes[nodeIndex]
-    for (
-      let nodeCharIndex = 0,
-        max = node.text.length,
-        maxTextChar = text.length - 1;
-      nodeCharIndex < max;
-      nodeCharIndex += 1
-    ) {
-      if (nodeCharIndex > maxTextChar) {
-        if (!node.nodes) {
-          node.nodes = []
-        }
-
-        node.nodes.push({
-          text,
-          data: values,
-        })
-        break
-      }
+    const prefix = getPrefixDetailsFromNodes(trie.nodes[nodeIndex], text)
+    if (prefix) {
+      console.log("NODE", trie.nodes[nodeIndex], text, prefix)
     }
   }
+
   return trie
 }
 
