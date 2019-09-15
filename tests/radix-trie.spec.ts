@@ -74,6 +74,7 @@ test("Insert second node", () => {
   })
 })
 
+// @TODO Use the InsertNodeIntoTrie to create this trie.
 const testTrieA = CreateTrie<TestData>("/")
 testTrieA.nodes = [
   {
