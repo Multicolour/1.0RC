@@ -11,8 +11,6 @@ const testTrie = CreateTrie<TestData>()
 
 test("Insert first node", () => {
   InsertNodeIntoTrie<TestData>(testTrie, "/super", "SUPER")
-  console.log(testTrie)
-
   expect(testTrie).toEqual({
     text: "",
     type: NodeType.PLAIN,

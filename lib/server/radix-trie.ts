@@ -1,11 +1,13 @@
 export enum NodeType {
+  ROOT,
   PLAIN,
   PARAM,
+  END,
 }
 
 export interface Node<Values extends {} = {}> {
-  readonly text: string
-  readonly type?: NodeType
+  text: string
+  type?: NodeType
   nodes?: Array<Node<Values>>
   data?: Values
   isEnd?: boolean
@@ -48,13 +50,13 @@ function getPrefixDetailsFromNodes(trieNode: Node, searchText: string):  number 
     charIndex++
   ) {
     if (trieNode.text[charIndex] !== searchText[charIndex]) {
-      return result
+      return result + 1
     } else {
       result = charIndex
     }
   }
 
-  return result
+  return result + 1
 }
 
 /**
@@ -144,10 +146,12 @@ export function InsertNodeIntoTrie<Values = any>(
   text: string,
   values: Values,
 ): Node<Values> {
+  const prefix = getPrefixDetailsFromNodes(trie, text)
+  trie.text = trie.text.substring(0, prefix)
   if (!trie.nodes || trie.nodes.length === 0) {
     trie.nodes = [
       {
-        text,
+        text: text.substring(prefix),
         type: NodeType.PLAIN,
         data: values,
       },
@@ -171,12 +175,12 @@ export function InsertNodeIntoTrie<Values = any>(
         nodes: [
           ...(trie.nodes || []),
           {
-            text: trie.nodes[nodeIndex].text.substr(prefix),
+            text: trie.nodes[nodeIndex].text.substring(prefix),
             type: trie.nodes[nodeIndex].type,
             data: trie.nodes[nodeIndex].data,
           },
           {
-            text: text.substr(prefix),
+            text: text.substring(prefix),
             type: NodeType.PLAIN,
             data: values,
           },
