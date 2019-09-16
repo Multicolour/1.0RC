@@ -28,24 +28,18 @@ test("Insert second node", () => {
   InsertNodeIntoTrie<TestData>(testTrie, "/sucky", "SUCKY")
 
   expect(testTrie).toEqual({
-    text: "",
+    text: "/su",
     type: NodeType.PLAIN,
     nodes: [
       {
-        text: "/su",
+        text: "per",
+        data: "SUPER",
         type: NodeType.PLAIN,
-        nodes: [
-          {
-            text: "per",
-            data: "SUPER",
-            type: NodeType.PLAIN,
-          },
-          {
-            text: "cky",
-            data: "SUCKY",
-            type: NodeType.PLAIN,
-          },
-        ],
+      },
+      {
+        text: "cky",
+        data: "SUCKY",
+        type: NodeType.PLAIN,
       },
     ],
   })
