@@ -29,7 +29,7 @@ class Multicolour {
     )
 
     try {
-      this.models = this.getModels()
+      this.models = this.getModelsFromPath(this.config.models)
     } catch (error) {
       console.error(error.prettify ? error.prettify() : error)
       process.exit(-1)
@@ -53,11 +53,11 @@ class Multicolour {
     )
   }
 
-  public getModels(): Multicolour$ModelsObject {
-    return getModels(this.config.models)
+  public getModelsFromPath(path: string): Multicolour$ModelsObject {
+    return getModels(path)
   }
 
-  public sortServicesAndPrepareWorkers() {
+  public sortServicesAndPrepareWorkers(): void {
     const servicesManager = new Services()
 
     const startOrder = servicesManager.validateAndSortServicesByDependencies(

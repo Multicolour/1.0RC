@@ -42,21 +42,21 @@ function isPrefix(text: string, comparitor: string): boolean {
   return result
 }
 
-function getPrefixDetailsFromNodes(trieNode: Node, searchText: string):  number {
-  let result: number = 0
+function getPrefixDetailsFromNodes(trieNode: Node, searchText: string): number {
+  let result = 0
   for (
     let charIndex = 0, maxCharIndex = trieNode.text.length;
     charIndex < maxCharIndex;
     charIndex++
   ) {
     if (trieNode.text[charIndex] !== searchText[charIndex]) {
-      return result + 1
+      return result
     } else {
       result = charIndex
     }
   }
 
-  return result + 1
+  return result
 }
 
 /**
@@ -72,7 +72,7 @@ function getPrefixDetailsFromNodes(trieNode: Node, searchText: string):  number 
  * @param {Values} to add data to root node.
  * @return {Node<Values>} Newly created node.
  */
-export function CreateTrie<Values>(rootText: string = ""): Node<Values> {
+export function CreateTrie<Values>(rootText = ""): Node<Values> {
   return {
     text: rootText,
     type: NodeType.PLAIN,
@@ -141,17 +141,18 @@ export function SearchTrie<Values>(
  * @param {Values} values to apply to this string within the trie.
  * @return {Node<Values>} updated node.
  */
-export function InsertNodeIntoTrie<Values = any>(
+export function InsertNodeIntoTrie<Values = string | number>(
   trie: Node<Values>,
   text: string,
   values: Values,
 ): Node<Values> {
-  const prefix = getPrefixDetailsFromNodes(trie, text)
-  trie.text = trie.text.substring(0, prefix)
+  const basePrefix = getPrefixDetailsFromNodes(trie, text)
+  trie.text = trie.text.substring(0, basePrefix)
+
   if (!trie.nodes || trie.nodes.length === 0) {
     trie.nodes = [
       {
-        text: text.substring(prefix),
+        text: text.substring(basePrefix),
         type: NodeType.PLAIN,
         data: values,
       },
@@ -161,21 +162,22 @@ export function InsertNodeIntoTrie<Values = any>(
   }
 
   for (
-    let nodeIndex = 0,
-    maxNodeIndex = trie.nodes.length;
+    let nodeIndex = 0, maxNodeIndex = trie.nodes.length;
     nodeIndex < maxNodeIndex;
     nodeIndex += 1
   ) {
     const prefix = getPrefixDetailsFromNodes(trie.nodes[nodeIndex], text)
+
     if (prefix) {
-      console.log("NODE", text, prefix)
+      const offset = basePrefix + prefix
+      console.log("NODE", trie.nodes[nodeIndex], text, prefix, basePrefix)
       trie.nodes[nodeIndex] = {
-        text: trie.nodes[nodeIndex].text.substring(0, prefix),
+        text: trie.nodes[nodeIndex].text.substring(0, offset),
         type: NodeType.PLAIN,
         nodes: [
           ...(trie.nodes || []),
           {
-            text: trie.nodes[nodeIndex].text.substring(prefix),
+            text: trie.nodes[nodeIndex].text.substring(offset),
             type: trie.nodes[nodeIndex].type,
             data: trie.nodes[nodeIndex].data,
           },
@@ -184,11 +186,10 @@ export function InsertNodeIntoTrie<Values = any>(
             type: NodeType.PLAIN,
             data: values,
           },
-        ]
+        ],
       }
       break
-    }
-    else {
+    } else {
       console.log("NO MATCH", trie.nodes[nodeIndex])
     }
   }
