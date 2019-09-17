@@ -42,7 +42,7 @@ function isPrefix(text: string, comparitor: string): boolean {
   return result
 }
 
-function getPrefixDetailsFromNodes(trieNode: Node, searchText: string): number {
+function getPrefixLengthFromNode(trieNode: Node, searchText: string): number {
   let result = 0
   for (
     let charIndex = 0, 
@@ -50,6 +50,7 @@ function getPrefixDetailsFromNodes(trieNode: Node, searchText: string): number {
     charIndex < maxCharIndex;
     charIndex++
   ) {
+    console.log(charIndex, trieNode.text[charIndex], searchText[charIndex])
     if (trieNode.text[charIndex] !== searchText[charIndex]) {
       return result
     } else {
@@ -128,6 +129,7 @@ export function SearchTrie<Values>(
       // the end of the target node. Reset the results.
       if (node.type !== NodeType.END)
         result = undefined
+
       break
     }
   }
@@ -151,8 +153,9 @@ export function InsertNodeIntoTrie<Values = string | number>(
   text: string,
   values: Values,
 ): Node<Values> {
-  const basePrefix = getPrefixDetailsFromNodes(trie, text)
-  trie.text = trie.text.substring(0, basePrefix)
+  const basePrefix = getPrefixLengthFromNode(trie, text)
+  if (basePrefix)
+    trie.text = trie.text.slice(basePrefix)
 
   if (!trie.nodes || trie.nodes.length === 0) {
     trie.nodes = [
@@ -171,25 +174,26 @@ export function InsertNodeIntoTrie<Values = string | number>(
     nodeIndex < maxNodeIndex;
     nodeIndex += 1
   ) {
-    const prefix = getPrefixDetailsFromNodes(trie.nodes[nodeIndex], text)
+    const prefix = getPrefixLengthFromNode(trie.nodes[nodeIndex], text)
 
     if (prefix) {
       const offset = basePrefix + prefix
-      console.log("NODE", trie.nodes[nodeIndex], text, prefix, basePrefix)
+      const node = trie.nodes[nodeIndex]
+      trie.nodes.splice(nodeIndex, 1)
+      console.log("NODE", node, text, prefix, basePrefix)
       trie.nodes[nodeIndex] = {
-        text: trie.nodes[nodeIndex].text.substring(0, offset),
+        text: node.text.slice(0, offset + 1),
         type: NodeType.PLAIN,
         nodes: [
-          ...(trie.nodes || []),
           {
-            text: trie.nodes[nodeIndex].text.substring(offset),
-            type: trie.nodes[nodeIndex].nodes 
-              ? trie.nodes[nodeIndex].type
+            text: node.text.slice(offset + 1),
+            type: node.nodes
+              ? node.type
               : NodeType.END,
-            data: trie.nodes[nodeIndex].data,
+            data: node.data,
           },
           {
-            text: text.substring(prefix),
+            text: text.substring(offset + 1),
             type: NodeType.END,
             data: values,
           },
