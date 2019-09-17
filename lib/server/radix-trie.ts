@@ -45,7 +45,8 @@ function isPrefix(text: string, comparitor: string): boolean {
 function getPrefixDetailsFromNodes(trieNode: Node, searchText: string): number {
   let result = 0
   for (
-    let charIndex = 0, maxCharIndex = trieNode.text.length;
+    let charIndex = 0, 
+    maxCharIndex = trieNode.text.length;
     charIndex < maxCharIndex;
     charIndex++
   ) {
@@ -123,6 +124,10 @@ export function SearchTrie<Values>(
     // should return what we already
     // have as our match or miss.
     if (cutSearch.length <= 0) {
+      // If we ran out of string but we didn't reach
+      // the end of the target node. Reset the results.
+      if (node.type !== NodeType.END)
+        result = undefined
       break
     }
   }
@@ -153,7 +158,7 @@ export function InsertNodeIntoTrie<Values = string | number>(
     trie.nodes = [
       {
         text: text.substring(basePrefix),
-        type: NodeType.PLAIN,
+        type: NodeType.END,
         data: values,
       },
     ]
@@ -178,12 +183,14 @@ export function InsertNodeIntoTrie<Values = string | number>(
           ...(trie.nodes || []),
           {
             text: trie.nodes[nodeIndex].text.substring(offset),
-            type: trie.nodes[nodeIndex].type,
+            type: trie.nodes[nodeIndex].nodes 
+              ? trie.nodes[nodeIndex].type
+              : NodeType.END,
             data: trie.nodes[nodeIndex].data,
           },
           {
             text: text.substring(prefix),
-            type: NodeType.PLAIN,
+            type: NodeType.END,
             data: values,
           },
         ],

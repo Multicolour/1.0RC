@@ -26,5 +26,8 @@
   },
   "plugins": [
     "@typescript-eslint"
-  ]
+  ],
+  "rules": {
+    "no-warning-comments": "error"
+  }
 }

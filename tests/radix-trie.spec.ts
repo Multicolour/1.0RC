@@ -18,7 +18,7 @@ test("Insert first node", () => {
       {
         text: "/super",
         data: "SUPER",
-        type: NodeType.PLAIN,
+        type: NodeType.END,
       },
     ],
   })
@@ -34,12 +34,12 @@ test("Insert second node", () => {
       {
         text: "per",
         data: "SUPER",
-        type: NodeType.PLAIN,
+        type: NodeType.END,
       },
       {
         text: "cky",
         data: "SUCKY",
-        type: NodeType.PLAIN,
+        type: NodeType.END,
       },
     ],
   })
@@ -56,12 +56,12 @@ test("Insert second node", () => {
           {
             text: "super",
             data: "SUPER",
-            type: NodeType.PLAIN,
+            type: NodeType.END,
           },
           {
             text: "cats",
             data: "CATS",
-            type: NodeType.PLAIN,
+            type: NodeType.END,
           },
         ],
       },
@@ -81,10 +81,12 @@ testTrieA.nodes = [
           {
             text: "uper",
             data: "SUPER",
+            type: NodeType.END,
           },
           {
             text: "illy",
             data: "SILLY",
+            type: NodeType.END,
           },
         ],
       },
@@ -94,6 +96,7 @@ testTrieA.nodes = [
           {
             text: "ats",
             data: "CATS",
+            type: NodeType.END,
           },
           {
             text: "o",
@@ -101,6 +104,7 @@ testTrieA.nodes = [
               {
                 text: "py",
                 data: "COPY",
+                type: NodeType.END,
               },
               {
                 text: "n",
@@ -108,6 +112,7 @@ testTrieA.nodes = [
                   {
                     text: "tact",
                     data: "CONTACT",
+                    type: NodeType.END,
                   },
                 ],
               },
@@ -123,6 +128,7 @@ test("Basic /cats", () => {
   expect(SearchTrie<TestData>(testTrieA, "/cats")).toEqual({
     text: "ats",
     data: "CATS",
+    type: NodeType.END,
   })
 })
 
@@ -130,6 +136,7 @@ test("Basic /contact", () => {
   expect(SearchTrie<TestData>(testTrieA, "/contact")).toEqual({
     text: "tact",
     data: "CONTACT",
+    type: NodeType.END,
   })
 })
 
@@ -137,6 +144,7 @@ test("Basic /copy", () => {
   expect(SearchTrie<TestData>(testTrieA, "/copy")).toEqual({
     text: "py",
     data: "COPY",
+    type: NodeType.END,
   })
 })
 
@@ -144,6 +152,7 @@ test("Basic /super", () => {
   expect(SearchTrie<TestData>(testTrieA, "/super")).toEqual({
     text: "uper",
     data: "SUPER",
+    type: NodeType.END,
   })
 })
 
@@ -151,5 +160,6 @@ test("Basic /silly", () => {
   expect(SearchTrie<TestData>(testTrieA, "/silly")).toEqual({
     text: "illy",
     data: "SILLY",
+    type: NodeType.END,
   })
 })
