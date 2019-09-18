@@ -51,7 +51,7 @@ function getPrefixLengthFromNode(trieNode: Node, searchText: string): number {
     charIndex++
   ) {
     if (trieNode.text[charIndex] !== searchText[charIndex]) {
-      return result
+      break
     } else {
       result = charIndex
     }
@@ -176,17 +176,18 @@ export function InsertNodeIntoTrie<Values = string | number>(
   ) {
     const prefix = getPrefixLengthFromNode(trie.nodes[nodeIndex], text)
     const node = trie.nodes[nodeIndex]
+    console.log(prefix)
 
     if (prefix !== -1) {
-      const offset = basePrefix + prefix + 2
+      const offset = basePrefix + prefix
       trie.nodes.splice(nodeIndex, 1)
 
       trie.nodes[nodeIndex] = {
-        text: node.text.slice(0, offset),
+        text: node.text.substring(0, offset),
         type: NodeType.PLAIN,
         nodes: [
           {
-            text: node.text.slice(offset),
+            text: node.text.substring(offset),
             type: node.nodes
               ? node.type
               : NodeType.END,

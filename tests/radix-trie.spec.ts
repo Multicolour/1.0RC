@@ -27,8 +27,6 @@ test("Insert first node", () => {
 test("Insert second node", () => {
   InsertNodeIntoTrie<TestData>(testTrie, "/sucky", "SUCKY")
 
-  console.log("TRIE", JSON.stringify(testTrie, null, 2))
-
   expect(testTrie).toEqual({
     text: "",
     type: NodeType.ROOT,
@@ -51,8 +49,11 @@ test("Insert second node", () => {
       },
     ],
   })
+})
 
+test("Insert third, unrelated node", () => {
   InsertNodeIntoTrie<TestData>(testTrie, "/cats", "CATS")
+  console.log("TRIE", JSON.stringify(testTrie, null, 2))
 
   expect(testTrie).toEqual({
     text: "",
