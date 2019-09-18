@@ -13,7 +13,7 @@ test("Insert first node", () => {
   InsertNodeIntoTrie<TestData>(testTrie, "/super", "SUPER")
   expect(testTrie).toEqual({
     text: "",
-    type: NodeType.PLAIN,
+    type: NodeType.ROOT,
     nodes: [
       {
         text: "/super",
@@ -27,19 +27,27 @@ test("Insert first node", () => {
 test("Insert second node", () => {
   InsertNodeIntoTrie<TestData>(testTrie, "/sucky", "SUCKY")
 
+  console.log("TRIE", JSON.stringify(testTrie, null, 2))
+
   expect(testTrie).toEqual({
-    text: "/su",
-    type: NodeType.PLAIN,
+    text: "",
+    type: NodeType.ROOT,
     nodes: [
       {
-        text: "per",
-        data: "SUPER",
-        type: NodeType.END,
-      },
-      {
-        text: "cky",
-        data: "SUCKY",
-        type: NodeType.END,
+        text: "/su",
+        type: NodeType.PLAIN,
+        nodes: [
+          {
+            text: "per",
+            data: "SUPER",
+            type: NodeType.END,
+          },
+          {
+            text: "cky",
+            data: "SUCKY",
+            type: NodeType.END,
+          },
+        ],
       },
     ],
   })
@@ -48,7 +56,7 @@ test("Insert second node", () => {
 
   expect(testTrie).toEqual({
     text: "",
-    type: NodeType.PLAIN,
+    type: NodeType.ROOT,
     nodes: [
       {
         text: "/",

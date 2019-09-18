@@ -43,14 +43,13 @@ function isPrefix(text: string, comparitor: string): boolean {
 }
 
 function getPrefixLengthFromNode(trieNode: Node, searchText: string): number {
-  let result = 0
+  let result = -1
   for (
     let charIndex = 0, 
     maxCharIndex = trieNode.text.length;
     charIndex < maxCharIndex;
     charIndex++
   ) {
-    console.log(charIndex, trieNode.text[charIndex], searchText[charIndex])
     if (trieNode.text[charIndex] !== searchText[charIndex]) {
       return result
     } else {
@@ -77,7 +76,7 @@ function getPrefixLengthFromNode(trieNode: Node, searchText: string): number {
 export function CreateTrie<Values>(rootText = ""): Node<Values> {
   return {
     text: rootText,
-    type: NodeType.PLAIN,
+    type: NodeType.ROOT,
     nodes: [],
   }
 }
@@ -154,8 +153,9 @@ export function InsertNodeIntoTrie<Values = string | number>(
   values: Values,
 ): Node<Values> {
   const basePrefix = getPrefixLengthFromNode(trie, text)
-  if (basePrefix)
-    trie.text = trie.text.slice(basePrefix)
+
+  if (basePrefix !== -1)
+    trie.text = trie.text.substring(basePrefix)
 
   if (!trie.nodes || trie.nodes.length === 0) {
     trie.nodes = [
@@ -175,25 +175,25 @@ export function InsertNodeIntoTrie<Values = string | number>(
     nodeIndex += 1
   ) {
     const prefix = getPrefixLengthFromNode(trie.nodes[nodeIndex], text)
+    const node = trie.nodes[nodeIndex]
 
-    if (prefix) {
-      const offset = basePrefix + prefix
-      const node = trie.nodes[nodeIndex]
+    if (prefix !== -1) {
+      const offset = basePrefix + prefix + 2
       trie.nodes.splice(nodeIndex, 1)
-      console.log("NODE", node, text, prefix, basePrefix)
+
       trie.nodes[nodeIndex] = {
-        text: node.text.slice(0, offset + 1),
+        text: node.text.slice(0, offset),
         type: NodeType.PLAIN,
         nodes: [
           {
-            text: node.text.slice(offset + 1),
+            text: node.text.slice(offset),
             type: node.nodes
               ? node.type
               : NodeType.END,
             data: node.data,
           },
           {
-            text: text.substring(offset + 1),
+            text: text.substring(offset),
             type: NodeType.END,
             data: values,
           },
@@ -201,7 +201,8 @@ export function InsertNodeIntoTrie<Values = string | number>(
       }
       break
     } else {
-      console.log("NO MATCH", trie.nodes[nodeIndex])
+      InsertNodeIntoTrie(node, text, values)
+      console.log("NO MATCH", node, text, values)
     }
   }
 
