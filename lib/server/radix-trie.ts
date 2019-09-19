@@ -155,12 +155,12 @@ export function InsertNodeIntoTrie<Values = string | number>(
   const basePrefix = getPrefixLengthFromNode(trie, text)
 
   if (basePrefix !== -1)
-    trie.text = trie.text.substring(basePrefix)
+    trie.text = trie.text.substring(basePrefix + 1)
 
   if (!trie.nodes || trie.nodes.length === 0) {
     trie.nodes = [
       {
-        text: text.substring(basePrefix),
+        text: text.substring(basePrefix + 1),
         type: NodeType.END,
         data: values,
       },
@@ -174,36 +174,15 @@ export function InsertNodeIntoTrie<Values = string | number>(
     nodeIndex < maxNodeIndex;
     nodeIndex += 1
   ) {
-    const prefix = getPrefixLengthFromNode(trie.nodes[nodeIndex], text)
     const node = trie.nodes[nodeIndex]
-    console.log(prefix)
+    const prefixLength = getPrefixLengthFromNode(node, text)
+    const offset = basePrefix + prefixLength + 1
 
-    if (prefix !== -1) {
-      const offset = basePrefix + prefix
-      trie.nodes.splice(nodeIndex, 1)
-
-      trie.nodes[nodeIndex] = {
-        text: node.text.substring(0, offset),
-        type: NodeType.PLAIN,
-        nodes: [
-          {
-            text: node.text.substring(offset),
-            type: node.nodes
-              ? node.type
-              : NodeType.END,
-            data: node.data,
-          },
-          {
-            text: text.substring(offset),
-            type: NodeType.END,
-            data: values,
-          },
-        ],
-      }
-      break
-    } else {
-      InsertNodeIntoTrie(node, text, values)
-      console.log("NO MATCH", node, text, values)
+    if (prefixLength === -1)
+      InsertNodeIntoTrie(node, text.substring(offset), values)
+    else {
+      node.text = node.text.substring(0, offset)
+      InsertNodeIntoTrie(node, text.substring(offset), values)
     }
   }
 
