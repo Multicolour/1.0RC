@@ -179,9 +179,17 @@ export function InsertNodeIntoTrie<Values = string | number>(
     const offset = basePrefix + prefixLength + 1
 
     if (prefixLength === -1)
-      InsertNodeIntoTrie(node, text.substring(offset), values)
+      continue
+      // InsertNodeIntoTrie(node, text.substring(offset), values)
     else {
+      // Split this node.
       node.text = node.text.substring(0, offset)
+      node.nodes = node.nodes || []
+      node.nodes.unshift({
+        text: text.substring(0, offset),
+        data: node.data,
+        nodes: node.nodes,
+      })
       InsertNodeIntoTrie(node, text.substring(offset), values)
     }
   }
