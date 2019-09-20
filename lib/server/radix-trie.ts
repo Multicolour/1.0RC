@@ -180,17 +180,19 @@ export function InsertNodeIntoTrie<Values = string | number>(
 
     if (prefixLength === -1)
       continue
-      // InsertNodeIntoTrie(node, text.substring(offset), values)
     else {
+      console.log(offset, text.substring(offset))
       // Split this node.
-      node.text = node.text.substring(0, offset)
       node.nodes = node.nodes || []
       node.nodes.unshift({
-        text: text.substring(0, offset),
+        text: text.substring(offset),
         data: node.data,
         nodes: node.nodes,
       })
-      InsertNodeIntoTrie(node, text.substring(offset), values)
+      node.text = node.text.substring(0, offset)
+      node.data = undefined
+
+      InsertNodeIntoTrie(node, node.nodes[0].text, values)
     }
   }
 
