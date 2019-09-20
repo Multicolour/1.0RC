@@ -45,12 +45,12 @@ function isPrefix(text: string, comparitor: string): boolean {
 function getPrefixLengthFromNode(trieNode: Node, searchText: string): number {
   let result = -1
   for (
-    let charIndex = 0, 
-    maxCharIndex = trieNode.text.length;
+    let charIndex = 0, maxCharIndex = trieNode.text.length;
     charIndex < maxCharIndex;
     charIndex++
   ) {
     if (trieNode.text[charIndex] !== searchText[charIndex]) {
+      if (charIndex === 0) result = -1
       break
     } else {
       result = charIndex
@@ -126,8 +126,7 @@ export function SearchTrie<Values>(
     if (cutSearch.length <= 0) {
       // If we ran out of string but we didn't reach
       // the end of the target node. Reset the results.
-      if (node.type !== NodeType.END)
-        result = undefined
+      if (node.type !== NodeType.END) result = undefined
 
       break
     }
@@ -154,13 +153,12 @@ export function InsertNodeIntoTrie<Values = string | number>(
 ): Node<Values> {
   const basePrefix = getPrefixLengthFromNode(trie, text)
 
-  if (basePrefix !== -1)
-    trie.text = trie.text.substring(basePrefix + 1)
+  if (basePrefix !== -1) trie.text = trie.text.substring(0, basePrefix + 1)
 
   if (!trie.nodes || trie.nodes.length === 0) {
     trie.nodes = [
       {
-        text: text.substring(basePrefix + 1),
+        text: text.slice(basePrefix + 1),
         type: NodeType.END,
         data: values,
       },
@@ -178,10 +176,8 @@ export function InsertNodeIntoTrie<Values = string | number>(
     const prefixLength = getPrefixLengthFromNode(node, text)
     const offset = basePrefix + prefixLength + 1
 
-    if (prefixLength === -1)
-      continue
+    if (prefixLength === -1) continue
     else {
-      console.log(offset, text.substring(offset))
       // Split this node.
       node.nodes = node.nodes || []
       node.nodes.unshift({
@@ -192,7 +188,15 @@ export function InsertNodeIntoTrie<Values = string | number>(
       node.text = node.text.substring(0, offset)
       node.data = undefined
 
-      InsertNodeIntoTrie(node, node.nodes[0].text, values)
+      console.log(
+        offset,
+        basePrefix,
+        prefixLength,
+        text,
+        text.substring(offset),
+        !!trie.nodes,
+      )
+      //InsertNodeIntoTrie(node, text.substring(offset), values)
     }
   }
 
