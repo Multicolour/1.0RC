@@ -101,7 +101,7 @@ class BoyerMooreHorspool {
    *
    * @return number[] array of indices where pattern starts.
    */
-  public search(text: Buffer, limit: number = 0) {
+  public search(text: Buffer, limit = 0) {
     const results: number[] = []
     let skip = 0
 
@@ -147,7 +147,7 @@ class BoyerMooreHorspool {
     }
 
     // Add our offsets.
-    for (let char: number = 0; char < truePatternLength; char++) {
+    for (let char = 0; char < truePatternLength; char++) {
       badCharShift[this.pattern[char]] = truePatternLength - char
     }
 
