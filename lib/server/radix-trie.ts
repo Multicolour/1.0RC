@@ -150,10 +150,13 @@ export function InsertNodeIntoTrie<Values = string | number>(
   trie: Node<Values>,
   text: string,
   values: Values,
+  trieStart = 0,
 ): Node<Values> {
   const basePrefix = getPrefixLengthFromNode(trie, text)
+  debugger
 
   if (basePrefix !== -1) trie.text = trie.text.substring(0, basePrefix + 1)
+  else if (trie.text.length) return trie
 
   if (!trie.nodes || trie.nodes.length === 0) {
     trie.nodes = [
@@ -168,7 +171,7 @@ export function InsertNodeIntoTrie<Values = string | number>(
   }
 
   for (
-    let nodeIndex = 0, maxNodeIndex = trie.nodes.length;
+    let nodeIndex = trieStart, maxNodeIndex = trie.nodes.length;
     nodeIndex < maxNodeIndex;
     nodeIndex += 1
   ) {
@@ -176,6 +179,7 @@ export function InsertNodeIntoTrie<Values = string | number>(
     const prefixLength = getPrefixLengthFromNode(node, text)
     const offset = basePrefix + prefixLength + 1
 
+    // Check for no match at all and move on.
     if (prefixLength === -1) continue
     else {
       // Split this node.
@@ -185,18 +189,15 @@ export function InsertNodeIntoTrie<Values = string | number>(
         data: node.data,
         nodes: node.nodes,
       })
-      node.text = node.text.substring(0, offset)
+      node.text = node.text.substring(0, offset + 1)
       node.data = undefined
 
-      console.log(
-        offset,
-        basePrefix,
-        prefixLength,
-        text,
-        text.substring(offset),
-        !!trie.nodes,
+      InsertNodeIntoTrie(
+        trie,
+        text.substring(offset + 1),
+        values,
+        nodeIndex + 1,
       )
-      //InsertNodeIntoTrie(node, text.substring(offset), values)
     }
   }
 
