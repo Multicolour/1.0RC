@@ -153,7 +153,6 @@ export function InsertNodeIntoTrie<Values = string | number>(
   trieStart = 0,
 ): Node<Values> {
   const basePrefix = getPrefixLengthFromNode(trie, text)
-  debugger
 
   if (basePrefix !== -1) trie.text = trie.text.substring(0, basePrefix + 1)
   else if (trie.text.length) return trie
@@ -198,6 +197,7 @@ export function InsertNodeIntoTrie<Values = string | number>(
         values,
         nodeIndex + 1,
       )
+      break
     }
   }
 
