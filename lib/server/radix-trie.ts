@@ -150,7 +150,6 @@ export function InsertNodeIntoTrie<Values = string | number>(
   trie: Node<Values>,
   text: string,
   values: Values,
-  trieStart = 0,
 ): Node<Values> {
   const basePrefix = getPrefixLengthFromNode(trie, text)
 
@@ -170,7 +169,7 @@ export function InsertNodeIntoTrie<Values = string | number>(
   }
 
   for (
-    let nodeIndex = trieStart, maxNodeIndex = trie.nodes.length;
+    let nodeIndex = 0, maxNodeIndex = trie.nodes.length;
     nodeIndex < maxNodeIndex;
     nodeIndex += 1
   ) {
@@ -181,23 +180,27 @@ export function InsertNodeIntoTrie<Values = string | number>(
     // Check for no match at all and move on.
     if (prefixLength === -1) continue
     else {
-      // Split this node.
-      node.nodes = node.nodes || []
-      node.nodes.unshift({
-        text: text.substring(offset),
-        data: node.data,
-        nodes: node.nodes,
-      })
-      node.text = node.text.substring(0, offset + 1)
-      node.data = undefined
+      const newNode: Node<Values> = {
+        text: node.text.substring(offset + 1),
+        type: NodeType.PLAIN,
+        nodes: [],
+      }
 
-      InsertNodeIntoTrie(
-        trie,
-        text.substring(offset + 1),
-        values,
-        nodeIndex + 1,
-      )
-      break
+      if (Array.isArray(node.nodes) && node.nodes.length > 0) {
+        InsertNodeIntoTrie(newNode, text.substring(offset + 1), values)
+      } else {
+        newNode.nodes = [
+          {
+            text: text.substring(offset + 1),
+            data: node.data,
+            nodes: node.nodes || [],
+          },
+        ]
+        node.text = node.text.substring(0, offset + 1)
+        node.nodes = [newNode]
+        node.type = NodeType.PLAIN
+        node.data = undefined
+      }
     }
   }
 
