@@ -26,7 +26,6 @@ test("Insert first node", () => {
 
 test("Insert second node", () => {
   InsertNodeIntoTrie<TestData>(testTrie, "/sucky", "SUCKY")
-  console.log(JSON.stringify(testTrie, null, 2))
 
   expect(testTrie).toEqual({
     text: "",
@@ -52,8 +51,9 @@ test("Insert second node", () => {
   })
 })
 
-/*test("Insert third, unrelated node", () => {
+test("Insert third, unrelated node", () => {
   InsertNodeIntoTrie<TestData>(testTrie, "/cats", "CATS")
+  console.log(JSON.stringify(testTrie, null, 2))
 
   expect(testTrie).toEqual({
     text: "",
@@ -63,9 +63,20 @@ test("Insert second node", () => {
         text: "/",
         nodes: [
           {
-            text: "super",
-            data: "SUPER",
-            type: NodeType.END,
+            text: "su",
+            type: NodeType.PLAIN,
+            nodes: [
+              {
+                text: "per",
+                data: "SUPER",
+                type: NodeType.END,
+              },
+              {
+                text: "cky",
+                data: "SUCKY",
+                type: NodeType.END,
+              },
+            ],
           },
           {
             text: "cats",
@@ -76,7 +87,7 @@ test("Insert second node", () => {
       },
     ],
   })
-})*/
+})
 
 // @TODO Use the InsertNodeIntoTrie to create this trie.
 const testTrieA = CreateTrie<TestData>("/")

@@ -183,7 +183,6 @@ export function InsertNodeIntoTrie<Values = string | number>(
       const newNode: Node<Values> = {
         text: node.text.substring(0, offset + 1),
         type: NodeType.PLAIN,
-        nodes: [],
       }
 
       if (Array.isArray(node.nodes) && node.nodes.length > 0) {
