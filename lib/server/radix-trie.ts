@@ -31,6 +31,7 @@ function isPrefix(text: string, comparitor: string): boolean {
     charIndex < maxCharIndex;
     charIndex++
   ) {
+    // Mismatch check and exit early.
     if (text[charIndex] !== comparitor[charIndex]) {
       result = false
       break
@@ -42,6 +43,17 @@ function isPrefix(text: string, comparitor: string): boolean {
   return result
 }
 
+/**
+ * Is the trieNode.text a match at any length of searchText?
+ *
+ * Example:
+ *   isPrefix("multi", "multicolour") -> 5
+ *   isPrefix("single", "multicolour") -> -1
+ *
+ * @param {Node} node to check for match in.
+ * @param {string} searchText that we're looking for.
+ * @return {number} length of the prefix or -1 if no match.
+ */
 function getPrefixLengthFromNode(trieNode: Node, searchText: string): number {
   let result = -1
   for (
