@@ -27,7 +27,7 @@ test("Insert first node", () => {
 test("Insert second node", () => {
   InsertNodeIntoTrie<TestData>(testTrie, "/sucky", "SUCKY")
   console.log(JSON.stringify(testTrie, null, 2))
-  debugger
+
   expect(testTrie).toEqual({
     text: "",
     type: NodeType.ROOT,
@@ -40,13 +40,11 @@ test("Insert second node", () => {
             text: "per",
             data: "SUPER",
             type: NodeType.END,
-            nodes: [],
           },
           {
             text: "cky",
             data: "SUCKY",
             type: NodeType.END,
-            nodes: [],
           },
         ],
       },
