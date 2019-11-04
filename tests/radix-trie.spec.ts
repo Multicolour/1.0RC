@@ -53,7 +53,6 @@ test("Insert second node", () => {
 
 test("Insert third, unrelated node", () => {
   InsertNodeIntoTrie<TestData>(testTrie, "/cats", "CATS")
-  console.log(JSON.stringify(testTrie, null, 2))
 
   expect(testTrie).toEqual({
     text: "",
@@ -61,6 +60,7 @@ test("Insert third, unrelated node", () => {
     nodes: [
       {
         text: "/",
+        type: NodeType.PLAIN,
         nodes: [
           {
             text: "su",
@@ -89,97 +89,76 @@ test("Insert third, unrelated node", () => {
   })
 })
 
-// @TODO Use the InsertNodeIntoTrie to create this trie.
-const testTrieA = CreateTrie<TestData>("/")
-testTrieA.nodes = [
-  {
-    text: "/",
+test("Insert fourth node", () => {
+  InsertNodeIntoTrie<TestData>(testTrie, "/cats/pyjamas", "PJs!")
+  console.log(JSON.stringify(testTrie, null, 2))
+
+  expect(testTrie).toEqual({
+    text: "",
+    type: NodeType.ROOT,
     nodes: [
       {
-        text: "s",
+        text: "/",
+        type: NodeType.PLAIN,
         nodes: [
           {
-            text: "uper",
-            data: "SUPER",
-            type: NodeType.END,
-          },
-          {
-            text: "illy",
-            data: "SILLY",
-            type: NodeType.END,
-          },
-        ],
-      },
-      {
-        text: "c",
-        nodes: [
-          {
-            text: "ats",
-            data: "CATS",
-            type: NodeType.END,
-          },
-          {
-            text: "o",
+            text: "su",
+            type: NodeType.PLAIN,
             nodes: [
               {
-                text: "py",
-                data: "COPY",
+                text: "per",
+                data: "SUPER",
                 type: NodeType.END,
               },
               {
-                text: "n",
-                nodes: [
-                  {
-                    text: "tact",
-                    data: "CONTACT",
-                    type: NodeType.END,
-                  },
-                ],
+                text: "cky",
+                data: "SUCKY",
+                type: NodeType.END,
+              },
+            ],
+          },
+          {
+            text: "cats",
+            data: "CATS",
+            type: NodeType.END,
+            nodes: [
+              {
+                text: "/pyjamas",
+                data: "PJs",
+                type: NodeType.END,
               },
             ],
           },
         ],
       },
     ],
-  },
-]
+  })
+})
 
-test("Basic /cats", () => {
-  expect(SearchTrie<TestData>(testTrieA, "/cats")).toEqual({
-    text: "ats",
+test("Search /cats", () => {
+  expect(SearchTrie<TestData>(testTrie, "/cats")).toEqual({
+    text: "cats",
     data: "CATS",
     type: NodeType.END,
   })
 })
 
-test("Basic /contact", () => {
-  expect(SearchTrie<TestData>(testTrieA, "/contact")).toEqual({
-    text: "tact",
-    data: "CONTACT",
-    type: NodeType.END,
-  })
-})
-
-test("Basic /copy", () => {
-  expect(SearchTrie<TestData>(testTrieA, "/copy")).toEqual({
-    text: "py",
-    data: "COPY",
-    type: NodeType.END,
-  })
-})
-
-test("Basic /super", () => {
-  expect(SearchTrie<TestData>(testTrieA, "/super")).toEqual({
-    text: "uper",
+test("Search /super", () => {
+  expect(SearchTrie<TestData>(testTrie, "/super")).toEqual({
+    text: "per",
     data: "SUPER",
     type: NodeType.END,
   })
 })
 
-test("Basic /silly", () => {
-  expect(SearchTrie<TestData>(testTrieA, "/silly")).toEqual({
-    text: "illy",
-    data: "SILLY",
+test("Search /sucky", () => {
+  expect(SearchTrie<TestData>(testTrie, "/sucky")).toEqual({
+    text: "cky",
+    data: "SUCKY",
     type: NodeType.END,
   })
+})
+
+test("Search /404", () => {
+  expect(SearchTrie<TestData>(testTrie, "/404")).toBe(undefined)
 })

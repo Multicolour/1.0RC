@@ -196,15 +196,27 @@ export function InsertNodeIntoTrie<Values = string | number>(
         text: node.text.substring(0, offset + 1),
         type: NodeType.PLAIN,
       }
+      const slicedNode = {
+        ...node,
+        text: node.text.substring(offset + 1),
+      }
 
       if (Array.isArray(node.nodes) && node.nodes.length > 0) {
+        node.text = node.text.substring(0, offset + 1)
+        node.type = NodeType.PLAIN
+        slicedNode.nodes = node.nodes
+        /*node.nodes = [
+          slicedNode,
+          {
+            text: text.substr(offset + 1),
+            data: values,
+            type: NodeType.END,
+          },
+        ]*/
         InsertNodeIntoTrie(node, text.substring(offset + 1), values)
       } else {
         newNode.nodes = [
-          {
-            ...node,
-            text: node.text.substring(offset + 1),
-          },
+          slicedNode,
           {
             text: text.substr(offset + 1),
             data: values,
