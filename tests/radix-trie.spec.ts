@@ -91,7 +91,6 @@ test("Insert third, unrelated node", () => {
 
 test("Insert fourth node", () => {
   InsertNodeIntoTrie<TestData>(testTrie, "/cats/pyjamas", "PJs!")
-  console.log(JSON.stringify(testTrie, null, 2))
 
   expect(testTrie).toEqual({
     text: "",

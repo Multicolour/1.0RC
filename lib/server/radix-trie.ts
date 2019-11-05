@@ -166,7 +166,6 @@ export function InsertNodeIntoTrie<Values = string | number>(
   const basePrefix = getPrefixLengthFromNode(trie, text)
 
   if (basePrefix !== -1) trie.text = trie.text.substring(0, basePrefix + 1)
-  else if (trie.text.length) return trie
 
   if (!trie.nodes || trie.nodes.length === 0) {
     trie.nodes = [
@@ -200,20 +199,17 @@ export function InsertNodeIntoTrie<Values = string | number>(
         ...node,
         text: node.text.substring(offset + 1),
       }
-
+      debugger
       if (Array.isArray(node.nodes) && node.nodes.length > 0) {
         node.text = node.text.substring(0, offset + 1)
         node.type = NodeType.PLAIN
         slicedNode.nodes = node.nodes
-        /*node.nodes = [
-          slicedNode,
-          {
-            text: text.substr(offset + 1),
-            data: values,
-            type: NodeType.END,
-          },
-        ]*/
-        InsertNodeIntoTrie(node, text.substring(offset + 1), values)
+        const insertable = InsertNodeIntoTrie(
+          node,
+          text.substring(offset + 1),
+          values,
+        )
+        trie.nodes.splice(nodeIndex, 1, insertable)
       } else {
         newNode.nodes = [
           slicedNode,
