@@ -163,7 +163,6 @@ export function InsertNodeIntoTrie<Values = string | number>(
   text: string,
   values: Values,
 ): Node<Values> {
-  let didInsert = false
   const basePrefix = getPrefixLengthFromNode(trie, text)
 
   if (basePrefix !== -1) trie.text = trie.text.substring(0, basePrefix + 1)
@@ -192,31 +191,33 @@ export function InsertNodeIntoTrie<Values = string | number>(
     // Check for no match at all and move on.
     if (prefixLength === -1) continue
     else {
-      const newNode: Node<Values> = {
-        text: node.text.substring(0, offset + 1),
-        type: NodeType.PLAIN,
-      }
-      const slicedNode = {
+      // This is the remainder. Explained below.
+      const slicedNode: Node<Values> = {
         ...node,
         text: node.text.substring(offset + 1),
       }
+      // We need to split this node into two parts
+      // the first part will be the original Node's
+      // .text sliced at the calculated offset.
+      //
+      // This replaces this node in the trie and
+      // the remainder becomes a child node of it
+      // pushing this sub-trie deeper.
+      const newParentNode: Node<Values> = {
+        text: node.text.substring(0, offset + 1),
+        type: NodeType.PLAIN,
+        nodes: [slicedNode],
+      }
 
-      if (Array.isArray(node.nodes) && node.nodes.length > 0) {
-        node.text = node.text.substring(0, offset + 1)
-        node.type = NodeType.PLAIN
-        newNode.nodes = node.nodes
-        trie.nodes.splice(nodeIndex, 1, newNode)
+      InsertNodeIntoTrie(newParentNode, text.substring(offset + 1), values)
+      trie.nodes.splice(nodeIndex, 1, newParentNode)
+
+      /*if (Array.isArray(node.nodes) && node.nodes.length > 0) {
+        trie.nodes.splice(nodeIndex, 1, newParentNode)
         InsertNodeIntoTrie(trie, text.substring(offset + 1), values)
         // trie.nodes.splice(nodeIndex, 1, insertable)
-        debugger
-        if (nodeIndex === maxNodeIndex && !didInsert)
-          newNode.nodes.push({
-            text: text.substr(offset + 1),
-            data: values,
-            type: NodeType.END,
-          })
       } else {
-        newNode.nodes = [
+        newParentNode.nodes = [
           slicedNode,
           {
             text: text.substr(offset + 1),
@@ -227,9 +228,8 @@ export function InsertNodeIntoTrie<Values = string | number>(
         node.text = node.text.substring(0, offset + 1)
         node.type = NodeType.PLAIN
         node.data = undefined
-        trie.nodes.splice(nodeIndex, 1, newNode)
-      }
-      didInsert = true
+        trie.nodes.splice(nodeIndex, 1, newParentNode)
+      }*/
     }
   }
 
