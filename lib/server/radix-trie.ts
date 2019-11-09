@@ -14,6 +14,35 @@ export interface Node<Values extends {} = {}> {
 }
 
 /**
+ * Is the trieNode.text a match at any length of searchText?
+ *
+ * Example:
+ *   getPrefixLengt)hFromNode({ text: "multi" }, "multicolour") -> 5
+ *   getPrefixLengthFromNode({ text: "single" }, "multicolour") -> -1
+ *
+ * @param {Node} node to check for match in.
+ * @param {string} searchText that we're looking for.
+ * @return {number} length of the prefix.
+ */
+export function getPrefixLengthFromNode(
+  trieNode: Node,
+  searchText: string,
+): number {
+  let result = 0
+  for (
+    let maxCharIndex = trieNode.text.length;
+    result <= maxCharIndex;
+    result++
+  ) {
+    if (trieNode.text[result] !== searchText[result]) {
+      break
+    }
+  }
+
+  return result
+}
+
+/**
  * Is the `text` a full prefix of the `comparitor`?
  *
  * Example:
@@ -25,51 +54,8 @@ export interface Node<Values extends {} = {}> {
  * @return {boolean} Whether there was a prefix or not.
  */
 function isPrefix(text: string, comparitor: string): boolean {
-  let result = false
-  for (
-    let charIndex = 0, maxCharIndex = text.length;
-    charIndex < maxCharIndex;
-    charIndex++
-  ) {
-    // Mismatch check and exit early.
-    if (text[charIndex] !== comparitor[charIndex]) {
-      result = false
-      break
-    } else {
-      result = true
-    }
-  }
-
-  return result
-}
-
-/**
- * Is the trieNode.text a match at any length of searchText?
- *
- * Example:
- *   isPrefix("multi", "multicolour") -> 5
- *   isPrefix("single", "multicolour") -> -1
- *
- * @param {Node} node to check for match in.
- * @param {string} searchText that we're looking for.
- * @return {number} length of the prefix or -1 if no match.
- */
-function getPrefixLengthFromNode(trieNode: Node, searchText: string): number {
-  let result = -1
-  for (
-    let charIndex = 0, maxCharIndex = trieNode.text.length;
-    charIndex <= maxCharIndex;
-    charIndex++
-  ) {
-    if (trieNode.text[charIndex] !== searchText[charIndex]) {
-      if (charIndex === 0) result = -1
-      break
-    } else {
-      result = charIndex
-    }
-  }
-
-  return result
+  const result = getPrefixLengthFromNode({ text }, comparitor)
+  return result > 0
 }
 
 /**
@@ -78,8 +64,8 @@ function getPrefixLengthFromNode(trieNode: Node, searchText: string): number {
  * Takes a Generic type to specify the type of the `data` attribute of this node.
  *
  * Example:
- *   CreateTrie() -> { text: "", type: NodeType.PLAIN, nodes: [] }
- *   CreateTrie("/") -> { text: "/", type: NodeType.PLAIN, nodes: [] }
+ *   CreateTrie() -> { text: "", type: NodeType.ROOT, nodes: [] }
+ *   CreateTrie("/") -> { text: "/", type: NodeType.ROOT, nodes: [] }
  *
  * @param {string} rootText
  * @param {Values} to add data to root node.
@@ -89,7 +75,6 @@ export function CreateTrie<Values>(rootText = ""): Node<Values> {
   return {
     text: rootText,
     type: NodeType.ROOT,
-    nodes: [],
   }
 }
 
@@ -166,6 +151,7 @@ export function InsertNodeIntoTrie<Values = string | number>(
   const basePrefix = getPrefixLengthFromNode(trie, text)
 
   if (basePrefix !== -1) trie.text = trie.text.substring(0, basePrefix + 1)
+  else if (trie.type !== NodeType.ROOT) return trie
 
   if (!trie.nodes || trie.nodes.length === 0) {
     trie.nodes = [
@@ -187,6 +173,7 @@ export function InsertNodeIntoTrie<Values = string | number>(
     const node = trie.nodes[nodeIndex]
     const prefixLength = getPrefixLengthFromNode(node, text)
     const offset = basePrefix + prefixLength + 1
+    console.log(basePrefix, prefixLength, offset, trie.text, node.text, text)
 
     // Check for no match at all and move on.
     if (prefixLength === -1) continue
