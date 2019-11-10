@@ -54,26 +54,23 @@ export function getPrefixLengthFromNode(
  * @return {boolean} Whether there was a prefix or not.
  */
 function isPrefix(text: string, comparitor: string): boolean {
-  const result = getPrefixLengthFromNode({ text }, comparitor)
-  return result > 0
+  return getPrefixLengthFromNode({ text }, comparitor) > 0
 }
 
 /**
- * Create a basic trie, with the specified root node.
+ * Create a basic trie.
  *
  * Takes a Generic type to specify the type of the `data` attribute of this node.
  *
  * Example:
  *   CreateTrie() -> { text: "", type: NodeType.ROOT, nodes: [] }
- *   CreateTrie("/") -> { text: "/", type: NodeType.ROOT, nodes: [] }
  *
- * @param {string} rootText
  * @param {Values} to add data to root node.
  * @return {Node<Values>} Newly created node.
  */
-export function CreateTrie<Values>(rootText = ""): Node<Values> {
+export function CreateTrie<Values>(): Node<Values> {
   return {
-    text: rootText,
+    text: "",
     type: NodeType.ROOT,
   }
 }
@@ -150,14 +147,15 @@ export function InsertNodeIntoTrie<Values = string | number>(
 ): Node<Values> {
   if (text.length <= 0) return trie
 
+  let didInsert = false
   const basePrefix = getPrefixLengthFromNode(trie, text)
 
-  if (basePrefix !== 0) trie.text = trie.text.substring(0, basePrefix + 1)
+  if (basePrefix !== 0) trie.text = trie.text.substring(0, basePrefix)
 
   if (!trie.nodes || trie.nodes.length === 0) {
     trie.nodes = [
       {
-        text: text.slice(basePrefix + 1),
+        text: text.slice(basePrefix),
         type: NodeType.END,
         data: values,
       },
@@ -173,21 +171,23 @@ export function InsertNodeIntoTrie<Values = string | number>(
   ) {
     const node = trie.nodes[nodeIndex]
     const prefixLength = getPrefixLengthFromNode(node, text)
-    const offset = basePrefix + prefixLength + 1
-    console.log(basePrefix, prefixLength, offset, trie.text, node.text, text)
+    const offset = basePrefix + prefixLength
 
     // Check for no match at all and move on.
     if (prefixLength === 0) continue
     else {
-      // This is the remainder. Explained below.
-      const slicedNode: Node<Values> = {
-        ...node,
-        text: node.text.substring(offset + 1),
-      }
+      didInsert = true
+
       // We need to split this node into two parts
       // the first part will be the original Node's
       // .text sliced at the calculated offset.
       //
+      // This is the remainder. Explained below.
+      const slicedNode: Node<Values> = {
+        ...node,
+        text: node.text.substring(offset),
+      }
+
       // This replaces this node in the trie and
       // the remainder becomes a child node of it
       // pushing this sub-trie deeper.
@@ -199,27 +199,15 @@ export function InsertNodeIntoTrie<Values = string | number>(
 
       InsertNodeIntoTrie(newParentNode, text.substring(offset), values)
       trie.nodes.splice(nodeIndex, 1, newParentNode)
-
-      /*if (Array.isArray(node.nodes) && node.nodes.length > 0) {
-        trie.nodes.splice(nodeIndex, 1, newParentNode)
-        InsertNodeIntoTrie(trie, text.substring(offset + 1), values)
-        // trie.nodes.splice(nodeIndex, 1, insertable)
-      } else {
-        newParentNode.nodes = [
-          slicedNode,
-          {
-            text: text.substr(offset + 1),
-            data: values,
-            type: NodeType.END,
-          },
-        ]
-        node.text = node.text.substring(0, offset + 1)
-        node.type = NodeType.PLAIN
-        node.data = undefined
-        trie.nodes.splice(nodeIndex, 1, newParentNode)
-      }*/
     }
   }
+
+  if (!didInsert)
+    trie.nodes.push({
+      text,
+      data: values,
+      type: NodeType.END,
+    })
 
   return trie
 }

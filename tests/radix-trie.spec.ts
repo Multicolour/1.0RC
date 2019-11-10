@@ -20,6 +20,7 @@ const testTrie = CreateTrie<TestData>()
 
 test("Insert first node", () => {
   InsertNodeIntoTrie<TestData>(testTrie, "/super", "SUPER")
+
   expect(testTrie).toEqual({
     text: "",
     type: NodeType.ROOT,
@@ -62,7 +63,6 @@ test("Insert second node", () => {
 
 test("Insert third, unrelated node", () => {
   InsertNodeIntoTrie<TestData>(testTrie, "/cats", "CATS")
-  console.log(3, JSON.stringify(testTrie, null, 2))
 
   expect(testTrie).toEqual({
     text: "",
@@ -101,7 +101,7 @@ test("Insert third, unrelated node", () => {
 
 test("Insert fourth node", () => {
   InsertNodeIntoTrie<TestData>(testTrie, "/cats/pyjamas", "PJs!")
-  console.log(4, JSON.stringify(testTrie, null, 2))
+  debugger
 
   expect(testTrie).toEqual({
     text: "",
@@ -145,7 +145,7 @@ test("Insert fourth node", () => {
   })
 })
 
-test("Search /cats", () => {
+/*test("Search /cats", () => {
   expect(SearchTrie<TestData>(testTrie, "/cats")).toEqual({
     text: "cats",
     data: "CATS",
@@ -167,7 +167,7 @@ test("Search /sucky", () => {
     data: "SUCKY",
     type: NodeType.END,
   })
-})
+})*/
 
 test("Search /404", () => {
   expect(SearchTrie<TestData>(testTrie, "/404")).toBe(undefined)
