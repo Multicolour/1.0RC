@@ -1,21 +1,22 @@
 import {
-  /*CreateTrie,
+  CreateTrie,
   InsertNodeIntoTrie,
   NodeType,
-  SearchTrie,*/
+  SearchTrie,
   getPrefixLengthFromNode,
 } from "@lib/server/radix-trie"
 
-// type TestData = string
+type TestData = string
 
 test("Prefix lengths", () => {
+  expect(getPrefixLengthFromNode({ text: "text" }, "text")).toEqual(4)
   expect(getPrefixLengthFromNode({ text: "multicolour" }, "multi")).toEqual(5)
-  expect(getPrefixLengthFromNode({ text: "a" }, "a")).toEqual(1)
+  expect(getPrefixLengthFromNode({ text: "a.b.c.d" }, "a.b.c")).toEqual(5)
   expect(getPrefixLengthFromNode({ text: "1" }, "1")).toEqual(1)
   expect(getPrefixLengthFromNode({ text: "/a/cat" }, "/cat")).toEqual(1)
 })
 
-/*const testTrie = CreateTrie<TestData>()
+const testTrie = CreateTrie<TestData>()
 
 test("Insert first node", () => {
   InsertNodeIntoTrie<TestData>(testTrie, "/super", "SUPER")
@@ -171,4 +172,3 @@ test("Search /sucky", () => {
 test("Search /404", () => {
   expect(SearchTrie<TestData>(testTrie, "/404")).toBe(undefined)
 })
-*/

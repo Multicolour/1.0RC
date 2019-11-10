@@ -31,7 +31,7 @@ export function getPrefixLengthFromNode(
   let result = 0
   for (
     let maxCharIndex = trieNode.text.length;
-    result <= maxCharIndex;
+    result < maxCharIndex;
     result++
   ) {
     if (trieNode.text[result] !== searchText[result]) {
@@ -148,10 +148,11 @@ export function InsertNodeIntoTrie<Values = string | number>(
   text: string,
   values: Values,
 ): Node<Values> {
+  if (text.length <= 0) return trie
+
   const basePrefix = getPrefixLengthFromNode(trie, text)
 
-  if (basePrefix !== -1) trie.text = trie.text.substring(0, basePrefix + 1)
-  else if (trie.type !== NodeType.ROOT) return trie
+  if (basePrefix !== 0) trie.text = trie.text.substring(0, basePrefix + 1)
 
   if (!trie.nodes || trie.nodes.length === 0) {
     trie.nodes = [
@@ -176,7 +177,7 @@ export function InsertNodeIntoTrie<Values = string | number>(
     console.log(basePrefix, prefixLength, offset, trie.text, node.text, text)
 
     // Check for no match at all and move on.
-    if (prefixLength === -1) continue
+    if (prefixLength === 0) continue
     else {
       // This is the remainder. Explained below.
       const slicedNode: Node<Values> = {
@@ -191,12 +192,12 @@ export function InsertNodeIntoTrie<Values = string | number>(
       // the remainder becomes a child node of it
       // pushing this sub-trie deeper.
       const newParentNode: Node<Values> = {
-        text: node.text.substring(0, offset + 1),
+        text: node.text.substring(0, offset),
         type: NodeType.PLAIN,
         nodes: [slicedNode],
       }
 
-      InsertNodeIntoTrie(newParentNode, text.substring(offset + 1), values)
+      InsertNodeIntoTrie(newParentNode, text.substring(offset), values)
       trie.nodes.splice(nodeIndex, 1, newParentNode)
 
       /*if (Array.isArray(node.nodes) && node.nodes.length > 0) {
