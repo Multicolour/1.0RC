@@ -1,7 +1,7 @@
 import { IncomingMessage } from "http"
-import { Multicolour$ReplyContext } from "./reply"
+import { MulticolourReplyContext } from "./reply"
 
-export enum Multicolour$RouteVerbs {
+export enum MulticolourRouteVerbs {
   GET = "GET",
   POST = "POST",
   PUT = "PUT",
@@ -11,37 +11,37 @@ export enum Multicolour$RouteVerbs {
   HEAD = "HEAD",
 }
 
-export interface Multicolour$RouteAuthConfig {
-  type: "oauth" | "jwt" | "none",
-  roles?: string[],
-  provider?: "google"
-    | "github"
-    | "facebook"
-    | "twitter"
+export interface MulticolourRouteAuthConfig {
+  type: "oauth" | "jwt" | "none"
+  roles?: string[]
+  provider?: "google" | "github" | "facebook" | "twitter"
 }
 
-export interface Multicolour$RouteValidations {
-  params: object,
-  queryString: object,
-  body: object,
-  response: object,
+export interface MulticolourRouteValidations {
+  params: object
+  queryString: object
+  body: object
+  response: object
 }
 
-export interface Multicolour$RouteSpecificsConfig {
-  auth?: Multicolour$RouteAuthConfig,
+export interface MulticolourRouteSpecificsConfig {
+  auth?: MulticolourRouteAuthConfig
 }
 
-export type Multicolour$RouteHandler = (request: IncomingMessage, context: Multicolour$ReplyContext) => Promise<any>
-
-export interface Multicolour$Route {
-  path: string,
-  handler: Multicolour$RouteHandler,
-  method: Multicolour$RouteVerbs,
-  config?: Multicolour$RouteSpecificsConfig,
-  validate?: Multicolour$RouteValidations,
-}
-
-export interface Multicolour$RequestParserArgs {
+export type MulticolourRouteHandler<ModelShape> = (
   request: IncomingMessage,
-  maxBodySize?: number,
+  context: MulticolourReplyContext,
+) => Promise<ModelShape | ModelShape[]>
+
+export interface MulticolourRoute<Model> {
+  path: string
+  handler: MulticolourRouteHandler<Model>
+  method: MulticolourRouteVerbs
+  config?: MulticolourRouteSpecificsConfig
+  validate?: MulticolourRouteValidations
+}
+
+export interface MulticolourRequestParserArgs {
+  request: IncomingMessage
+  maxBodySize?: number
 }

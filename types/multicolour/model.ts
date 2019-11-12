@@ -1,6 +1,6 @@
 import {
-  Multicolour$RouteSpecificsConfig,
-  Multicolour$RouteVerbs,
+  MulticolourRouteSpecificsConfig,
+  MulticolourRouteVerbs,
 } from "@mc-types/multicolour/route"
 import { IncomingMessage } from "http"
 
@@ -9,7 +9,8 @@ import { IncomingMessage } from "http"
  * types that Multicolour supports at the moment.
  * @type {string}
  */
-export type Multicolour$ModelAttributeType = "smallInt" // signed
+export type MulticolourModelAttributeType =
+  | "smallInt" // signed
   | "mediumInt" // signed
   | "integer" // signed
   | "bigInt" // signed
@@ -17,7 +18,6 @@ export type Multicolour$ModelAttributeType = "smallInt" // signed
   | "double"
   | "float"
   | "bit"
-
   | "boolean"
 
   // dates.
@@ -37,60 +37,57 @@ export type Multicolour$ModelAttributeType = "smallInt" // signed
  * and each column can be configured for
  * requirement, docs and etcetera.
  */
-export interface Multicolour$ModelAttribute {
+export interface MulticolourModelAttribute {
   // The type of the database column.
-  type: Multicolour$ModelAttributeType,
+  type: MulticolourModelAttributeType
 
   // Whether this attribute is required to exist or not.
-  required?: boolean,
+  required?: boolean
 
   // A description of this attribute, used in the documentation
   // page to help consumers understand the attribute's purpose.
-  description?: string,
+  description?: string
 
   // Tags to be used in the documentation to help with filtering
   // certain endpoints and categories together.
-  tags?: string[],
+  tags?: string[]
 }
 
-export type Multicolour$ConstraintTargetCallback = (request: IncomingMessage) => Promise<any>
+export type MulticolourConstraintTargetCallback = (
+  request: IncomingMessage,
+) => Promise<any>
 
-export type Multicolour$ConstraintTarget = string
+export type MulticolourConstraintTarget =
+  | string
   | number
   | boolean
-  | Multicolour$ConstraintTargetCallback
+  | MulticolourConstraintTargetCallback
 
-export interface Multicolour$ConstraintDefinition {
+export interface MulticolourConstraintDefinition {
   // The verbs this constraint has an affect on.
-  verbs: Multicolour$RouteVerbs[],
+  verbs: MulticolourRouteVerbs[]
 
   // The constraint target which is added to the query overriding any incoming vales.
-  constraint: Multicolour$ConstraintTarget,
+  constraint: MulticolourConstraintTarget
 }
 
-export interface Multicolour$ModelRouteConfig {
-  [Multicolour$RouteVerbs.GET]: Multicolour$RouteSpecificsConfig,
-  [Multicolour$RouteVerbs.POST]: Multicolour$RouteSpecificsConfig,
-  [Multicolour$RouteVerbs.PUT]: Multicolour$RouteSpecificsConfig,
-  [Multicolour$RouteVerbs.PATCH]: Multicolour$RouteSpecificsConfig,
-  [Multicolour$RouteVerbs.DELETE]: Multicolour$RouteSpecificsConfig,
-  [Multicolour$RouteVerbs.HEAD]: Multicolour$RouteSpecificsConfig,
-  [Multicolour$RouteVerbs.OPTIONS]: Multicolour$RouteSpecificsConfig,
+export type MulticolourModelRouteConfig = {
+  [key in MulticolourRouteVerbs]: MulticolourRouteSpecificsConfig
 }
 
-export interface Multicolour$Model<ModelAttributes = object> {
+export interface MulticolourModel<ModelAttributes = object> {
   columns: {
-    [attribute: string]: Multicolour$ModelAttribute,
-  },
-  services?: string[],
-  database?: string,
-  routeConfig?: Multicolour$ModelRouteConfig,
+    [attribute: string]: MulticolourModelAttribute
+  }
+  services?: string[]
+  database?: string
+  routeConfig?: MulticolourModelRouteConfig
   constraints?: {
-    [column: string]: Multicolour$ConstraintDefinition,
-  },
-  toJSON?: (row: ModelAttributes) => Promise<ModelAttributes> ,
+    [column: string]: MulticolourConstraintDefinition
+  }
+  toJSON?: (row: ModelAttributes) => Promise<ModelAttributes>
 }
 
-export interface Multicolour$ModelsObject {
-  [modelName: string]: Multicolour$Model<any>,
+export interface MulticolourModelsObject<AllModels> {
+  [modelName: string]: MulticolourModel<AllModels>
 }

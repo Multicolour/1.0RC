@@ -1,5 +1,5 @@
-import { Multicolour$ServiceGroup } from "@mc-types/multicolour/config"
-import { Multicolour$ThreadMessage } from "@mc-types/multicolour/thread-message"
+import { MulticolourServiceGroup } from "@mc-types/multicolour/config"
+import { MulticolourThreadMessage } from "@mc-types/multicolour/thread-message"
 
 import ServiceBridgeError from "@lib/better-errors/service-declaration-error"
 
@@ -7,12 +7,12 @@ import { isMainThread, Worker } from "worker_threads"
 
 class ServiceNetworkBridge {
   private services: {
-    [serviceName: string]: Worker,
+    [serviceName: string]: Worker
   } = {}
-  private serviceDeclarations: Multicolour$ServiceGroup
+  private serviceDeclarations: MulticolourServiceGroup
   private startOrder: string[]
 
-  constructor(services: Multicolour$ServiceGroup, startOrder: string[]) {
+  constructor(services: MulticolourServiceGroup, startOrder: string[]) {
     if (!isMainThread) {
       throw new ServiceBridgeError(
         "Attempt to create new service bridge within a sub-thread. META.",
@@ -71,12 +71,13 @@ class ServiceNetworkBridge {
     return Promise.all(tasks)
   }
 
-  private handleMessageFromThread(message: Multicolour$ThreadMessage) {
-    if (!this.services.hasOwnProperty(message.serviceName)) {
+  private handleMessageFromThread(message: MulticolourThreadMessage) {
+    if (
+      !Object.prototype.hasOwnProperty.call(this.services, message.serviceName)
+    ) {
       throw new ServiceBridgeError("Missing service dependency", [
         {
           type: "missing-service-dependency",
-          // tslint:disable-next-line:max-line-length
           message: `Received a request from a thread to query another service for data but the service it requested ("${message.serviceName}") doesn't exist. This usually happens when the target service has stopped running.`, // eslint-disable-line max-len
         },
       ])

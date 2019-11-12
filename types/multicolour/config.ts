@@ -1,6 +1,6 @@
 import * as https from "https"
 
-export interface Multicolour$ServiceBaseConfig {
+export interface MulticolourServiceBaseConfig {
   /**
    * The type of service this config describes.
    */
@@ -13,7 +13,7 @@ export interface Multicolour$ServiceBaseConfig {
   dependsOn?: string[]
 }
 
-export interface Multicolour$APIServiceSecurityConfig {
+export interface MulticolourAPIServiceSecurityConfig {
   /**
    * The auth config this services requires.
    */
@@ -38,7 +38,7 @@ export interface Multicolour$APIServiceSecurityConfig {
          * If using an OAuth service like Facebook you can provide
          * your app or client ID here.
          */
-        clientId?: string,
+        clientId?: string
 
         /**
          * If using an OAuth service like Facebook you can provide
@@ -62,31 +62,26 @@ export interface Multicolour$APIServiceSecurityConfig {
         technology: "oath" | "token" | "basic"
 
         // @TODO remove this if its not needed.
-        secure?: boolean,
-      },
-    },
-  },
+        secure?: boolean
+      }
+    }
+  }
 
   /**
    * You can specify only certain origins for requests
    * by adding your FQDN/URIs here to be validated.
    */
   cors?: {
-    allowedDomains: string[],
-  },
+    allowedDomains: string[]
+  }
 }
 
-export interface Multicolour$DatabaseServiceConfig
-  extends Multicolour$ServiceBaseConfig {
+export interface MulticolourDatabaseServiceConfig
+  extends MulticolourServiceBaseConfig {
   /**
    * The adapter this database connection will use.
    */
-  adapter: "pg"
-    | "sqlite3"
-    | "mysql"
-    | "mysql2"
-    | "oracle"
-    | "mssql"
+  adapter: "pg" | "sqlite3" | "mysql" | "mysql2" | "oracle" | "mssql"
 
   /**
    * The host this database is at.
@@ -120,8 +115,8 @@ export interface Multicolour$DatabaseServiceConfig
   password?: string
 }
 
-export interface Multicolour$APIServiceConfig
-  extends Multicolour$ServiceBaseConfig {
+export interface MulticolourAPIServiceConfig
+  extends MulticolourServiceBaseConfig {
   /**
    * The hostname/interface this API service will serve from.
    * Note: localhost will only listen on certain devices and
@@ -150,7 +145,7 @@ export interface Multicolour$APIServiceConfig
   /**
    * The security config this API service requests.
    */
-  security?: Multicolour$APIServiceSecurityConfig
+  security?: MulticolourAPIServiceSecurityConfig
 
   /**
    * Whether or not to use the https module and
@@ -168,23 +163,22 @@ export interface Multicolour$APIServiceConfig
   secureServerOptions?: https.ServerOptions
 }
 
-export interface Multicolour$ServiceGroup {
+export interface MulticolourServiceGroup {
   /**
    * Your service's definitions.
    */
-  [key: string]: Multicolour$DatabaseServiceConfig
-    | Multicolour$APIServiceConfig
+  [key: string]: MulticolourDatabaseServiceConfig | MulticolourAPIServiceConfig
 }
 
 /**
  * The Multicolour config object,
  * restart defaults to "never".
  */
-export interface Multicolour$Config {
+export interface MulticolourConfig {
   /**
    * Your service's configurations.
    */
-  services: Multicolour$ServiceGroup,
+  services: MulticolourServiceGroup
 
   /**
    * The path to your models if not the same as your config.
@@ -204,7 +198,5 @@ export interface Multicolour$Config {
    *
    * @default "never"
    */
-  restart?: "unless-stopped"
-    | "on-error"
-    | "never"
+  restart?: "unless-stopped" | "on-error" | "never"
 }

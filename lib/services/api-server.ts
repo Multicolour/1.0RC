@@ -1,6 +1,6 @@
 import {
-  Multicolour$APIServiceConfig,
-  Multicolour$DatabaseServiceConfig,
+  MulticolourAPIServiceConfig,
+  MulticolourDatabaseServiceConfig,
 } from "@mc-types/multicolour/config"
 
 import MulticolourServer from "../server/server"
@@ -9,7 +9,7 @@ class APIServer {
   public server: MulticolourServer
 
   constructor(
-    service: Multicolour$DatabaseServiceConfig | Multicolour$APIServiceConfig,
+    service: MulticolourDatabaseServiceConfig | MulticolourAPIServiceConfig,
   ) {
     this.server = new MulticolourServer(service)
 

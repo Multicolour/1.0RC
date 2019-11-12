@@ -10,9 +10,7 @@ class PrettyErrorWithStack extends Error {
    *
    * @type {RegExp}
    */
-  // tslint:disable-next-line:max-line-length
   public static ignoredPackages = /(^internal\/process\/|module.js|flow-node|bootstrap_node.js|node_modules\/flow-remove-types|next_tick.js|node_modules\/jest-jasmine2|^events.js$|internal\/(bootstrap|modules)\/.*$)/
-  // tslint:disable-next-line
   public __proto__?: object
   public messageAST: Error$MessageAST
   protected data: object
@@ -102,7 +100,7 @@ class PrettyErrorWithStack extends Error {
     const parsedStack = this.stack
       ? this.stack
           .split("\n")
-          .map((line) => line.trim())
+          .map(line => line.trim())
           .filter(Boolean)
           .slice(1)
           .map((frame: string) => this.parseStackFrame(frame))

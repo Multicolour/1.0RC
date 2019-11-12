@@ -1,11 +1,11 @@
 import HttpError from "@lib/better-errors/http-error"
 import bodyParser from "@lib/server/request-parsers/body-parser"
-import { Multicolour$ResponseParserArgs } from "@mc-types/multicolour/reply"
-import { Multicolour$RequestParserArgs } from "@mc-types/multicolour/route"
-import { Multicolour$ContentNegotiator } from "./base"
+import { MulticolourResponseParserArgs } from "@mc-types/multicolour/reply"
+import { MulticolourRequestParserArgs } from "@mc-types/multicolour/route"
+import { MulticolourContentNegotiator } from "./base"
 
-export default class JSONContentNegotiator extends Multicolour$ContentNegotiator {
-  public async parseBody(args: Multicolour$RequestParserArgs): Promise<object> {
+export default class JSONContentNegotiator extends MulticolourContentNegotiator {
+  public async parseBody(args: MulticolourRequestParserArgs): Promise<object> {
     return bodyParser({ request: args.request }).then((json: string) => {
       let outwardBody
 
@@ -34,7 +34,7 @@ export default class JSONContentNegotiator extends Multicolour$ContentNegotiator
     })
   }
 
-  public async parseResponse(config: Multicolour$ResponseParserArgs) {
+  public async parseResponse(config: MulticolourResponseParserArgs) {
     return JSON.stringify(config.reply)
   }
 }

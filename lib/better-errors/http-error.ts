@@ -5,7 +5,7 @@ export interface HttpErrorMessage {
   headers?: object
   error: {
     message: string
-    [extra: string]: any,
+    [extra: string]: any
   }
 }
 
@@ -17,7 +17,7 @@ class MulticolourHttpError extends PrettyErrorWithStack {
 
     this.statusCode = error.statusCode
 
-    Error.captureStackTrace(this, Multicolour$HttpError)
+    Error.captureStackTrace(this, MulticolourHttpError)
   }
 
   public prettify() {

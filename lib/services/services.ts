@@ -1,18 +1,19 @@
-import { Multicolour$ServiceGroup } from "@mc-types/multicolour/config"
+import toposort from "toposort"
+import { MulticolourServiceGroup } from "@mc-types/multicolour/config"
 
 import ServiceDeclarationError from "@lib/better-errors/service-declaration-error"
 import ServiceBridge from "./service-bridge"
 
 class Services {
   public getServiceNetworkBridge(
-    services: Multicolour$ServiceGroup,
+    services: MulticolourServiceGroup,
     startOrder: string[],
   ) {
     return new ServiceBridge(services, startOrder)
   }
 
   public validateAndSortServicesByDependencies(
-    services: Multicolour$ServiceGroup,
+    services: MulticolourServiceGroup,
   ) {
     const configuredServicesNames = Object.keys(services)
 
@@ -40,13 +41,11 @@ class Services {
   }
 
   public sortDependenciesTopologically(topologicalGraph: string[][]) {
-    const toposort = require("toposort")
-
     return toposort(topologicalGraph).reverse()
   }
 
   public getTopologicalGraphOfServiceDependencies(
-    services: Multicolour$ServiceGroup,
+    services: MulticolourServiceGroup,
     serviceNames: string[],
   ) {
     return serviceNames.reduceRight(
@@ -66,12 +65,12 @@ class Services {
   }
 
   public validateServicesHaveAllDependencies(
-    services: Multicolour$ServiceGroup,
+    services: MulticolourServiceGroup,
     configuredServicesNames: string[],
   ) {
     return Object.keys(services)
       .map((serviceName: string) => {
-        const service: Multicolour$ServiceGroup = services[serviceName]
+        const service: MulticolourServiceGroup = services[serviceName]
 
         if (service.dependsOn) {
           return service.dependsOn
@@ -79,7 +78,6 @@ class Services {
               if (configuredServicesNames.indexOf(serviceDependsOnName) < 0) {
                 return {
                   type: "missing-dependency",
-                  // tslint:disable-next-line:max-line-length
                   message: `The service "${serviceName}" depends on "${serviceDependsOnName}" but there is no service by that name. Check for a spelling mistake and check cases of service names.`,
                 }
               }

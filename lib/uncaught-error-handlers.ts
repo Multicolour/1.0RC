@@ -1,7 +1,5 @@
+;(Error as any).stackTraceLimit = Infinity // eslint-disable-line @typescript-eslint/no-explicit-any
 import UncaughtError from "@lib/better-errors/uncaught-error"
-
-// @FIXME: Work out if this is a TypeScript bug.
-// (Error as any).stackTraceLimit = Infinity
 
 process.on("uncaughtException", (error: Error) => {
   // tslint:disable-next-line:max-line-length

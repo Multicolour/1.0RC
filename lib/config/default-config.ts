@@ -1,6 +1,6 @@
-import { Multicolour$Config } from "@mc-types/multicolour/config"
+import { MulticolourConfig } from "@mc-types/multicolour/config"
 
-const defaultConfig: Multicolour$Config = {
+const defaultConfig: MulticolourConfig = {
   restart: "never",
   models: "./models",
   services: {},

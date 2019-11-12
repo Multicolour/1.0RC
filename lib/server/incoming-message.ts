@@ -2,27 +2,27 @@ import { IncomingMessage } from "http"
 import { Socket } from "net"
 
 import {
-  Multicolour$AcceptHeader,
-  Multicolour$ContentTypeHeader,
+  MulticolourAcceptHeader,
+  MulticolourContentTypeHeader,
 } from "@mc-types/multicolour/reply"
 
-export interface Multicolour$ParsedHeaders {
-  accept: Multicolour$AcceptHeader
-  "content-type"?: Multicolour$ContentTypeHeader
+export interface MulticolourParsedHeaders {
+  accept: MulticolourAcceptHeader
+  "content-type"?: MulticolourContentTypeHeader
 }
 
-export interface Multicolour$ParsedBody {
+export interface MulticolourParsedBody {
   [key: string]: string
 }
 
-export class Multicolour$IncomingMessage extends IncomingMessage {
-  public parsedHeaders: Multicolour$ParsedHeaders
-  public parsedBody: Multicolour$ParsedBody
+export class MulticolourIncomingMessage extends IncomingMessage {
+  public parsedHeaders: MulticolourParsedHeaders
+  public parsedBody: MulticolourParsedBody
 
   constructor(socket: Socket) {
     super(socket)
     this.parsedHeaders = {
-      "accept": [
+      accept: [
         {
           contentType: "application/json",
           quality: 1.0,

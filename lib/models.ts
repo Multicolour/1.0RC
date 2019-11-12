@@ -1,11 +1,14 @@
 import Ajv from "ajv"
+import { readdirSync } from "fs"
+import { basename, extname, resolve } from "path"
+import modelSchema from "../schema/model/model.schema.json"
 import modelConstraintSchema from "../schema/model/constraint.schema.json"
-import { Multicolour$Model } from "../types/multicolour/model"
+import { MulticolourModel } from "types/multicolour/model"
 
 import ModelValidationError from "./better-errors/model-error"
 
-interface Multicolour$ModelObject {
-  [modelName: string]: Multicolour$Model<any>
+interface MulticolourModelObject<Model> {
+  [modelName: string]: MulticolourModel<Model>
 }
 
 interface IntermediaryModelFileResult {
@@ -19,18 +22,14 @@ interface ModelFileResult {
   modelConfiguration: string
 }
 
-function validateModelAgainstSchema(model: Multicolour$Model) {
+function validateModelAgainstSchema(model: MulticolourModel): MulticolourModel {
   const ajv = new Ajv()
 
   ajv.addSchema(modelConstraintSchema)
 
-  const validModel = ajv.validate(
-    require("../schema/model/model.schema.json"),
-    model.modelConfiguration,
-  )
+  const validModel = ajv.validate(modelSchema, model.modelConfiguration)
 
   if (!validModel) {
-    // tslint:disable-next-line:max-line-length
     throw new ModelValidationError(
       `Your model "${model.modelName}" contains errors. See below for an explanation:`,
       ajv.errors || [],
@@ -40,10 +39,9 @@ function validateModelAgainstSchema(model: Multicolour$Model) {
   return model
 }
 
-function getModels(path: string = "./models"): Multicolour$ModelObject {
-  const { readdirSync } = require("fs")
-  const { basename, extname, resolve } = require("path")
-
+function getModels<AllModels>(
+  path = "./models",
+): MulticolourModelObject<AllModels> {
   const includePattern = /\.js$/gi
   const files = readdirSync(path)
 
@@ -74,9 +72,9 @@ function getModels(path: string = "./models"): Multicolour$ModelObject {
       // Syntax check and parse the model.
       .reduce(
         (
-          models: Multicolour$ModelObject,
+          models: MulticolourModelObject<AllModels>,
           modelFileResult: ModelFileResult,
-        ): Multicolour$ModelObject => {
+        ): MulticolourModelObject<AllModels> => {
           models[modelFileResult.modelName] = modelFileResult.modelConfiguration
           return models
         },

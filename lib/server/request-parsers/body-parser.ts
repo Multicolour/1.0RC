@@ -1,8 +1,8 @@
 import HttpError from "@lib/better-errors/http-error"
-import { Multicolour$RequestParserArgs } from "@mc-types/multicolour/route"
+import { MulticolourRequestParserArgs } from "@mc-types/multicolour/route"
 
 async function BodyParser(
-  config: Multicolour$RequestParserArgs,
+  config: MulticolourRequestParserArgs,
 ): Promise<string> {
   if (!config.request) {
     return Promise.reject(

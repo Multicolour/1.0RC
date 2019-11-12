@@ -1,9 +1,9 @@
-import { Multicolour$ModelsObject } from "@mc-types/multicolour/model"
+import { MulticolourModelsObject } from "@mc-types/multicolour/model"
 
 import Database from "../database"
 
 class DatabaseService {
-  public models: Multicolour$ModelsObject = {}
+  public models: MulticolourModelsObject<any> = {}
   public connection?: Database
 }
 
