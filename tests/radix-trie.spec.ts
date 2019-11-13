@@ -36,7 +36,6 @@ test("Insert first node", () => {
 
 test("Insert second node", () => {
   InsertNodeIntoTrie<TestData>(testTrie, "/sucky", "SUCKY")
-  console.log(JSON.stringify(testTrie, null, 2))
 
   expect(testTrie).toEqual({
     text: "",
@@ -62,7 +61,7 @@ test("Insert second node", () => {
   })
 })
 
-/*test("Insert third, unrelated node", () => {
+test("Insert third, unrelated node", () => {
   InsertNodeIntoTrie<TestData>(testTrie, "/cats", "CATS")
 
   expect(testTrie).toEqual({
@@ -102,7 +101,7 @@ test("Insert second node", () => {
 
 test("Insert fourth node", () => {
   InsertNodeIntoTrie<TestData>(testTrie, "/cats/pyjamas", "PJs!")
-  debugger
+  console.log(JSON.stringify(testTrie, null, 2))
 
   expect(testTrie).toEqual({
     text: "",
@@ -145,7 +144,7 @@ test("Insert fourth node", () => {
     ],
   })
 })
-
+/*
 test("Search /cats", () => {
   expect(SearchTrie<TestData>(testTrie, "/cats")).toEqual({
     text: "cats",

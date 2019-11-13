@@ -181,8 +181,6 @@ export function InsertNodeIntoTrie<Values = string | number>(
     // Check for no match at all and move on.
     if (prefixLength === 0) continue
     else {
-      state.lastVisitedNode = node
-
       // We need to split this node into two parts
       // the first part will be the original Node's
       // .text sliced at the calculated offset.
@@ -202,8 +200,16 @@ export function InsertNodeIntoTrie<Values = string | number>(
         nodes: [slicedNode],
       }
 
-      InsertNodeIntoTrie(newParentNode, text.substring(offset), values, state)
-      trie.nodes.splice(nodeIndex, 1, newParentNode)
+      const updated = InsertNodeIntoTrie(
+        newParentNode,
+        text.substring(offset),
+        values,
+        state,
+      )
+      debugger
+      state.lastVisitedNode = updated
+      state.text = text.substring(offset)
+      trie.nodes.splice(nodeIndex, 1, updated)
     }
   }
 
@@ -211,7 +217,7 @@ export function InsertNodeIntoTrie<Values = string | number>(
     state.didInsert = true
     state.lastVisitedNode.nodes = state.lastVisitedNode.nodes || []
     state.lastVisitedNode.nodes.push({
-      text,
+      text: state.text,
       data: values,
       type: NodeType.END,
     })

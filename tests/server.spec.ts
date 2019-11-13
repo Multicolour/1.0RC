@@ -12,7 +12,7 @@ const testableRoutes = [
       accept: "text/plain",
     },
     route: {
-      method: Multicolour$RouteVerbs.GET,
+      method: MulticolourRouteVerbs.GET,
       path: "/text",
       handler: async () => "Text",
     },
@@ -48,7 +48,7 @@ const testableRoutes = [
         throw new HttpError({
           statusCode: 418,
           error: {
-            message: "Some kind of error.",
+            message: "Teapot. am. I?",
           },
         })
       },
