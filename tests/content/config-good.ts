@@ -9,9 +9,7 @@ const config: Multicolour$Config = {
 
       security: {
         cors: {
-          allowedDomains: [
-            "http://localhost:1811",
-          ],
+          allowedDomains: ["http://localhost:1811"],
         },
       },
     },

@@ -1,7 +1,7 @@
 import {
-  Multicolour$IncomingMessage,
-  Multicolour$ParsedBody,
-  Multicolour$ParsedHeaders,
+  MulticolourIncomingMessage,
+  MulticolourParsedBody,
+  MulticolourParsedHeaders,
 } from "@lib/server/incoming-message"
 import { IncomingHttpHeaders } from "http"
 import { Socket } from "net"
@@ -13,19 +13,19 @@ interface Options {
   headers?: IncomingHttpHeaders
 }
 
-class IncomingMessage
-  extends Multicolour$IncomingMessage {
+class IncomingMessage extends MulticolourIncomingMessage {
   public url: string
-  public method?: string  = "GET"
+  public method?: string = "GET"
   public body?: Buffer
-  public parsedHeaders: Multicolour$ParsedHeaders = {
-    accept: [{
-      contentType: "application/json",
-      quality: 1,
-    }],
+  public parsedHeaders: MulticolourParsedHeaders = {
+    accept: [
+      {
+        contentType: "application/json",
+        quality: 1,
+      },
+    ],
   }
-  public parsedBody: Multicolour$ParsedBody = {}
-
+  public parsedBody: MulticolourParsedBody = {}
 
   constructor(options: Options) {
     super(new Socket({}))

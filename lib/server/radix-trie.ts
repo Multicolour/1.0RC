@@ -140,14 +140,19 @@ export function SearchTrie<Values>(
  * @param {Values} values to apply to this string within the trie.
  * @return {Node<Values>} updated node.
  */
+interface InsertStatus {
+  text: string
+  lastVisitedNode?: Node
+  didInsert?: boolean
+}
 export function InsertNodeIntoTrie<Values = string | number>(
   trie: Node<Values>,
   text: string,
   values: Values,
+  state: InsertStatus = { text },
 ): Node<Values> {
   if (text.length <= 0) return trie
 
-  let didInsert = false
   const basePrefix = getPrefixLengthFromNode(trie, text)
 
   if (basePrefix !== 0) trie.text = trie.text.substring(0, basePrefix)
@@ -176,7 +181,7 @@ export function InsertNodeIntoTrie<Values = string | number>(
     // Check for no match at all and move on.
     if (prefixLength === 0) continue
     else {
-      didInsert = true
+      state.lastVisitedNode = node
 
       // We need to split this node into two parts
       // the first part will be the original Node's
@@ -197,17 +202,20 @@ export function InsertNodeIntoTrie<Values = string | number>(
         nodes: [slicedNode],
       }
 
-      InsertNodeIntoTrie(newParentNode, text.substring(offset), values)
+      InsertNodeIntoTrie(newParentNode, text.substring(offset), values, state)
       trie.nodes.splice(nodeIndex, 1, newParentNode)
     }
   }
 
-  if (!didInsert)
-    trie.nodes.push({
+  if (!state.didInsert && state.lastVisitedNode) {
+    state.didInsert = true
+    state.lastVisitedNode.nodes = state.lastVisitedNode.nodes || []
+    state.lastVisitedNode.nodes.push({
       text,
       data: values,
       type: NodeType.END,
     })
+  }
 
   return trie
 }

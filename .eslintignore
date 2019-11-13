@@ -1,0 +1,2 @@
+tests/k6/*
+jest.config.js

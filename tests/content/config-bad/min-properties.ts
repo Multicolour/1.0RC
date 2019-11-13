@@ -1,9 +1,8 @@
-import { Multicolour$Config } from "@mc-types/multicolour/config"
+import { MulticolourConfig } from "@mc-types/multicolour/config"
 
-const config: Multicolour$Config = {
+const config: MulticolourConfig = {
   models: "./models",
-  services: {
-  },
+  services: {},
 }
 
 export default config
