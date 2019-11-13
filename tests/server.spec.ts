@@ -1,10 +1,9 @@
 import HttpError from "@lib/better-errors/http-error"
-import { Multicolour$ContentNegotiator } from "@lib/content-negotiators/base"
+import { MulticolourContentNegotiator } from "@lib/content-negotiators/base"
 import MulticolourServer from "@lib/server/server"
-import { Multicolour$RouteVerbs } from "@mc-types/multicolour/route"
+import { MulticolourRouteVerbs } from "@mc-types/multicolour/route"
 import { ServerResponse } from "http"
 import { IncomingMessage } from "./mocks/http"
-
 
 const testableRoutes = [
   /* @TODO: Add a text content negotiator
@@ -27,13 +26,15 @@ const testableRoutes = [
       accept: "application/json",
     },
     route: {
-      method: Multicolour$RouteVerbs.GET,
+      method: MulticolourRouteVerbs.GET,
       path: "/json",
       handler: async () => ({ json: true }),
     },
     expected: (reply: any) => {
-      expect(reply.reply).toEqual("{\"json\":true}")
-      expect(reply.context.responseHeaders["content-type"]).toBe("application/json")
+      expect(reply.reply).toEqual('{"json":true}')
+      expect(reply.context.responseHeaders["content-type"]).toBe(
+        "application/json",
+      )
     },
   },
   {
@@ -41,7 +42,7 @@ const testableRoutes = [
       accept: "application/json",
     },
     route: {
-      method: Multicolour$RouteVerbs.GET,
+      method: MulticolourRouteVerbs.GET,
       path: "/throws-http-error",
       handler: async () => {
         throw new HttpError({
@@ -53,9 +54,11 @@ const testableRoutes = [
       },
     },
     expected: (reply: any, response: ServerResponse) => {
-      expect(reply.reply).toEqual("{\"error\":\"Some kind of error.\"}")
+      expect(reply.reply).toEqual('{"error":"Some kind of error."}')
       expect(response.statusCode).toBe(418)
-      expect(reply.context.responseHeaders["content-type"]).toBe("application/json")
+      expect(reply.context.responseHeaders["content-type"]).toBe(
+        "application/json",
+      )
     },
   },
 ]
@@ -78,7 +81,6 @@ test("Multicolour server routing", async () => {
 
     await testableRoute.expected(reply, testableResponse)
   }
-
 })
 
 test("404 for unknown route", () => {
@@ -87,10 +89,11 @@ test("404 for unknown route", () => {
   })
   const request = new IncomingMessage({
     url: "/nope",
-    method: Multicolour$RouteVerbs.GET,
+    method: MulticolourRouteVerbs.GET,
   })
   const response = new ServerResponse(request)
-  server.onRequest(request, response)
+  server
+    .onRequest(request, response)
     .then(() => {
       expect(response.statusCode).toBe(404)
       expect(response.statusCode).not.toBe(500)
@@ -104,10 +107,9 @@ test("Server content negotiator", () => {
   const server = new MulticolourServer({
     type: "api",
   })
-  const classNegotiator = class extends Multicolour$ContentNegotiator {
-  }
+  const ClassNegotiator = class extends MulticolourContentNegotiator {}
 
-  server.addContentNegotiator("text/html", classNegotiator)
+  server.addContentNegotiator("text/html", ClassNegotiator)
 
   expect(server.negotiators["text/html"]).toBeTruthy()
 })
