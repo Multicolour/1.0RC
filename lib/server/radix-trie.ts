@@ -180,6 +180,9 @@ export function InsertNodeIntoTrie<Values = string | number>(
 
     // Check for no match at all and move on.
     if (prefixLength === 0) continue
+    // If it's a full match, don't insert a duplicate.
+    else if (offset === node.text.length) continue
+    // Okay, lets dig deeper and maybe insert.
     else {
       // We need to split this node into two parts
       // the first part will be the original Node's
@@ -199,6 +202,7 @@ export function InsertNodeIntoTrie<Values = string | number>(
         type: NodeType.PLAIN,
         nodes: [slicedNode],
       }
+      console.log("OFF", offset, node.text.length, newParentNode.text)
 
       const updated = InsertNodeIntoTrie(
         newParentNode,
@@ -206,7 +210,7 @@ export function InsertNodeIntoTrie<Values = string | number>(
         values,
         state,
       )
-      debugger
+
       state.lastVisitedNode = updated
       state.text = text.substring(offset)
       trie.nodes.splice(nodeIndex, 1, updated)
