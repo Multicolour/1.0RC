@@ -7,15 +7,9 @@ import syntaxError from "./content/payloads/bad/json/syntax-error"
 import jsonArray from "./content/payloads/good/json/array"
 import jsonObject from "./content/payloads/good/json/object"
 
-const badPayloads = [
-  badEntryChar,
-  syntaxError,
-]
+const badPayloads = [badEntryChar, syntaxError]
 
-const goodPayloads = [
-  jsonArray,
-  jsonObject,
-]
+const goodPayloads = [jsonArray, jsonObject]
 
 test("JSON body parser with known bad payloads", async () => {
   const parsers = badPayloads.map((payload) => {
@@ -28,8 +22,7 @@ test("JSON body parser with known bad payloads", async () => {
     request.emit("data", payload)
     request.emit("end")
 
-    return parser
-      .catch(({statusCode}) => statusCode) // Kill the error, we want to test it.
+    return parser.catch(({ statusCode }) => statusCode) // Kill the error, we want to test it.
   })
 
   const statusCodes = await Promise.all(parsers)
@@ -55,4 +48,3 @@ test("JSON body parser with known good payloads", async () => {
   expect(payloads[0]).toEqual(JSON.parse(goodPayloads[0]))
   expect(payloads[1]).toEqual(JSON.parse(goodPayloads[1]))
 })
-

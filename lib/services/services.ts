@@ -1,20 +1,25 @@
 import toposort from "toposort"
-import { MulticolourServiceGroup } from "@mc-types/multicolour/config"
+import {
+  MulticolourServiceGroup,
+  MulticolourDatabaseServiceConfig,
+  MulticolourAPIServiceConfig,
+  ServiceDeclarationErrorType,
+} from "@mc-types/multicolour/config"
 
 import ServiceDeclarationError from "@lib/better-errors/service-declaration-error"
 import ServiceBridge from "./service-bridge"
 
 class Services {
-  public getServiceNetworkBridge(
+  getServiceNetworkBridge(
     services: MulticolourServiceGroup,
     startOrder: string[],
-  ) {
+  ): ServiceBridge {
     return new ServiceBridge(services, startOrder)
   }
 
-  public validateAndSortServicesByDependencies(
+  validateAndSortServicesByDependencies(
     services: MulticolourServiceGroup,
-  ) {
+  ): string[] {
     const configuredServicesNames = Object.keys(services)
 
     // This will throw an error if any service has an unmet dependency.
@@ -40,14 +45,16 @@ class Services {
     return startOrder
   }
 
-  public sortDependenciesTopologically(topologicalGraph: string[][]) {
+  sortDependenciesTopologically(
+    topologicalGraph: [string, string | undefined][],
+  ): string[] {
     return toposort(topologicalGraph).reverse()
   }
 
-  public getTopologicalGraphOfServiceDependencies(
+  getTopologicalGraphOfServiceDependencies(
     services: MulticolourServiceGroup,
     serviceNames: string[],
-  ) {
+  ): string[][] {
     return serviceNames.reduceRight(
       (topology: string[][], serviceName: string) => {
         const dependants = services[serviceName].dependsOn
@@ -64,13 +71,13 @@ class Services {
     )
   }
 
-  public validateServicesHaveAllDependencies(
+  validateServicesHaveAllDependencies(
     services: MulticolourServiceGroup,
     configuredServicesNames: string[],
-  ) {
+  ): ServiceDeclarationErrorType[] {
     return Object.keys(services)
       .map((serviceName: string) => {
-        const service: MulticolourServiceGroup = services[serviceName]
+        const service = services[serviceName]
 
         if (service.dependsOn) {
           return service.dependsOn
@@ -81,11 +88,12 @@ class Services {
                   message: `The service "${serviceName}" depends on "${serviceDependsOnName}" but there is no service by that name. Check for a spelling mistake and check cases of service names.`,
                 }
               }
-
-              return false
+              return
             })
             .filter(Boolean)
         }
+
+        return
       })
       .reduce(
         (

@@ -8,7 +8,7 @@ import debug from "debug"
       log(error)
       log(error.stack)
     })
-    .on("unhandledRejection", (reason: any, promise: Promise<any>) => {
+    .on("unhandledRejection", (reason: unknown, promise: Promise<unknown>) => {
       log(reason)
       log(promise)
     })

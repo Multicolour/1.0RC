@@ -57,8 +57,9 @@ class AJVValidationError extends PrettyErrorWithStack {
           case "required":
             // tslint:disable-next-line:max-line-length
             neatErrors.push(
-              `Property "${this.object}${currentError.dataPath ||
-                ""}" requires the presence of "${
+              `Property "${this.object}${
+                currentError.dataPath || ""
+              }" requires the presence of "${
                 (currentError.params as RequiredParams).missingProperty
               }".`,
             )

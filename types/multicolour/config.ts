@@ -163,11 +163,14 @@ export interface MulticolourAPIServiceConfig
   secureServerOptions?: https.ServerOptions
 }
 
-export interface MulticolourServiceGroup {
-  /**
-   * Your service's definitions.
-   */
-  [key: string]: MulticolourDatabaseServiceConfig | MulticolourAPIServiceConfig
+export type MulticolourServiceGroup<Config = Record<string, unknown>> = Record<
+  keyof Config,
+  MulticolourDatabaseServiceConfig | MulticolourAPIServiceConfig
+>
+
+export interface ServiceDeclarationErrorType {
+  type: string
+  message: string
 }
 
 /**

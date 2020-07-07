@@ -5,6 +5,6 @@ while (buff.length < size) {
   buff.write("\u00bd")
 }
 
-const payload: string = `{a: "${buff.toString("utf8")}"}`
+const payload = `{a: "${buff.toString("utf8")}"}`
 
 export default payload

@@ -55,7 +55,7 @@ export interface MulticolourModelAttribute {
 
 export type MulticolourConstraintTargetCallback = (
   request: IncomingMessage,
-) => Promise<any>
+) => Promise<unknown>
 
 export type MulticolourConstraintTarget =
   | string
@@ -75,7 +75,7 @@ export type MulticolourModelRouteConfig = {
   [key in MulticolourRouteVerbs]: MulticolourRouteSpecificsConfig
 }
 
-export interface MulticolourModel<ModelAttributes = object> {
+export interface MulticolourModel<ModelAttributes = Record<string, unknown>> {
   columns: {
     [attribute: string]: MulticolourModelAttribute
   }

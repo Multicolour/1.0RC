@@ -22,7 +22,7 @@ export interface MulticolourContentTypeHeader {
 }
 
 export interface MulticolourResponseParserArgs {
-  reply: any
+  reply: unknown
   context: MulticolourReplyContext
   response: ServerResponse
   request: MulticolourIncomingMessage

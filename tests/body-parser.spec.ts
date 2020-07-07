@@ -14,7 +14,7 @@ import { IncomingMessage } from "./mocks/http"
     request.emit("data", Buffer.from("1234", "utf-8"))
     request.emit("end")
 
-    return parser.then(value => expect(value).toEqual("1234"))
+    return parser.then((value) => expect(value).toEqual("1234"))
   })
 
   test("Body parser max size", () => {

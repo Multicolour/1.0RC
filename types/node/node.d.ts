@@ -7,7 +7,7 @@ import { Server, ServerResponse } from "http"
 // @TODO: PR to add that event name.
 declare namespace NodeJS {
   interface Process extends EventEmitter {
-    on(event: string, callback: (...args: any[]) => void): this
+    on(event: string, callback: (...args: unknown[]) => void): this
   }
 }
 

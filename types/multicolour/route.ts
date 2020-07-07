@@ -18,10 +18,10 @@ export interface MulticolourRouteAuthConfig {
 }
 
 export interface MulticolourRouteValidations {
-  params: object
-  queryString: object
-  body: object
-  response: object
+  params: Record<string, unknown>
+  queryString: Record<string, unknown>
+  body: Record<string, unknown>
+  response: Record<string, unknown>
 }
 
 export interface MulticolourRouteSpecificsConfig {

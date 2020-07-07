@@ -9,31 +9,39 @@ import { IncomingMessage } from "./mocks/http"
 const goodAcceptHeaders = [
   {
     contentType: "text/plain",
-    expected: [{
-      contentType: "text/plain",
-      quality: 1,
-    }],
+    expected: [
+      {
+        contentType: "text/plain",
+        quality: 1,
+      },
+    ],
   },
   {
     contentType: "application/vnd.api+json",
-    expected: [{
-      contentType: "application/vnd.api+json",
-      quality: 1,
-    }],
+    expected: [
+      {
+        contentType: "application/vnd.api+json",
+        quality: 1,
+      },
+    ],
   },
   {
     contentType: "*/*",
-    expected: [{
-      contentType: "*/*",
-      quality: 1,
-    }],
+    expected: [
+      {
+        contentType: "*/*",
+        quality: 1,
+      },
+    ],
   },
   {
     contentType: "application/json;q=0.1",
-    expected: [{
-      contentType: "application/json",
-      quality: 0.1,
-    }],
+    expected: [
+      {
+        contentType: "application/json",
+        quality: 0.1,
+      },
+    ],
   },
   {
     contentType: "text/plain;q=0.5,text/html;q=0.001,application/json",
@@ -82,7 +90,8 @@ const goodContentTypeHeaders = [
     },
   },
   {
-    contentType: "multipart/form-data; boundary=---12345multicolour; charset=utf-8",
+    contentType:
+      "multipart/form-data; boundary=---12345multicolour; charset=utf-8",
     expected: {
       contentType: "multipart/form-data",
       boundary: "---12345multicolour",
@@ -105,7 +114,6 @@ test("Header parser: Content Type headers", () => {
 
     expect(parsedHeaders).toEqual(header.expected)
   })
-
 })
 
 test("Bad content type headers", () => {
@@ -121,22 +129,25 @@ test("Bad content type headers", () => {
 })
 
 test("Header parser: HeaderParser", () => {
-  const parsedHeaders = HeaderParser(new IncomingMessage({
-    url: "/test",
-    headers: {
-      "accept": "application/json",
-      "content-type": "application/json",
-    },
-  }))
+  const parsedHeaders = HeaderParser(
+    new IncomingMessage({
+      url: "/test",
+      headers: {
+        accept: "application/json",
+        "content-type": "application/json",
+      },
+    }),
+  )
 
   expect(parsedHeaders).toEqual({
-    "accept": [{
-      contentType: "application/json",
-      quality: 1,
-    }],
+    accept: [
+      {
+        contentType: "application/json",
+        quality: 1,
+      },
+    ],
     "content-type": {
       contentType: "application/json",
     },
   })
 })
-

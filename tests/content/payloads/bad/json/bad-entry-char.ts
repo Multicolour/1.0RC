@@ -1,3 +1,3 @@
-const payload: string = "a: 123"
+const payload = "a: 123"
 
 export default payload

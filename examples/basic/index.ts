@@ -9,21 +9,20 @@ new Multicolour({
 
     myAuthAPI: {
       type: "api",
-      dependsOn: [ "myPGDatabase" ],
+      dependsOn: ["myPGDatabase"],
       port: 1811,
     },
 
     myUserAPI: {
       type: "api",
-      dependsOn: [ "myAuthAPI" ],
+      dependsOn: ["myAuthAPI"],
       port: 1812,
     },
 
     myPublicAPI: {
       type: "api",
-      dependsOn: [ "myPGDatabase" ],
+      dependsOn: ["myPGDatabase"],
       port: 1813,
     },
   },
-})
-  .start()
+}).start()

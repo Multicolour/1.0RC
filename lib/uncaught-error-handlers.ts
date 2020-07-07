@@ -13,7 +13,10 @@ process.on("uncaughtException", (error: Error) => {
 
 process.on(
   "unhandledRejection",
-  async (reason: {} | null | undefined, uncaughtPromise: Promise<any>) => {
+  async (
+    reason: Record<string, unknown> | null | undefined,
+    uncaughtPromise: Promise<unknown>,
+  ) => {
     const logID = Date.now().toString(16)
 
     console.error(

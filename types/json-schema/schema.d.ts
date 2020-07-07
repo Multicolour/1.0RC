@@ -8,7 +8,7 @@ export interface JSONSchema {
   $schema?: string
   title?: string
   description?: string
-  default?: any
+  default?: unknown
   required?: string[]
   properties?: JSONSchemaMetaReference
   minProperties?: number

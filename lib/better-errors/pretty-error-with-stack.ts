@@ -100,7 +100,7 @@ class PrettyErrorWithStack extends Error {
     const parsedStack = this.stack
       ? this.stack
           .split("\n")
-          .map(line => line.trim())
+          .map((line) => line.trim())
           .filter(Boolean)
           .slice(1)
           .map((frame: string) => this.parseStackFrame(frame))

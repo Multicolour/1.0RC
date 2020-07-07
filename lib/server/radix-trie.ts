@@ -194,7 +194,7 @@ export function InsertNodeIntoTrie<Values = string | number>(
         text: node.text.substring(offset),
       }
 
-      // This replaces this node in the trie and
+      // This will replace this node in the trie and
       // the remainder becomes a child node of it
       // pushing this sub-trie deeper.
       const newParentNode: Node<Values> = {
@@ -202,7 +202,6 @@ export function InsertNodeIntoTrie<Values = string | number>(
         type: NodeType.PLAIN,
         nodes: [slicedNode],
       }
-      console.log("OFF", offset, node.text.length, newParentNode.text)
 
       const updated = InsertNodeIntoTrie(
         newParentNode,

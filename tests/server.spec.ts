@@ -16,7 +16,7 @@ const testableRoutes = [
       path: "/text",
       handler: async () => "Text",
     },
-    expected: (reply: any, response: ServerResponse) => {
+    expected: (reply: unknown, response: ServerResponse) => {
       expect(reply).toBe("Text")
       expect(response.getHeader("content-type")).toBe("text/plain")
     },
@@ -30,7 +30,7 @@ const testableRoutes = [
       path: "/json",
       handler: async () => ({ json: true }),
     },
-    expected: (reply: any) => {
+    expected: (reply: unknown) => {
       expect(reply.reply).toEqual('{"json":true}')
       expect(reply.context.responseHeaders["content-type"]).toBe(
         "application/json",
@@ -53,7 +53,7 @@ const testableRoutes = [
         })
       },
     },
-    expected: (reply: any, response: ServerResponse) => {
+    expected: (reply: unknown, response: ServerResponse) => {
       expect(reply.reply).toEqual('{"error":"Some kind of error."}')
       expect(response.statusCode).toBe(418)
       expect(reply.context.responseHeaders["content-type"]).toBe(

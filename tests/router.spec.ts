@@ -5,11 +5,11 @@ import {
   MulticolourRouteVerbs,
 } from "@mc-types/multicolour/route"
 
-type Route = MulticolourRoute<Record<string, any>>
+type Route = MulticolourRoute<Record<string, unknown>>
 
 test("Router starts and routing", () => {
   const router = new Router()
-  const noOp = async (): Promise<Record<string, any>> => Promise.resolve({})
+  const noOp = async (): Promise<Record<string, unknown>> => Promise.resolve({})
 
   const routes: Route[] = [
     {
