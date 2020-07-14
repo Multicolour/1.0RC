@@ -5,12 +5,37 @@ export enum NodeType {
   END,
 }
 
-export interface Node<Values extends {} = {}> {
+export interface Node<Values = Record<string, unknown>> {
   text: string
   type?: NodeType
   nodes?: Array<Node<Values>>
   data?: Values
   isEnd?: boolean
+}
+
+interface URI {
+  uri: string
+  params?: Record<string, { start: number; end: number; name: string }>
+}
+
+export function breakPathIntoComponents(path: string): URI {
+  const ADICT = new Set(
+    "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789".split(""),
+  )
+  if (typeof path !== "string")
+    return {
+      uri: "",
+    }
+
+  const uri: URI = {
+    uri: path,
+  }
+
+  for (let i = 0, max = path.length; i < max; i++) {
+    const char = path[i]
+  }
+
+  return uri
 }
 
 /**
@@ -24,8 +49,8 @@ export interface Node<Values extends {} = {}> {
  * @param {string} searchText that we're looking for.
  * @return {number} length of the prefix.
  */
-export function getPrefixLengthFromNode(
-  trieNode: Node,
+export function getPrefixLengthFromNode<Values = Record<string, unknown>>(
+  trieNode: Node<Values>,
   searchText: string,
 ): number {
   let result = 0
@@ -40,21 +65,6 @@ export function getPrefixLengthFromNode(
   }
 
   return result
-}
-
-/**
- * Is the `text` a full prefix of the `comparitor`?
- *
- * Example:
- *   isPrefix("multi", "multicolour") -> true
- *   isPrefix("monotone", "multicolour") -> false
- *
- * @param {string} text to compare as a prefix to `comparitor`
- * @param {string} comparitor text to check the prefix of against `text`
- * @return {boolean} Whether there was a prefix or not.
- */
-function isPrefix(text: string, comparitor: string): boolean {
-  return getPrefixLengthFromNode({ text }, comparitor) > 0
 }
 
 /**
@@ -90,142 +100,15 @@ export function SearchTrie<Values>(
   trie: Node<Values>,
   search: string,
 ): Node<Values> | void {
-  if (!trie.nodes) {
-    return trie
-  }
-
-  let result: Node<Values> | void
-  for (
-    let nodeIndex = 0, maxNodeIndex = trie.nodes.length - 1;
-    nodeIndex <= maxNodeIndex;
-    nodeIndex++
-  ) {
-    const node = trie.nodes[nodeIndex]
-
-    // If this node's text isnt a match,
-    // exit this iteration and move onto
-    // the next node.
-    if (!isPrefix(node.text, search)) {
-      continue
-    }
-
-    const cutSearch = search.slice(node.text.length, search.length)
-
-    // It's a prefix, dig deeper...
-    result = SearchTrie(node, cutSearch)
-
-    // If we've run out of string, we
-    // should return what we already
-    // have as our match or miss.
-    if (cutSearch.length <= 0) {
-      // If we ran out of string but we didn't reach
-      // the end of the target node. Reset the results.
-      if (node.type !== NodeType.END) result = undefined
-
-      break
-    }
-  }
-
-  return result
+  console.log("Finding", search, "in", trie)
 }
 
-/**
- * Insert a new entry into another Node (or root Node AKA: Trie).
- *
- * Takes a Generic type to specify the type of the `data` attribute of this node.
- * Insertion `values` *must* be the same _type_ as the generic passed into this function.
- *
- * @param {Node<Values>} trie to insert new entry into.
- * @param {string} text to insert into the `trie`
- * @param {Values} values to apply to this string within the trie.
- * @return {Node<Values>} updated node.
- */
-interface InsertStatus {
-  text: string
-  lastVisitedNode?: Node
-  didInsert?: boolean
-}
-export function InsertNodeIntoTrie<Values = string | number>(
+export function InsertNodeIntoTrie<Values = Record<string, unknown>>(
   trie: Node<Values>,
   text: string,
   values: Values,
-  state: InsertStatus = { text },
 ): Node<Values> {
-  if (text.length <= 0) return trie
-
-  const basePrefix = getPrefixLengthFromNode(trie, text)
-
-  if (basePrefix !== 0) trie.text = trie.text.substring(0, basePrefix)
-
-  if (!trie.nodes || trie.nodes.length === 0) {
-    trie.nodes = [
-      {
-        text: text.slice(basePrefix),
-        type: NodeType.END,
-        data: values,
-      },
-    ]
-
-    return trie
-  }
-
-  for (
-    let nodeIndex = 0, maxNodeIndex = trie.nodes.length;
-    nodeIndex < maxNodeIndex;
-    nodeIndex += 1
-  ) {
-    const node = trie.nodes[nodeIndex]
-    const prefixLength = getPrefixLengthFromNode(node, text)
-    const offset = basePrefix + prefixLength
-
-    // Check for no match at all and move on.
-    if (prefixLength === 0) continue
-    // If it's a full match, don't insert a duplicate.
-    else if (offset === node.text.length) continue
-    // Okay, lets dig deeper and maybe insert.
-    else {
-      // We need to split this node into two parts
-      // the first part will be the original Node's
-      // .text sliced at the calculated offset.
-      //
-      // This is the remainder. Explained below.
-      const slicedNode: Node<Values> = {
-        ...node,
-        text: node.text.substring(offset),
-      }
-
-      // This will replace this node in the trie and
-      // the remainder becomes a child node of it
-      // pushing this sub-trie deeper.
-      const newParentNode: Node<Values> = {
-        text: node.text.substring(0, offset),
-        type: NodeType.PLAIN,
-        nodes: [slicedNode],
-      }
-
-      const updated = InsertNodeIntoTrie(
-        newParentNode,
-        text.substring(offset),
-        values,
-        state,
-      )
-
-      state.lastVisitedNode = updated
-      state.text = text.substring(offset)
-      trie.nodes.splice(nodeIndex, 1, updated)
-    }
-  }
-
-  if (!state.didInsert && state.lastVisitedNode) {
-    state.didInsert = true
-    state.lastVisitedNode.nodes = state.lastVisitedNode.nodes || []
-    state.lastVisitedNode.nodes.push({
-      text: state.text,
-      data: values,
-      type: NodeType.END,
-    })
-  }
-
+  console.log("Inserting ", text, "with", values, "into", trie)
   return trie
 }
 

@@ -1,5 +1,9 @@
 import * as https from "https"
 
+export interface MulticolourServiceBaseConfigTarget {
+  communicationVia?: "protobuf"
+  address: string
+}
 export interface MulticolourServiceBaseConfig {
   /**
    * The type of service this config describes.
@@ -11,6 +15,12 @@ export interface MulticolourServiceBaseConfig {
    * to run, the order is irrelevant.
    */
   dependsOn?: string[]
+
+  /**
+   * Sometimes we'll host our services on other
+   * servers. We can configure that here.
+   */
+  target: MulticolourServiceBaseConfigTarget
 }
 
 export interface MulticolourAPIServiceSecurityConfig {

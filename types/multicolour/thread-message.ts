@@ -1,9 +1,9 @@
 import { IncomingMessage } from "http"
-import { Multicolour$Route } from "./route"
+import { MulticolourRoute } from "./route"
 
-export interface Multicolour$ThreadMessage {
+export interface MulticolourThreadMessage {
   readonly type: "dependency-request"
   readonly serviceName: string
-  readonly route: Multicolour$Route
+  readonly route: MulticolourRoute
   readonly request: IncomingMessage
 }

@@ -1,14 +1,7 @@
-import {
-  CreateTrie,
-  InsertNodeIntoTrie,
-  NodeType,
-  // SearchTrie,
-  getPrefixLengthFromNode,
-} from "@lib/server/radix-trie"
+import naughtyStrings from "naughty-string-validator"
+import { getPrefixLengthFromNode } from "@lib/server/radix-trie"
 
-type TestData = string
-
-test("Prefix lengths", () => {
+test("Basic Prefix lengths", () => {
   expect(getPrefixLengthFromNode({ text: "text" }, "text")).toEqual(4)
   expect(getPrefixLengthFromNode({ text: "multicolour" }, "multi")).toEqual(5)
   expect(getPrefixLengthFromNode({ text: "a.b.c.d" }, "a.b.c")).toEqual(5)
@@ -16,9 +9,30 @@ test("Prefix lengths", () => {
   expect(getPrefixLengthFromNode({ text: "/a/cat" }, "/cat")).toEqual(1)
 })
 
-const testTrie = CreateTrie<TestData>()
+test("Naughty strings prefix check", () => {
+  naughtyStrings
+    .getNaughtyStringList()
+    .map((naughtyString: string): void =>
+      expect(
+        getPrefixLengthFromNode({ text: naughtyString }, naughtyString),
+      ).toEqual(naughtyString.length),
+    )
+})
 
-test("Insert first node", () => {
+test("Emoji string prefix check", () => {
+  naughtyStrings
+    .getEmojiList()
+    .map((naughtyString: string): void =>
+      expect(
+        getPrefixLengthFromNode({ text: naughtyString }, naughtyString),
+      ).toEqual(naughtyString.length),
+    )
+})
+
+test("Parameterised prefix check", () => {
+  expect(getPrefixLengthFromNode({ text: "/a/:animal" }, "/a/cat")).toEqual(6)
+})
+/*test("Insert first node", () => {
   InsertNodeIntoTrie<TestData>(testTrie, "/super", "SUPER")
 
   expect(testTrie).toEqual({
@@ -144,7 +158,7 @@ test("Insert fourth node", () => {
     ],
   })
 })
-/*
+
 test("Search /cats", () => {
   expect(SearchTrie<TestData>(testTrie, "/cats")).toEqual({
     text: "cats",
@@ -172,4 +186,4 @@ test("Search /sucky", () => {
 test("Search /404", () => {
   expect(SearchTrie<TestData>(testTrie, "/404")).toBe(undefined)
 })
-  */
+*/
