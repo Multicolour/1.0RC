@@ -13,26 +13,50 @@ export interface Node<Values = Record<string, unknown>> {
   isEnd?: boolean
 }
 
+interface Param { start: number; end: number; name: string }
 interface URI {
   uri: string
-  params?: Record<string, { start: number; end: number; name: string }>
+  params?: Record<string, Param>
 }
 
 export function breakPathIntoComponents(path: string): URI {
   const ADICT = new Set(
     "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789".split(""),
   )
-  if (typeof path !== "string")
+  if (typeof path !== "string") {
     return {
       uri: "",
     }
+  } else if (path[0] !== "/") {
+    path = "/" + path
+  }
 
   const uri: URI = {
     uri: path,
   }
+  let currentParam: null | Param = null
 
-  for (let i = 0, max = path.length; i < max; i++) {
+  // Ignore the first / because it's guaranteed.
+  for (let i = 1, max = path.length; i < max; i++) {
     const char = path[i]
+
+    if (!ADICT.has(char)) {
+      if (char === ":" && !currentParam) {
+        currentParam = {
+          start: i,
+          end: i+1,
+          name: ""
+        }
+        let j = 1
+        while (ADICT.has(path[i + j])) {
+          currentParam.name += path[i + j]
+          j++
+        }
+      }
+      else if (currentParam) {
+        i += (currentParam.name as string).length - 1
+        currentParam.end = i
+      }
   }
 
   return uri
