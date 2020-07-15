@@ -41,7 +41,7 @@ export function breakPathIntoComponents(path: string): URI {
   let currentParam: null | Param = null
 
   // Ignore the first / because it's guaranteed.
-  for (let i = 1, max = path.length; i < max; i++) {
+  for (let i = 0, max = path.length; i < max; i++) {
     const char = path[i]
     let currentParamName
 
@@ -95,10 +95,7 @@ export function getPrefixLengthFromNode<Values = Record<string, unknown>>(
     result++
   ) {
     if (trieNode.text[result] === ":") {
-      while (
-        ADICT.has(searchText[result + 1]) &&
-        searchText.length < result + 1
-      ) {
+      while (ADICT.has(searchText[result + 1])) {
         result++
       }
       continue

@@ -2,9 +2,16 @@ import naughtyStrings from "naughty-string-validator"
 import {
   getPrefixLengthFromNode,
   breakPathIntoComponents,
+  Node,
 } from "@lib/server/radix-trie"
 
 test("URI object from path", () => {
+  expect(breakPathIntoComponents((true as unknown) as string)).toEqual({
+    uri: "",
+  })
+  expect(breakPathIntoComponents("no leading slash")).toEqual({
+    uri: "/no leading slash",
+  })
   expect(breakPathIntoComponents("/")).toEqual({ uri: "/" })
   expect(breakPathIntoComponents("/:animal")).toEqual({
     uri: "/:animal",
@@ -34,6 +41,7 @@ test("URI object from path", () => {
 })
 
 test("Basic Prefix lengths", () => {
+  expect(getPrefixLengthFromNode((null as unknown) as Node, "text")).toEqual(0)
   expect(getPrefixLengthFromNode({ text: "text" }, "text")).toEqual(4)
   expect(getPrefixLengthFromNode({ text: "multicolour" }, "multi")).toEqual(5)
   expect(getPrefixLengthFromNode({ text: "a.b.c.d" }, "a.b.c")).toEqual(5)
@@ -64,6 +72,7 @@ test("Emoji string prefix check", () => {
 })
 
 test("Parameterised prefix check", () => {
+  expect(getPrefixLengthFromNode({ text: "/a/:a" }, "/a/aanteater")).toEqual(12)
   expect(getPrefixLengthFromNode({ text: "/a/:animal" }, "/a/cat")).toEqual(6)
 })
 /*test("Insert first node", () => {
