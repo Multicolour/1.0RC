@@ -13,7 +13,10 @@ export interface Node<Values = Record<string, unknown>> {
   isEnd?: boolean
 }
 
-interface Param { start: number; end: number; name: string }
+interface Param {
+  start: number
+  end: number
+}
 interface URI {
   uri: string
   params?: Record<string, Param>
@@ -39,24 +42,29 @@ export function breakPathIntoComponents(path: string): URI {
   // Ignore the first / because it's guaranteed.
   for (let i = 1, max = path.length; i < max; i++) {
     const char = path[i]
+    let currentParamName
 
     if (!ADICT.has(char)) {
       if (char === ":" && !currentParam) {
+        currentParamName = ""
         currentParam = {
           start: i,
-          end: i+1,
-          name: ""
+          end: i + 1,
         }
         let j = 1
         while (ADICT.has(path[i + j])) {
-          currentParam.name += path[i + j]
+          currentParamName += path[i + j]
           j++
         }
-      }
-      else if (currentParam) {
-        i += (currentParam.name as string).length - 1
+
+        i += (currentParamName as string).length - 1
         currentParam.end = i
+        if (uri.params?.toString() !== "[object Object]") uri.params = {}
+        uri.params[currentParamName as string] = currentParam
+        currentParamName = ""
+        currentParam = null
       }
+    }
   }
 
   return uri

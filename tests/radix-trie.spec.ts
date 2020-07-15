@@ -1,5 +1,34 @@
 import naughtyStrings from "naughty-string-validator"
-import { getPrefixLengthFromNode } from "@lib/server/radix-trie"
+import {
+  getPrefixLengthFromNode,
+  breakPathIntoComponents,
+} from "@lib/server/radix-trie"
+
+test("URI object from path", () => {
+  expect(breakPathIntoComponents("/")).toEqual({ uri: "/" })
+  expect(breakPathIntoComponents("/:animal")).toEqual({
+    uri: "/:animal",
+    params: {
+      animal: {
+        start: 1,
+        end: 6,
+      },
+    },
+  })
+  expect(breakPathIntoComponents("/:animal/:says")).toEqual({
+    uri: "/:animal/:says",
+    params: {
+      animal: {
+        start: 1,
+        end: 6,
+      },
+      says: {
+        start: 9,
+        end: 12,
+      },
+    },
+  })
+})
 
 test("Basic Prefix lengths", () => {
   expect(getPrefixLengthFromNode({ text: "text" }, "text")).toEqual(4)
