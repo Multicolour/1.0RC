@@ -15,6 +15,9 @@ test("URI object from path", () => {
       },
     },
   })
+  expect(breakPathIntoComponents("/animal")).toEqual({
+    uri: "/animal",
+  })
   expect(breakPathIntoComponents("/:animal/:says")).toEqual({
     uri: "/:animal/:says",
     params: {
@@ -41,6 +44,7 @@ test("Basic Prefix lengths", () => {
 test("Naughty strings prefix check", () => {
   naughtyStrings
     .getNaughtyStringList()
+    .filter(Boolean)
     .map((naughtyString: string): void =>
       expect(
         getPrefixLengthFromNode({ text: naughtyString }, naughtyString),
@@ -51,6 +55,7 @@ test("Naughty strings prefix check", () => {
 test("Emoji string prefix check", () => {
   naughtyStrings
     .getEmojiList()
+    .filter(Boolean)
     .map((naughtyString: string): void =>
       expect(
         getPrefixLengthFromNode({ text: naughtyString }, naughtyString),

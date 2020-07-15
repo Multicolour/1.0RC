@@ -22,10 +22,11 @@ interface URI {
   params?: Record<string, Param>
 }
 
+const ADICT = new Set(
+  "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789".split(""),
+)
+
 export function breakPathIntoComponents(path: string): URI {
-  const ADICT = new Set(
-    "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789".split(""),
-  )
   if (typeof path !== "string") {
     return {
       uri: "",
@@ -86,11 +87,23 @@ export function getPrefixLengthFromNode<Values = Record<string, unknown>>(
   searchText: string,
 ): number {
   let result = 0
+  if (!trieNode?.text) return 0
+
   for (
     let maxCharIndex = trieNode.text.length;
     result < maxCharIndex;
     result++
   ) {
+    if (trieNode.text[result] === ":") {
+      while (
+        ADICT.has(searchText[result + 1]) &&
+        searchText.length < result + 1
+      ) {
+        result++
+      }
+      continue
+    }
+
     if (trieNode.text[result] !== searchText[result]) {
       break
     }
