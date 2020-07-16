@@ -3,7 +3,12 @@ import {
   getPrefixLengthFromNode,
   breakPathIntoComponents,
   Node,
+  NodeType,
+  InsertNodeIntoTrie,
+  CreateTrie,
 } from "@lib/server/radix-trie"
+
+type TestData = string
 
 test("URI object from path", () => {
   expect(breakPathIntoComponents((true as unknown) as string)).toEqual({
@@ -75,7 +80,10 @@ test("Parameterised prefix check", () => {
   expect(getPrefixLengthFromNode({ text: "/a/:a" }, "/a/aanteater")).toEqual(12)
   expect(getPrefixLengthFromNode({ text: "/a/:animal" }, "/a/cat")).toEqual(6)
 })
-/*test("Insert first node", () => {
+
+const testTrie: Node<TestData> = CreateTrie<TestData>()
+
+test("Insert first node", () => {
   InsertNodeIntoTrie<TestData>(testTrie, "/super", "SUPER")
 
   expect(testTrie).toEqual({
@@ -201,7 +209,7 @@ test("Insert fourth node", () => {
     ],
   })
 })
-
+/*
 test("Search /cats", () => {
   expect(SearchTrie<TestData>(testTrie, "/cats")).toEqual({
     text: "cats",

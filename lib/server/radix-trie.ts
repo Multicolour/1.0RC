@@ -2,15 +2,16 @@ export enum NodeType {
   ROOT,
   PLAIN,
   PARAM,
+  PARAM_END,
   END,
 }
 
 export interface Node<Values = Record<string, unknown>> {
   text: string
   type?: NodeType
-  nodes?: Array<Node<Values>>
+  nodes?: Node<Values>[]
   data?: Values
-  isEnd?: boolean
+  params?: Record<string, Param>
 }
 
 interface Param {
@@ -115,16 +116,56 @@ export function getPrefixLengthFromNode<Values = Record<string, unknown>>(
  * Takes a Generic type to specify the type of the `data` attribute of this node.
  *
  * Example:
- *   CreateTrie() -> { text: "", type: NodeType.ROOT, nodes: [] }
+ *   CreateTrie() -> { text: "", type: NodeType.ROOT }
  *
- * @param {Values} to add data to root node.
- * @return {Node<Values>} Newly created node.
+ * @return {Node<Values>} Newly created trie.
  */
 export function CreateTrie<Values>(): Node<Values> {
   return {
     text: "",
     type: NodeType.ROOT,
   }
+}
+
+/**
+ * Create a new node inside the trie.
+ *
+ * @param {Node<Values>} trie to insert into.
+ * @param {string} text to search for and add.
+ * @param {Values} data to assign to the node.
+ * @return {Node<Values>} updated trie.
+ */
+export function InsertNodeIntoTrie<Values = Record<string, unknown>>(
+  trie: Node<Values>,
+  uri: URI,
+  data: Values,
+): Node<Values> {
+  // If there's no nodes to insert to, safe to assume
+  // we can just bung it in here and crack on. This is
+  // cheaper than the following logic.
+  if (!trie?.nodes || !trie.nodes?.length) {
+    if (uri.uri.search(":") > -1) {
+      trie.nodes = [
+        {
+          text: uri.uri,
+          data,
+          type: NodeType.END,
+          params: uri.params,
+        },
+      ]
+    } else {
+      trie.nodes = [
+        {
+          text: uri.uri,
+          data,
+          type: NodeType.END,
+        },
+      ]
+    }
+    return trie
+  }
+
+  return trie
 }
 
 /**
@@ -143,15 +184,6 @@ export function SearchTrie<Values>(
   search: string,
 ): Node<Values> | void {
   console.log("Finding", search, "in", trie)
-}
-
-export function InsertNodeIntoTrie<Values = Record<string, unknown>>(
-  trie: Node<Values>,
-  text: string,
-  values: Values,
-): Node<Values> {
-  console.log("Inserting ", text, "with", values, "into", trie)
-  return trie
 }
 
 /**
