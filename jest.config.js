@@ -15,7 +15,6 @@ module.exports = {
     "<rootDir>/lib/better-errors/ajv-syntax-or-reference-error.ts",
     "tests/content/uncaught-error-handlers.ts",
   ],
-  setupFiles: ["./tests/content/uncaught-error-handlers.ts"],
   coverageReporters: ["lcov", "json", "html", "text"],
   coverageThreshold: {
     global: {
