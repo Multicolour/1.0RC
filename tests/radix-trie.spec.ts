@@ -6,6 +6,7 @@ import {
   NodeType,
   InsertNodeIntoTrie,
   CreateTrie,
+  URI,
 } from "@lib/server/radix-trie"
 
 type TestData = string
@@ -84,7 +85,8 @@ test("Parameterised prefix check", () => {
 const testTrie: Node<TestData> = CreateTrie<TestData>()
 
 test("Insert first node", () => {
-  InsertNodeIntoTrie<TestData>(testTrie, "/super", "SUPER")
+  const uri: URI = breakPathIntoComponents("/super")
+  InsertNodeIntoTrie<TestData>(testTrie, uri, "SUPER")
 
   expect(testTrie).toEqual({
     text: "",
@@ -94,13 +96,17 @@ test("Insert first node", () => {
         text: "/super",
         data: "SUPER",
         type: NodeType.END,
+        nodes: [],
       },
     ],
   })
 })
 
 test("Insert second node", () => {
-  InsertNodeIntoTrie<TestData>(testTrie, "/sucky", "SUCKY")
+  const uri: URI = breakPathIntoComponents("/sucky")
+  InsertNodeIntoTrie<TestData>(testTrie, uri, "SUCKY")
+
+  console.log((testTrie.nodes as Node<TestData>[])[0])
 
   expect(testTrie).toEqual({
     text: "",
@@ -114,20 +120,23 @@ test("Insert second node", () => {
             text: "per",
             data: "SUPER",
             type: NodeType.END,
+            nodes: [],
           },
           {
             text: "cky",
             data: "SUCKY",
             type: NodeType.END,
+            nodes: [],
           },
         ],
       },
     ],
   })
 })
-
+/*
 test("Insert third, unrelated node", () => {
-  InsertNodeIntoTrie<TestData>(testTrie, "/cats", "CATS")
+  const uri: URI = breakPathIntoComponents("/cats")
+  InsertNodeIntoTrie<TestData>(testTrie, uri, "CATS")
 
   expect(testTrie).toEqual({
     text: "",
@@ -165,7 +174,8 @@ test("Insert third, unrelated node", () => {
 })
 
 test("Insert fourth node", () => {
-  InsertNodeIntoTrie<TestData>(testTrie, "/cats/pyjamas", "PJs!")
+  const uri: URI = breakPathIntoComponents("/cats/pyjamas")
+  InsertNodeIntoTrie<TestData>(testTrie, uri, "PJs!")
   console.log(JSON.stringify(testTrie, null, 2))
 
   expect(testTrie).toEqual({
@@ -209,7 +219,7 @@ test("Insert fourth node", () => {
     ],
   })
 })
-/*
+
 test("Search /cats", () => {
   expect(SearchTrie<TestData>(testTrie, "/cats")).toEqual({
     text: "cats",

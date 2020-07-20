@@ -1,9 +1,9 @@
 export enum NodeType {
-  ROOT,
-  PLAIN,
-  PARAM,
-  PARAM_END,
-  END,
+  ROOT = "root",
+  PLAIN = "plain",
+  PARAM = "param",
+  PARAM_END = "param_end",
+  END = "end",
 }
 
 export interface Node<Values = Record<string, unknown>> {
@@ -14,11 +14,12 @@ export interface Node<Values = Record<string, unknown>> {
   params?: Record<string, Param>
 }
 
-interface Param {
+export interface Param {
   start: number
   end: number
+  value?: string
 }
-interface URI {
+export interface URI {
   uri: string
   params?: Record<string, Param>
 }
@@ -41,7 +42,6 @@ export function breakPathIntoComponents(path: string): URI {
   }
   let currentParam: null | Param = null
 
-  // Ignore the first / because it's guaranteed.
   for (let i = 0, max = path.length; i < max; i++) {
     const char = path[i]
     let currentParamName
@@ -139,6 +139,7 @@ export function InsertNodeIntoTrie<Values = Record<string, unknown>>(
   trie: Node<Values>,
   uri: URI,
   data: Values,
+  nodes: Node<Values>[] = [],
 ): Node<Values> {
   // If there's no nodes to insert to, safe to assume
   // we can just bung it in here and crack on. This is
@@ -151,6 +152,7 @@ export function InsertNodeIntoTrie<Values = Record<string, unknown>>(
           data,
           type: NodeType.END,
           params: uri.params,
+          nodes,
         },
       ]
     } else {
@@ -159,10 +161,58 @@ export function InsertNodeIntoTrie<Values = Record<string, unknown>>(
           text: uri.uri,
           data,
           type: NodeType.END,
+          nodes,
         },
       ]
     }
     return trie
+  }
+
+  console.log("\n-------------\n")
+  for (const node of trie.nodes) {
+    for (
+      let charIndex = 0, max = uri.uri.length, hasMatch = false;
+      charIndex <= max;
+      charIndex++
+    ) {
+      console.log(uri.uri[charIndex], node.text[charIndex])
+      // if the char is a miss go Linkin Park.
+      if (uri.uri[charIndex] !== node.text[charIndex]) {
+        if (hasMatch) {
+          // Update the node, its getting split.
+          const nextText = node.text.substring(0, charIndex)
+          const remainder = node.text.substring(charIndex, node.text.length)
+
+          node.text = nextText
+          node.type = NodeType.PLAIN
+          node.nodes = [
+            {
+              text: remainder,
+              type: node.type,
+              data: node.data,
+              nodes: node.nodes,
+            },
+          ]
+          delete node.data
+          return InsertNodeIntoTrie(
+            node,
+            { ...uri, uri: uri.uri.substring(charIndex) },
+            data,
+            node.nodes,
+          )
+        } else {
+          trie.nodes.push({
+            text: uri.uri,
+            data,
+            nodes,
+            type: NodeType.END,
+          })
+        }
+        break
+      }
+
+      hasMatch = true
+    }
   }
 
   return trie
