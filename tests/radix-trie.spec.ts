@@ -106,8 +106,6 @@ test("Insert second node", () => {
   const uri: URI = breakPathIntoComponents("/sucky")
   InsertNodeIntoTrie<TestData>(testTrie, uri, "SUCKY")
 
-  console.log((testTrie.nodes as Node<TestData>[])[0])
-
   expect(testTrie).toEqual({
     text: "",
     type: NodeType.ROOT,
@@ -133,7 +131,7 @@ test("Insert second node", () => {
     ],
   })
 })
-/*
+
 test("Insert third, unrelated node", () => {
   const uri: URI = breakPathIntoComponents("/cats")
   InsertNodeIntoTrie<TestData>(testTrie, uri, "CATS")
@@ -172,7 +170,7 @@ test("Insert third, unrelated node", () => {
     ],
   })
 })
-
+/*
 test("Insert fourth node", () => {
   const uri: URI = breakPathIntoComponents("/cats/pyjamas")
   InsertNodeIntoTrie<TestData>(testTrie, uri, "PJs!")

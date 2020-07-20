@@ -150,7 +150,7 @@ export function InsertNodeIntoTrie<Values = Record<string, unknown>>(
         {
           text: uri.uri,
           data,
-          type: NodeType.END,
+          type: NodeType.PARAM_END,
           params: uri.params,
           nodes,
         },
@@ -168,47 +168,46 @@ export function InsertNodeIntoTrie<Values = Record<string, unknown>>(
     return trie
   }
 
-  console.log("\n-------------\n")
-  for (const node of trie.nodes) {
+  nodeLoop: for (const node of trie.nodes) {
     for (
       let charIndex = 0, max = uri.uri.length, hasMatch = false;
       charIndex <= max;
       charIndex++
     ) {
-      console.log(uri.uri[charIndex], node.text[charIndex])
       // if the char is a miss go Linkin Park.
       if (uri.uri[charIndex] !== node.text[charIndex]) {
         if (hasMatch) {
-          // Update the node, its getting split.
           const nextText = node.text.substring(0, charIndex)
           const remainder = node.text.substring(charIndex, node.text.length)
 
+          // Update the node, its getting split.
           node.text = nextText
           node.type = NodeType.PLAIN
           node.nodes = [
             {
               text: remainder,
-              type: node.type,
+              type: NodeType.END,
               data: node.data,
               nodes: node.nodes,
             },
           ]
           delete node.data
-          return InsertNodeIntoTrie(
+          InsertNodeIntoTrie(
             node,
             { ...uri, uri: uri.uri.substring(charIndex) },
             data,
             node.nodes,
           )
+          break nodeLoop
         } else {
           trie.nodes.push({
             text: uri.uri,
             data,
-            nodes,
+            nodes: [],
             type: NodeType.END,
           })
+          break nodeLoop
         }
-        break
       }
 
       hasMatch = true
