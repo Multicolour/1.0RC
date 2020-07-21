@@ -3,7 +3,6 @@ import {
   getPrefixLengthFromNode,
   breakPathIntoComponents,
   Node,
-  NodeType,
   InsertNodeIntoTrie,
   CreateTrie,
   URI,
@@ -90,12 +89,10 @@ test("Insert first node", () => {
 
   expect(testTrie).toEqual({
     text: "",
-    type: NodeType.ROOT,
     nodes: [
       {
         text: "/super",
         data: "SUPER",
-        type: NodeType.END,
         nodes: [],
       },
     ],
@@ -108,22 +105,18 @@ test("Insert second node", () => {
 
   expect(testTrie).toEqual({
     text: "",
-    type: NodeType.ROOT,
     nodes: [
       {
         text: "/su",
-        type: NodeType.PLAIN,
         nodes: [
           {
             text: "per",
             data: "SUPER",
-            type: NodeType.END,
             nodes: [],
           },
           {
             text: "cky",
             data: "SUCKY",
-            type: NodeType.END,
             nodes: [],
           },
         ],
@@ -138,32 +131,73 @@ test("Insert third, unrelated node", () => {
 
   expect(testTrie).toEqual({
     text: "",
-    type: NodeType.ROOT,
     nodes: [
       {
         text: "/",
-        type: NodeType.PLAIN,
         nodes: [
           {
             text: "su",
-            type: NodeType.PLAIN,
+            data: undefined,
             nodes: [
               {
                 text: "per",
                 data: "SUPER",
-                type: NodeType.END,
+                nodes: [],
               },
               {
                 text: "cky",
                 data: "SUCKY",
-                type: NodeType.END,
+                nodes: [],
               },
             ],
           },
           {
             text: "cats",
             data: "CATS",
-            type: NodeType.END,
+            nodes: [],
+          },
+        ],
+      },
+    ],
+  })
+})
+
+test("Insert fourth node", () => {
+  const uri: URI = breakPathIntoComponents("/cats/pyjamas")
+  InsertNodeIntoTrie<TestData>(testTrie, uri, "PJs!")
+
+  expect(testTrie).toEqual({
+    text: "",
+    nodes: [
+      {
+        text: "/",
+        nodes: [
+          {
+            text: "su",
+            data: undefined,
+            nodes: [
+              {
+                text: "per",
+                data: "SUPER",
+                nodes: [],
+              },
+              {
+                text: "cky",
+                data: "SUCKY",
+                nodes: [],
+              },
+            ],
+          },
+          {
+            text: "cats",
+            data: "CATS",
+            nodes: [
+              {
+                text: "/pyjamas",
+                data: "PJs",
+                nodes: [],
+              },
+            ],
           },
         ],
       },
@@ -171,53 +205,6 @@ test("Insert third, unrelated node", () => {
   })
 })
 /*
-test("Insert fourth node", () => {
-  const uri: URI = breakPathIntoComponents("/cats/pyjamas")
-  InsertNodeIntoTrie<TestData>(testTrie, uri, "PJs!")
-  console.log(JSON.stringify(testTrie, null, 2))
-
-  expect(testTrie).toEqual({
-    text: "",
-    type: NodeType.ROOT,
-    nodes: [
-      {
-        text: "/",
-        type: NodeType.PLAIN,
-        nodes: [
-          {
-            text: "su",
-            type: NodeType.PLAIN,
-            nodes: [
-              {
-                text: "per",
-                data: "SUPER",
-                type: NodeType.END,
-              },
-              {
-                text: "cky",
-                data: "SUCKY",
-                type: NodeType.END,
-              },
-            ],
-          },
-          {
-            text: "cats",
-            data: "CATS",
-            type: NodeType.END,
-            nodes: [
-              {
-                text: "/pyjamas",
-                data: "PJs",
-                type: NodeType.END,
-              },
-            ],
-          },
-        ],
-      },
-    ],
-  })
-})
-
 test("Search /cats", () => {
   expect(SearchTrie<TestData>(testTrie, "/cats")).toEqual({
     text: "cats",

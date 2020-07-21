@@ -1,14 +1,5 @@
-export enum NodeType {
-  ROOT = "root",
-  PLAIN = "plain",
-  PARAM = "param",
-  PARAM_END = "param_end",
-  END = "end",
-}
-
 export interface Node<Values = Record<string, unknown>> {
   text: string
-  type?: NodeType
   nodes?: Node<Values>[]
   data?: Values
   params?: Record<string, Param>
@@ -123,7 +114,6 @@ export function getPrefixLengthFromNode<Values = Record<string, unknown>>(
 export function CreateTrie<Values>(): Node<Values> {
   return {
     text: "",
-    type: NodeType.ROOT,
   }
 }
 
@@ -150,7 +140,6 @@ export function InsertNodeIntoTrie<Values = Record<string, unknown>>(
         {
           text: uri.uri,
           data,
-          type: NodeType.PARAM_END,
           params: uri.params,
           nodes,
         },
@@ -160,8 +149,7 @@ export function InsertNodeIntoTrie<Values = Record<string, unknown>>(
         {
           text: uri.uri,
           data,
-          type: NodeType.END,
-          nodes,
+          nodes: nodes || [],
         },
       ]
     }
@@ -174,7 +162,6 @@ export function InsertNodeIntoTrie<Values = Record<string, unknown>>(
       charIndex <= max;
       charIndex++
     ) {
-      // if the char is a miss go Linkin Park.
       if (uri.uri[charIndex] !== node.text[charIndex]) {
         if (hasMatch) {
           const nextText = node.text.substring(0, charIndex)
@@ -182,15 +169,15 @@ export function InsertNodeIntoTrie<Values = Record<string, unknown>>(
 
           // Update the node, its getting split.
           node.text = nextText
-          node.type = NodeType.PLAIN
           node.nodes = [
             {
               text: remainder,
-              type: NodeType.END,
               data: node.data,
               nodes: node.nodes,
             },
           ]
+          // @TODO: delete this delete.
+          // WHY: It's slow and produces an 'undefined'
           delete node.data
           InsertNodeIntoTrie(
             node,
@@ -204,7 +191,6 @@ export function InsertNodeIntoTrie<Values = Record<string, unknown>>(
             text: uri.uri,
             data,
             nodes: [],
-            type: NodeType.END,
           })
           break nodeLoop
         }
