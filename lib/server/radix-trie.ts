@@ -197,6 +197,15 @@ export function InsertNodeIntoTrie<Values = Record<string, unknown>>(
       }
 
       hasMatch = true
+
+      if (charIndex + 1 >= node.text.length) {
+        InsertNodeIntoTrie(
+          node,
+          { ...uri, uri: uri.uri.substring(charIndex) },
+          data,
+        )
+        break nodeLoop
+      }
     }
   }
 
