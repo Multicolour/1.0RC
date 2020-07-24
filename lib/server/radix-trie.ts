@@ -107,13 +107,15 @@ export function getPrefixLengthFromNode<Values = Record<string, unknown>>(
  * Takes a Generic type to specify the type of the `data` attribute of this node.
  *
  * Example:
- *   CreateTrie() -> { text: "", type: NodeType.ROOT }
+ *   CreateTrie() -> { text: "" }
+ *   CreateTrie("/") -> { text: "/" }
  *
+ * @param {string} root node text content.
  * @return {Node<Values>} Newly created trie.
  */
-export function CreateTrie<Values>(): Node<Values> {
+export function CreateTrie<Values>(text = ""): Node<Values> {
   return {
-    text: "",
+    text,
   }
 }
 
@@ -165,20 +167,17 @@ export function InsertNodeIntoTrie<Values = Record<string, unknown>>(
         ) {
           charIndex++
         }
-        //
-        // Split our node.
+
+        // Split our text into (MATCH)(REMAINDER).
         const nextText = node.text.substr(0, charIndex)
         const remainder = node.text.substr(charIndex, node.text.length - 1)
-        console.log(
-          "----\n%s\n\n%s\n%s",
-          uri.uri,
-          JSON.stringify(nextText),
-          JSON.stringify(remainder),
-        )
 
         // Update the node, its getting split.
         node.text = nextText
-        if (remainder.length > 0)
+
+        // If there's a remainder, add it as
+        // the child node of this one (in the iteration)
+        if (remainder.length > 0) {
           node.nodes = [
             {
               text: remainder,
@@ -186,16 +185,21 @@ export function InsertNodeIntoTrie<Values = Record<string, unknown>>(
               nodes: node.nodes,
             },
           ]
-        // @TODO: delete this delete.
-        // WHY: It's slow and produces an 'undefined' in the output
-        // that we don't expect.
-        delete node.data
+
+          // @TODO: delete this delete.
+          // WHY: It's slow and produces an 'undefined' in the output
+          // that we don't expect.
+          delete node.data
+        }
+
         InsertNodeIntoTrie(
           node,
           { ...uri, uri: uri.uri.substring(charIndex) },
           data,
           node.nodes,
         )
+
+        // We added a node to the trie, we exit here.
         break
       } else {
         trie.nodes.push({
@@ -203,6 +207,7 @@ export function InsertNodeIntoTrie<Values = Record<string, unknown>>(
           data,
           nodes: [],
         })
+        // We added a node to the trie, we exit here.
         break
       }
     }

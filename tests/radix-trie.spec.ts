@@ -88,7 +88,7 @@ const URIs: Record<string, URI> = {
   pyjamas: breakPathIntoComponents("/cats/pyjamas"),
 }
 
-test("Insert first node", () => {
+test("Insert one node", () => {
   const testTrie: Node<TestData> = CreateTrie<TestData>()
   InsertNodeIntoTrie<TestData>(testTrie, URIs.super, "SUPER")
 
@@ -104,7 +104,7 @@ test("Insert first node", () => {
   })
 })
 
-test("Insert second node", () => {
+test("Insert two nodes", () => {
   const testTrie: Node<TestData> = CreateTrie<TestData>()
   InsertNodeIntoTrie<TestData>(testTrie, URIs.super, "SUPER")
   InsertNodeIntoTrie<TestData>(testTrie, URIs.sucky, "SUCKY")
@@ -131,7 +131,7 @@ test("Insert second node", () => {
   })
 })
 
-test("Insert third, unrelated node", () => {
+test("Insert three nodes", () => {
   const testTrie: Node<TestData> = CreateTrie<TestData>()
   InsertNodeIntoTrie<TestData>(testTrie, URIs.super, "SUPER")
   InsertNodeIntoTrie<TestData>(testTrie, URIs.sucky, "SUCKY")
@@ -170,7 +170,7 @@ test("Insert third, unrelated node", () => {
   })
 })
 
-test("Insert fourth node", () => {
+test("Insert four nodes", () => {
   const testTrie: Node<TestData> = CreateTrie<TestData>()
   InsertNodeIntoTrie<TestData>(testTrie, URIs.super, "SUPER")
   InsertNodeIntoTrie<TestData>(testTrie, URIs.sucky, "SUCKY")
@@ -217,7 +217,32 @@ test("Insert fourth node", () => {
     ],
   })
 })
+
 /*
+test("Naughty strings", () => {
+  const testTrie: Node<TestData> = CreateTrie<TestData>()
+
+  naughtyStrings
+    .getEmojiList()
+    .filter(Boolean)
+    .map((naughtyString: string): void => {
+      InsertNodeIntoTrie(testTrie, { uri: naughtyString }, naughtyString)
+      expect(testTrie).toMatchInlineSnapshot()
+    })
+})
+
+test("Naughty strings", () => {
+  const testTrie: Node<TestData> = CreateTrie<TestData>()
+
+  naughtyStrings
+    .getNaughtyStringList()
+    .filter(Boolean)
+    .map((naughtyString: string): void => {
+      InsertNodeIntoTrie(testTrie, { uri: naughtyString }, naughtyString)
+      expect(testTrie).toMatchInlineSnapshot()
+    })
+})
+
 test("Search /cats", () => {
   expect(SearchTrie<TestData>(testTrie, "/cats")).toEqual({
     text: "cats",
