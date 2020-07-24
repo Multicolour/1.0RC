@@ -177,6 +177,8 @@ test("Insert fourth node", () => {
   InsertNodeIntoTrie<TestData>(testTrie, URIs.cats, "CATS")
   InsertNodeIntoTrie<TestData>(testTrie, URIs.pyjamas, "PJs!")
 
+  console.log(JSON.stringify(testTrie, null, 2))
+
   expect(testTrie).toEqual({
     text: "",
     nodes: [

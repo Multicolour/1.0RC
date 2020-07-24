@@ -131,44 +131,54 @@ export function InsertNodeIntoTrie<Values = Record<string, unknown>>(
   data: Values,
   nodes: Node<Values>[] = [],
 ): Node<Values> {
+  if (uri.uri.length === 0) return trie
   // If there's no nodes to insert to, safe to assume
   // we can just bung it in here and crack on. This is
   // cheaper than the following logic.
   if (!trie?.nodes || !trie.nodes?.length) {
-    if (uri.uri.search(":") > -1) {
-      trie.nodes = [
-        {
-          text: uri.uri,
-          data,
-          params: uri.params,
-          nodes,
-        },
-      ]
-    } else {
-      trie.nodes = [
-        {
-          text: uri.uri,
-          data,
-          nodes: nodes || [],
-        },
-      ]
+    trie.nodes = [
+      {
+        text: uri.uri,
+        data,
+        nodes: nodes || [],
+      },
+    ]
+    if (uri.params) {
+      trie.nodes[0].params = uri.params
     }
     return trie
   }
 
-  nodeLoop: for (const node of trie.nodes) {
+  for (const node of trie.nodes) {
     for (
       let charIndex = 0, max = uri.uri.length, hasMatch = false;
       charIndex <= max;
       charIndex++
     ) {
-      if (uri.uri[charIndex] !== node.text[charIndex]) {
-        if (hasMatch) {
-          const nextText = node.text.substring(0, charIndex)
-          const remainder = node.text.substring(charIndex, node.text.length)
+      hasMatch = uri.uri[charIndex] === node.text[charIndex]
+      if (hasMatch) {
+        // Block and keep incrementing while we have matches.
+        while (
+          uri.uri[charIndex] &&
+          node.text[charIndex] &&
+          uri.uri[charIndex] === node.text[charIndex]
+        ) {
+          charIndex++
+        }
+          //
+        // Split our node.
+        const nextText = node.text.substr(0, charIndex)
+        const remainder = node.text.substr(charIndex, node.text.length - 1)
+        console.log(
+          "----\n%s\n\n%s\n%s",
+          uri.uri,
+          JSON.stringify(nextText),
+          JSON.stringify(remainder),
+        )
 
-          // Update the node, its getting split.
-          node.text = nextText
+        // Update the node, its getting split.
+        node.text = nextText
+        if (remainder.length > 0)
           node.nodes = [
             {
               text: remainder,
@@ -176,35 +186,24 @@ export function InsertNodeIntoTrie<Values = Record<string, unknown>>(
               nodes: node.nodes,
             },
           ]
-          // @TODO: delete this delete.
-          // WHY: It's slow and produces an 'undefined'
-          delete node.data
-          InsertNodeIntoTrie(
-            node,
-            { ...uri, uri: uri.uri.substring(charIndex) },
-            data,
-            node.nodes,
-          )
-          break nodeLoop
-        } else {
-          trie.nodes.push({
-            text: uri.uri,
-            data,
-            nodes: [],
-          })
-          break nodeLoop
-        }
-      }
-
-      hasMatch = true
-
-      if (charIndex + 1 >= node.text.length) {
+        // @TODO: delete this delete.
+        // WHY: It's slow and produces an 'undefined' in the output
+        // that we don't expect.
+        delete node.data
         InsertNodeIntoTrie(
           node,
           { ...uri, uri: uri.uri.substring(charIndex) },
           data,
+          node.nodes,
         )
-        break nodeLoop
+        break
+      } else {
+        trie.nodes.push({
+          text: uri.uri,
+          data,
+          nodes: [],
+        })
+        break
       }
     }
   }
