@@ -165,7 +165,7 @@ export function InsertNodeIntoTrie<Values = Record<string, unknown>>(
         ) {
           charIndex++
         }
-          //
+        //
         // Split our node.
         const nextText = node.text.substr(0, charIndex)
         const remainder = node.text.substr(charIndex, node.text.length - 1)

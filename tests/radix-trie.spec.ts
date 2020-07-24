@@ -87,7 +87,7 @@ const URIs: Record<string, URI> = {
   cats: breakPathIntoComponents("/cats"),
   pyjamas: breakPathIntoComponents("/cats/pyjamas"),
 }
-/*
+
 test("Insert first node", () => {
   const testTrie: Node<TestData> = CreateTrie<TestData>()
   InsertNodeIntoTrie<TestData>(testTrie, URIs.super, "SUPER")
@@ -168,7 +168,7 @@ test("Insert third, unrelated node", () => {
       },
     ],
   })
-})*/
+})
 
 test("Insert fourth node", () => {
   const testTrie: Node<TestData> = CreateTrie<TestData>()
@@ -207,7 +207,7 @@ test("Insert fourth node", () => {
             nodes: [
               {
                 text: "/pyjamas",
-                data: "PJs",
+                data: "PJs!",
                 nodes: [],
               },
             ],
