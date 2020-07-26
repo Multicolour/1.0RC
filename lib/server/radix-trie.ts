@@ -153,10 +153,12 @@ export function InsertNodeIntoTrie<Values = Record<string, unknown>>(
 
   nodeLoop: for (const node of trie.nodes) {
     const prefix = getPrefixLengthFromNode(node, uri.uri)
+    console.log(node.text, uri.uri)
     if (prefix > 0) {
       // Split our text into (MATCH)(REMAINDER).
       const nextText = node.text.substr(0, prefix)
       const remainder = node.text.substr(prefix, node.text.length - 1)
+      console.log(nextText, remainder)
 
       // Update the node, its getting split.
       node.text = nextText
