@@ -67,7 +67,7 @@ export function breakPathIntoComponents(path: string): URI {
  * Is the trieNode.text a match at any length of searchText?
  *
  * Example:
- *   getPrefixLengt)hFromNode({ text: "multi" }, "multicolour") -> 5
+ *   getPrefixLengthFromNode({ text: "multi" }, "multicolour") -> 5
  *   getPrefixLengthFromNode({ text: "single" }, "multicolour") -> -1
  *
  * @param {Node} node to check for match in.
@@ -151,65 +151,47 @@ export function InsertNodeIntoTrie<Values = Record<string, unknown>>(
     return trie
   }
 
-  for (const node of trie.nodes) {
-    for (
-      let charIndex = 0, max = uri.uri.length, hasMatch = false;
-      charIndex <= max;
-      charIndex++
-    ) {
-      hasMatch = uri.uri[charIndex] === node.text[charIndex]
-      if (hasMatch) {
-        // Block and keep incrementing while we have matches.
-        while (
-          uri.uri[charIndex] &&
-          node.text[charIndex] &&
-          uri.uri[charIndex] === node.text[charIndex]
-        ) {
-          charIndex++
-        }
+  nodeLoop: for (const node of trie.nodes) {
+    const prefix = getPrefixLengthFromNode(node, uri.uri)
+    if (prefix > 0) {
+      // Split our text into (MATCH)(REMAINDER).
+      const nextText = node.text.substr(0, prefix)
+      const remainder = node.text.substr(prefix, node.text.length - 1)
 
-        // Split our text into (MATCH)(REMAINDER).
-        const nextText = node.text.substr(0, charIndex)
-        const remainder = node.text.substr(charIndex, node.text.length - 1)
+      // Update the node, its getting split.
+      node.text = nextText
 
-        // Update the node, its getting split.
-        node.text = nextText
+      // If there's a remainder, add it as
+      // the child node of this one (in the iteration)
+      if (remainder.length > 0) {
+        node.nodes = [
+          {
+            text: remainder,
+            data: node.data,
+            nodes: node.nodes,
+          },
+        ]
 
-        // If there's a remainder, add it as
-        // the child node of this one (in the iteration)
-        if (remainder.length > 0) {
-          node.nodes = [
-            {
-              text: remainder,
-              data: node.data,
-              nodes: node.nodes,
-            },
-          ]
-
-          // @TODO: delete this delete.
-          // WHY: It's slow and produces an 'undefined' in the output
-          // that we don't expect.
-          delete node.data
-        }
-
-        InsertNodeIntoTrie(
-          node,
-          { ...uri, uri: uri.uri.substring(charIndex) },
-          data,
-          node.nodes,
-        )
-
-        // We added a node to the trie, we exit here.
-        break
-      } else {
-        trie.nodes.push({
-          text: uri.uri,
-          data,
-          nodes: [],
-        })
-        // We added a node to the trie, we exit here.
-        break
+        delete node.data
       }
+
+      InsertNodeIntoTrie(
+        node,
+        { ...uri, uri: uri.uri.substring(prefix) },
+        data,
+        node.nodes,
+      )
+
+      // We added a node to the trie, we exit here.
+      break nodeLoop
+    } else {
+      trie.nodes.push({
+        text: uri.uri,
+        data,
+        nodes: [],
+      })
+      // We added a node to the trie, we exit here.
+      break nodeLoop
     }
   }
 
