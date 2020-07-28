@@ -151,14 +151,15 @@ export function InsertNodeIntoTrie<Values = Record<string, unknown>>(
     return trie
   }
 
+  let insertSibling = false
+
   nodeLoop: for (const node of trie.nodes) {
     const prefix = getPrefixLengthFromNode(node, uri.uri)
-    console.log(node.text, uri.uri)
+
     if (prefix > 0) {
       // Split our text into (MATCH)(REMAINDER).
       const nextText = node.text.substr(0, prefix)
       const remainder = node.text.substr(prefix, node.text.length - 1)
-      console.log(nextText, remainder)
 
       // Update the node, its getting split.
       node.text = nextText
@@ -177,6 +178,7 @@ export function InsertNodeIntoTrie<Values = Record<string, unknown>>(
         delete node.data
       }
 
+      insertSibling = false
       InsertNodeIntoTrie(
         node,
         { ...uri, uri: uri.uri.substring(prefix) },
@@ -187,15 +189,16 @@ export function InsertNodeIntoTrie<Values = Record<string, unknown>>(
       // We added a node to the trie, we exit here.
       break nodeLoop
     } else {
-      trie.nodes.push({
-        text: uri.uri,
-        data,
-        nodes: [],
-      })
-      // We added a node to the trie, we exit here.
-      break nodeLoop
+      insertSibling = true
     }
   }
+
+  if (insertSibling)
+    trie.nodes.push({
+      text: uri.uri,
+      data,
+      nodes: [],
+    })
 
   return trie
 }
