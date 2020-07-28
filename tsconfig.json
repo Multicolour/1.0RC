@@ -30,8 +30,7 @@
     "types": [
       "node",
       "jest",
-      "json-schema",
-      "formidable"
+      "json-schema"
     ],
     "esModuleInterop": true,
     "baseUrl": ".",
