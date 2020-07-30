@@ -60,8 +60,9 @@ test("Naughty strings prefix check", () => {
     .filter(Boolean)
     .map((naughtyString: string): void => {
       const text = escape(naughtyString)
-      console.log(JSON.stringify(text))
-      expect(getPrefixLengthFromNode({ text }, text)).toEqual(text.length)
+      expect(getPrefixLengthFromNode({ text }, naughtyString)).toEqual(
+        text.length,
+      )
     })
 })
 
@@ -71,7 +72,9 @@ test("Emoji string prefix check", () => {
     .filter(Boolean)
     .map((naughtyString: string): void => {
       const text = escape(naughtyString)
-      expect(getPrefixLengthFromNode({ text }, text)).toEqual(text.length)
+      expect(getPrefixLengthFromNode({ text }, naughtyString)).toEqual(
+        text.length,
+      )
     })
 })
 
@@ -176,8 +179,6 @@ test("Insert four nodes", () => {
   InsertNodeIntoTrie<TestData>(testTrie, URIs.cats, "CATS")
   InsertNodeIntoTrie<TestData>(testTrie, URIs.pyjamas, "PJs!")
 
-  //console.log(JSON.stringify(testTrie, null, 2))
-
   expect(testTrie).toEqual({
     text: "",
     nodes: [
@@ -217,31 +218,30 @@ test("Insert four nodes", () => {
   })
 })
 
-const testTrie: Node<TestData> = CreateTrie<TestData>()
+let testTrie: Node<TestData> = CreateTrie<TestData>()
 naughtyStrings
   .getEmojiList()
   .filter(Boolean)
-  .splice(0, 10)
-  .map((naughtyString: string): void => {
-    test("Naughty strings", () => {
+  .slice(0, 500) // There are a lot more than this but lets be kind to CI.
+  .map((naughtyString: string, index): void => {
+    test("Naughty strings - Emoji " + index, () => {
       InsertNodeIntoTrie(testTrie, { uri: naughtyString }, naughtyString)
-      // console.log(JSON.stringify(testTrie, null, 2))
+      expect(testTrie).toMatchSnapshot()
+    })
+  })
+
+testTrie = CreateTrie<TestData>()
+naughtyStrings
+  .getNaughtyStringList()
+  .filter(Boolean)
+  .map((naughtyString: string, index): void => {
+    test("Naughty strings - Naughty string " + index, () => {
+      InsertNodeIntoTrie(testTrie, { uri: naughtyString }, naughtyString)
       expect(testTrie).toMatchSnapshot()
     })
   })
 
 /*
-testTrie = CreateTrie<TestData>()
-naughtyStrings
-  .getNaughtyStringList()
-  .filter(Boolean)
-  .map((naughtyString: string): void => {
-    test("Naughty strings", () => {
-      InsertNodeIntoTrie(testTrie, { uri: naughtyString }, naughtyString)
-      expect(testTrie).toMatchSnapshot()
-    })
-  })
-
 test("Search /cats", () => {
   expect(SearchTrie<TestData>(testTrie, "/cats")).toEqual({
     text: "cats",
