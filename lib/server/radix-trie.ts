@@ -217,9 +217,24 @@ export function InsertNodeIntoTrie<Values = Record<string, unknown>>(
  */
 export function SearchTrie<Values>(
   trie: Node<Values>,
-  search: string,
+  uri: URI,
 ): Node<Values> | void {
-  console.log("Finding", search, "in", trie)
+  if (!trie.nodes || !trie.nodes.length) return undefined
+
+  let result: Node<Values> | void
+  for (const node of trie.nodes) {
+    const prefixLength = getPrefixLengthFromNode(node, uri.uri)
+
+    console.log(node.text, uri.uri, prefixLength)
+    if (prefixLength)
+      result = SearchTrie(node, {
+        uri: uri.uri.substr(prefixLength, uri.uri.length),
+      })
+
+    if (uri.uri.length - prefixLength === 0) break
+  }
+
+  return result
 }
 
 /**

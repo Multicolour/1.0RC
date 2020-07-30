@@ -5,6 +5,7 @@ import {
   Node,
   InsertNodeIntoTrie,
   CreateTrie,
+  SearchTrie,
   URI,
 } from "@lib/server/radix-trie"
 
@@ -89,7 +90,7 @@ const URIs: Record<string, URI> = {
   cats: breakPathIntoComponents("/cats"),
   pyjamas: breakPathIntoComponents("/cats/pyjamas"),
 }
-
+/*
 test("Insert one node", () => {
   const testTrie: Node<TestData> = CreateTrie<TestData>()
   InsertNodeIntoTrie<TestData>(testTrie, URIs.super, "SUPER")
@@ -240,33 +241,42 @@ naughtyStrings
       expect(testTrie).toMatchSnapshot()
     })
   })
-
-/*
+*/
+let testTrie: Node<TestData> = CreateTrie<TestData>()
+testTrie = CreateTrie<TestData>()
+InsertNodeIntoTrie<TestData>(testTrie, URIs.super, "SUPER")
+InsertNodeIntoTrie<TestData>(testTrie, URIs.sucky, "SUCKY")
+InsertNodeIntoTrie<TestData>(testTrie, URIs.cats, "CATS")
+InsertNodeIntoTrie<TestData>(testTrie, URIs.pyjamas, "PJs!")
 test("Search /cats", () => {
-  expect(SearchTrie<TestData>(testTrie, "/cats")).toEqual({
+  expect(
+    SearchTrie<TestData>(testTrie, { uri: "/cats" }),
+  ).toEqual({
     text: "cats",
     data: "CATS",
-    type: NodeType.END,
   })
 })
 
 test("Search /super", () => {
-  expect(SearchTrie<TestData>(testTrie, "/super")).toEqual({
+  expect(
+    SearchTrie<TestData>(testTrie, { uri: "/super" }),
+  ).toEqual({
     text: "per",
     data: "SUPER",
-    type: NodeType.END,
   })
 })
 
 test("Search /sucky", () => {
-  expect(SearchTrie<TestData>(testTrie, "/sucky")).toEqual({
+  expect(
+    SearchTrie<TestData>(testTrie, { uri: "/sucky" }),
+  ).toEqual({
     text: "cky",
     data: "SUCKY",
-    type: NodeType.END,
   })
 })
 
 test("Search /404", () => {
-  expect(SearchTrie<TestData>(testTrie, "/404")).toBe(undefined)
+  expect(
+    SearchTrie<TestData>(testTrie, { uri: "/404" }),
+  ).toBe(undefined)
 })
-*/
