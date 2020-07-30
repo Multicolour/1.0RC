@@ -225,13 +225,16 @@ export function SearchTrie<Values>(
   for (const node of trie.nodes) {
     const prefixLength = getPrefixLengthFromNode(node, uri.uri)
 
-    console.log(node.text, uri.uri, prefixLength)
-    if (prefixLength)
+    if (prefixLength > 0) {
+      if (uri.uri.length - prefixLength === 0) {
+        result = node
+        break
+      }
       result = SearchTrie(node, {
         uri: uri.uri.substr(prefixLength, uri.uri.length),
       })
-
-    if (uri.uri.length - prefixLength === 0) break
+      break
+    }
   }
 
   return result

@@ -90,7 +90,7 @@ const URIs: Record<string, URI> = {
   cats: breakPathIntoComponents("/cats"),
   pyjamas: breakPathIntoComponents("/cats/pyjamas"),
 }
-/*
+
 test("Insert one node", () => {
   const testTrie: Node<TestData> = CreateTrie<TestData>()
   InsertNodeIntoTrie<TestData>(testTrie, URIs.super, "SUPER")
@@ -241,8 +241,7 @@ naughtyStrings
       expect(testTrie).toMatchSnapshot()
     })
   })
-*/
-let testTrie: Node<TestData> = CreateTrie<TestData>()
+
 testTrie = CreateTrie<TestData>()
 InsertNodeIntoTrie<TestData>(testTrie, URIs.super, "SUPER")
 InsertNodeIntoTrie<TestData>(testTrie, URIs.sucky, "SUCKY")
@@ -254,6 +253,13 @@ test("Search /cats", () => {
   ).toEqual({
     text: "cats",
     data: "CATS",
+    nodes: [
+      {
+        text: "/pyjamas",
+        data: "PJs!",
+        nodes: [],
+      },
+    ],
   })
 })
 
@@ -263,6 +269,7 @@ test("Search /super", () => {
   ).toEqual({
     text: "per",
     data: "SUPER",
+    nodes: [],
   })
 })
 
@@ -272,6 +279,7 @@ test("Search /sucky", () => {
   ).toEqual({
     text: "cky",
     data: "SUCKY",
+    nodes: [],
   })
 })
 
