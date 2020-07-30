@@ -29,7 +29,7 @@ export function breakPathIntoComponents(path: string): URI {
   }
 
   const uri: URI = {
-    uri: path,
+    uri: escape(path),
   }
   let currentParam: null | Param = null
 
@@ -76,9 +76,10 @@ export function breakPathIntoComponents(path: string): URI {
  */
 export function getPrefixLengthFromNode<Values = Record<string, unknown>>(
   trieNode: Node<Values>,
-  searchText: string,
+  searchTextUnescaped: string,
 ): number {
   let result = 0
+  const searchText = escape(searchTextUnescaped)
   if (!trieNode?.text) return 0
 
   for (

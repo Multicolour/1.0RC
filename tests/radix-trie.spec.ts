@@ -15,11 +15,11 @@ test("URI object from path", () => {
     uri: "",
   })
   expect(breakPathIntoComponents("no leading slash")).toEqual({
-    uri: "/no leading slash",
+    uri: escape("/no leading slash"),
   })
   expect(breakPathIntoComponents("/")).toEqual({ uri: "/" })
   expect(breakPathIntoComponents("/:animal")).toEqual({
-    uri: "/:animal",
+    uri: escape("/:animal"),
     params: {
       animal: {
         start: 1,
@@ -31,7 +31,7 @@ test("URI object from path", () => {
     uri: "/animal",
   })
   expect(breakPathIntoComponents("/:animal/:says")).toEqual({
-    uri: "/:animal/:says",
+    uri: escape("/:animal/:says"),
     params: {
       animal: {
         start: 1,
@@ -58,22 +58,21 @@ test("Naughty strings prefix check", () => {
   naughtyStrings
     .getNaughtyStringList()
     .filter(Boolean)
-    .map((naughtyString: string): void =>
-      expect(
-        getPrefixLengthFromNode({ text: naughtyString }, naughtyString),
-      ).toEqual(naughtyString.length),
-    )
+    .map((naughtyString: string): void => {
+      const text = escape(naughtyString)
+      console.log(JSON.stringify(text))
+      expect(getPrefixLengthFromNode({ text }, text)).toEqual(text.length)
+    })
 })
 
 test("Emoji string prefix check", () => {
   naughtyStrings
     .getEmojiList()
     .filter(Boolean)
-    .map((naughtyString: string): void =>
-      expect(
-        getPrefixLengthFromNode({ text: naughtyString }, naughtyString),
-      ).toEqual(naughtyString.length),
-    )
+    .map((naughtyString: string): void => {
+      const text = escape(naughtyString)
+      expect(getPrefixLengthFromNode({ text }, text)).toEqual(text.length)
+    })
 })
 
 test("Parameterised prefix check", () => {
@@ -177,7 +176,7 @@ test("Insert four nodes", () => {
   InsertNodeIntoTrie<TestData>(testTrie, URIs.cats, "CATS")
   InsertNodeIntoTrie<TestData>(testTrie, URIs.pyjamas, "PJs!")
 
-  console.log(JSON.stringify(testTrie, null, 2))
+  //console.log(JSON.stringify(testTrie, null, 2))
 
   expect(testTrie).toEqual({
     text: "",
@@ -218,30 +217,30 @@ test("Insert four nodes", () => {
   })
 })
 
+const testTrie: Node<TestData> = CreateTrie<TestData>()
+naughtyStrings
+  .getEmojiList()
+  .filter(Boolean)
+  .splice(0, 10)
+  .map((naughtyString: string): void => {
+    test("Naughty strings", () => {
+      InsertNodeIntoTrie(testTrie, { uri: naughtyString }, naughtyString)
+      // console.log(JSON.stringify(testTrie, null, 2))
+      expect(testTrie).toMatchSnapshot()
+    })
+  })
+
 /*
-test("Naughty strings", () => {
-  const testTrie: Node<TestData> = CreateTrie<TestData>()
-
-  naughtyStrings
-    .getEmojiList()
-    .filter(Boolean)
-    .map((naughtyString: string): void => {
+testTrie = CreateTrie<TestData>()
+naughtyStrings
+  .getNaughtyStringList()
+  .filter(Boolean)
+  .map((naughtyString: string): void => {
+    test("Naughty strings", () => {
       InsertNodeIntoTrie(testTrie, { uri: naughtyString }, naughtyString)
-      expect(testTrie).toMatchInlineSnapshot()
+      expect(testTrie).toMatchSnapshot()
     })
-})
-
-test("Naughty strings", () => {
-  const testTrie: Node<TestData> = CreateTrie<TestData>()
-
-  naughtyStrings
-    .getNaughtyStringList()
-    .filter(Boolean)
-    .map((naughtyString: string): void => {
-      InsertNodeIntoTrie(testTrie, { uri: naughtyString }, naughtyString)
-      expect(testTrie).toMatchInlineSnapshot()
-    })
-})
+  })
 
 test("Search /cats", () => {
   expect(SearchTrie<TestData>(testTrie, "/cats")).toEqual({

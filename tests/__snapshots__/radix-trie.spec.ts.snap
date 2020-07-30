@@ -1,0 +1,356 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Naughty strings 1`] = `
+Object {
+  "nodes": Array [
+    Object {
+      "data": "😀",
+      "nodes": Array [],
+      "text": "😀",
+    },
+  ],
+  "text": "",
+}
+`;
+
+exports[`Naughty strings 2`] = `
+Object {
+  "nodes": Array [
+    Object {
+      "data": "😀",
+      "nodes": Array [],
+      "text": "😀",
+    },
+    Object {
+      "data": "😃",
+      "nodes": Array [],
+      "text": "😃",
+    },
+  ],
+  "text": "",
+}
+`;
+
+exports[`Naughty strings 3`] = `
+Object {
+  "nodes": Array [
+    Object {
+      "data": "😀",
+      "nodes": Array [],
+      "text": "😀",
+    },
+    Object {
+      "data": "😃",
+      "nodes": Array [],
+      "text": "😃",
+    },
+    Object {
+      "data": "😄",
+      "nodes": Array [],
+      "text": "😄",
+    },
+  ],
+  "text": "",
+}
+`;
+
+exports[`Naughty strings 4`] = `
+Object {
+  "nodes": Array [
+    Object {
+      "data": "😀",
+      "nodes": Array [],
+      "text": "😀",
+    },
+    Object {
+      "data": "😃",
+      "nodes": Array [],
+      "text": "😃",
+    },
+    Object {
+      "data": "😄",
+      "nodes": Array [],
+      "text": "😄",
+    },
+    Object {
+      "data": "😁",
+      "nodes": Array [],
+      "text": "😁",
+    },
+  ],
+  "text": "",
+}
+`;
+
+exports[`Naughty strings 5`] = `
+Object {
+  "nodes": Array [
+    Object {
+      "data": "😀",
+      "nodes": Array [],
+      "text": "😀",
+    },
+    Object {
+      "data": "😃",
+      "nodes": Array [],
+      "text": "😃",
+    },
+    Object {
+      "data": "😄",
+      "nodes": Array [],
+      "text": "😄",
+    },
+    Object {
+      "data": "😁",
+      "nodes": Array [],
+      "text": "😁",
+    },
+    Object {
+      "data": "😆",
+      "nodes": Array [],
+      "text": "😆",
+    },
+  ],
+  "text": "",
+}
+`;
+
+exports[`Naughty strings 6`] = `
+Object {
+  "nodes": Array [
+    Object {
+      "data": "😀",
+      "nodes": Array [],
+      "text": "😀",
+    },
+    Object {
+      "data": "😃",
+      "nodes": Array [],
+      "text": "😃",
+    },
+    Object {
+      "data": "😄",
+      "nodes": Array [],
+      "text": "😄",
+    },
+    Object {
+      "data": "😁",
+      "nodes": Array [],
+      "text": "😁",
+    },
+    Object {
+      "data": "😆",
+      "nodes": Array [],
+      "text": "😆",
+    },
+    Object {
+      "data": "😅",
+      "nodes": Array [],
+      "text": "😅",
+    },
+  ],
+  "text": "",
+}
+`;
+
+exports[`Naughty strings 7`] = `
+Object {
+  "nodes": Array [
+    Object {
+      "data": "😀",
+      "nodes": Array [],
+      "text": "😀",
+    },
+    Object {
+      "data": "😃",
+      "nodes": Array [],
+      "text": "😃",
+    },
+    Object {
+      "data": "😄",
+      "nodes": Array [],
+      "text": "😄",
+    },
+    Object {
+      "data": "😁",
+      "nodes": Array [],
+      "text": "😁",
+    },
+    Object {
+      "data": "😆",
+      "nodes": Array [],
+      "text": "😆",
+    },
+    Object {
+      "data": "😅",
+      "nodes": Array [],
+      "text": "😅",
+    },
+    Object {
+      "data": "😂",
+      "nodes": Array [],
+      "text": "😂",
+    },
+  ],
+  "text": "",
+}
+`;
+
+exports[`Naughty strings 8`] = `
+Object {
+  "nodes": Array [
+    Object {
+      "data": "😀",
+      "nodes": Array [],
+      "text": "😀",
+    },
+    Object {
+      "data": "😃",
+      "nodes": Array [],
+      "text": "😃",
+    },
+    Object {
+      "data": "😄",
+      "nodes": Array [],
+      "text": "😄",
+    },
+    Object {
+      "data": "😁",
+      "nodes": Array [],
+      "text": "😁",
+    },
+    Object {
+      "data": "😆",
+      "nodes": Array [],
+      "text": "😆",
+    },
+    Object {
+      "data": "😅",
+      "nodes": Array [],
+      "text": "😅",
+    },
+    Object {
+      "data": "😂",
+      "nodes": Array [],
+      "text": "😂",
+    },
+    Object {
+      "data": "🤣",
+      "nodes": Array [],
+      "text": "🤣",
+    },
+  ],
+  "text": "",
+}
+`;
+
+exports[`Naughty strings 9`] = `
+Object {
+  "nodes": Array [
+    Object {
+      "data": "😀",
+      "nodes": Array [],
+      "text": "😀",
+    },
+    Object {
+      "data": "😃",
+      "nodes": Array [],
+      "text": "😃",
+    },
+    Object {
+      "data": "😄",
+      "nodes": Array [],
+      "text": "😄",
+    },
+    Object {
+      "data": "😁",
+      "nodes": Array [],
+      "text": "😁",
+    },
+    Object {
+      "data": "😆",
+      "nodes": Array [],
+      "text": "😆",
+    },
+    Object {
+      "data": "😅",
+      "nodes": Array [],
+      "text": "😅",
+    },
+    Object {
+      "data": "😂",
+      "nodes": Array [],
+      "text": "😂",
+    },
+    Object {
+      "data": "🤣",
+      "nodes": Array [],
+      "text": "🤣",
+    },
+    Object {
+      "data": "☺️",
+      "nodes": Array [],
+      "text": "☺️",
+    },
+  ],
+  "text": "",
+}
+`;
+
+exports[`Naughty strings 10`] = `
+Object {
+  "nodes": Array [
+    Object {
+      "data": "😀",
+      "nodes": Array [],
+      "text": "😀",
+    },
+    Object {
+      "data": "😃",
+      "nodes": Array [],
+      "text": "😃",
+    },
+    Object {
+      "data": "😄",
+      "nodes": Array [],
+      "text": "😄",
+    },
+    Object {
+      "data": "😁",
+      "nodes": Array [],
+      "text": "😁",
+    },
+    Object {
+      "data": "😆",
+      "nodes": Array [],
+      "text": "😆",
+    },
+    Object {
+      "data": "😅",
+      "nodes": Array [],
+      "text": "😅",
+    },
+    Object {
+      "data": "😂",
+      "nodes": Array [],
+      "text": "😂",
+    },
+    Object {
+      "data": "🤣",
+      "nodes": Array [],
+      "text": "🤣",
+    },
+    Object {
+      "data": "☺️",
+      "nodes": Array [],
+      "text": "☺️",
+    },
+    Object {
+      "data": "😊",
+      "nodes": Array [],
+      "text": "😊",
+    },
+  ],
+  "text": "",
+}
+`;
