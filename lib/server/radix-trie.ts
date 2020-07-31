@@ -251,8 +251,45 @@ export function SearchTrie<Values>(
  */
 export function RemoveNodeFromTrie<Values>(
   trie: Node<Values>,
-  node: Node<Values>,
-): Node<Values> {
-  console.log("Removing", node, "from", trie)
+  uri: URI,
+  parent?: Node<Values>,
+): Node<Values> | void {
+  if (!trie.nodes || !trie.nodes.length) return undefined
+
+  for (
+    let nodeIndex = 0, max = trie.nodes.length;
+    nodeIndex < max;
+    nodeIndex++
+  ) {
+    const node = trie.nodes[nodeIndex]
+    const prefixLength = getPrefixLengthFromNode(node, uri.uri)
+
+    if (prefixLength > 0) {
+      if (uri.uri.length - prefixLength === 0) {
+        trie.nodes.splice(nodeIndex, 1)
+
+        // If we only have 1 child, then we can
+        // compress this "trie".
+        if (trie.nodes.length < 2) {
+          if (parent) {
+            parent.text = parent.text + node.text.substr(prefixLength)
+          } else
+            console.warn(
+              "Opportunity to compress this trie, but no parent scope to merge nodes",
+            )
+        }
+        break
+      }
+      RemoveNodeFromTrie(
+        node,
+        {
+          uri: uri.uri.substr(prefixLength, uri.uri.length),
+        },
+        trie,
+      )
+      break
+    }
+  }
+
   return trie
 }
