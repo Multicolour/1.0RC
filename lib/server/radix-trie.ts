@@ -270,7 +270,8 @@ export function RemoveNodeFromTrie<Values>(
 
         // If we only have 1 child, then we can
         // compress this "trie".
-        if (trie.nodes.length < 2) {
+        console.log(trie.nodes.length)
+        if (trie.nodes.length === 1) {
           if (parent) {
             parent.text = parent.text + node.text.substr(prefixLength)
           } else

@@ -16,7 +16,7 @@ const URIs: Record<string, URI> = {
   sucky: breakPathIntoComponents("/sucky"),
   cats: breakPathIntoComponents("/cats"),
   pyjamas: breakPathIntoComponents("/cats/pyjamas"),
-}
+} as const
 
 describe("URI object", () => {
   test("URI object from path", () => {
@@ -308,45 +308,105 @@ describe("Search trie", () => {
   })
 })
 
-describe("Delete from trie and recompress", ()=>{
-test("Delete pyjamas", () => {
+describe("Delete from trie and recompress", () => {
+  test("Delete pyjamas", () => {
+    const testTrie = CreateTrie<TestData>()
+    InsertNodeIntoTrie<TestData>(testTrie, URIs.super, "SUPER")
+    InsertNodeIntoTrie<TestData>(testTrie, URIs.sucky, "SUCKY")
+    InsertNodeIntoTrie<TestData>(testTrie, URIs.cats, "CATS")
+    InsertNodeIntoTrie<TestData>(testTrie, URIs.pyjamas, "PJs!")
+    RemoveNodeFromTrie(testTrie, URIs.pyjamas)
+
+    expect(testTrie).toEqual({
+      text: "",
+      nodes: [
+        {
+          text: "/",
+          nodes: [
+            {
+              text: "su",
+              data: undefined,
+              nodes: [
+                {
+                  text: "per",
+                  data: "SUPER",
+                  nodes: [],
+                },
+                {
+                  text: "cky",
+                  data: "SUCKY",
+                  nodes: [],
+                },
+              ],
+            },
+            {
+              text: "cats",
+              data: "CATS",
+              nodes: [],
+            },
+          ],
+        },
+      ],
+    })
+  })
+})
+
+describe("lifecycle of a trie node", () => {
   const testTrie = CreateTrie<TestData>()
+
   InsertNodeIntoTrie<TestData>(testTrie, URIs.super, "SUPER")
-  InsertNodeIntoTrie<TestData>(testTrie, URIs.sucky, "SUCKY")
-  InsertNodeIntoTrie<TestData>(testTrie, URIs.cats, "CATS")
-  InsertNodeIntoTrie<TestData>(testTrie, URIs.pyjamas, "PJs!")
-  RemoveNodeFromTrie(testTrie, URIs.pyjamas)
 
   expect(testTrie).toEqual({
     text: "",
     nodes: [
       {
-        text: "/",
+        text: "/super",
+        data: "SUPER",
+        nodes: [],
+      },
+    ],
+  })
+
+  expect(SearchTrie(testTrie, URIs.super)).toEqual({
+    text: "/super",
+    data: "SUPER",
+    nodes: [],
+  })
+
+  InsertNodeIntoTrie<TestData>(testTrie, URIs.sucky, "SUCKY")
+
+  expect(testTrie).toEqual({
+    text: "",
+    nodes: [
+      {
+        text: "/su",
         nodes: [
           {
-            text: "su",
-            data: undefined,
-            nodes: [
-              {
-                text: "per",
-                data: "SUPER",
-                nodes: [],
-              },
-              {
-                text: "cky",
-                data: "SUCKY",
-                nodes: [],
-              },
-            ],
+            text: "per",
+            data: "SUPER",
+            nodes: [],
           },
           {
-            text: "cats",
-            data: "CATS",
+            text: "cky",
+            data: "SUCKY",
             nodes: [],
           },
         ],
       },
     ],
   })
-})
+
+  expect(SearchTrie<TestData>(testTrie, URIs.sucky)).toEqual({
+    text: "cky",
+    data: "SUCKY",
+    nodes: [],
+  })
+
+  RemoveNodeFromTrie<TestData>(testTrie, URIs.sucky)
+
+  expect(SearchTrie(testTrie, URIs.super)).toEqual({
+    text: "/super",
+    data: "SUPER",
+    nodes: [],
+  })
 })
