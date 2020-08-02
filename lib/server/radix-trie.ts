@@ -179,6 +179,8 @@ export function InsertNodeIntoTrie<Values = Record<string, unknown>>(
         delete node.data
       }
 
+      // We won't be inserting a sibling edge,
+      // we're going further into the trie.
       insertSibling = false
       InsertNodeIntoTrie(
         node,

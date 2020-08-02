@@ -15,6 +15,8 @@ const URIs: Record<string, URI> = {
   super: breakPathIntoComponents("/super"),
   sucky: breakPathIntoComponents("/sucky"),
   cats: breakPathIntoComponents("/cats"),
+  catsSay: breakPathIntoComponents("/cats/meow"),
+  catsWakeMe: breakPathIntoComponents("/cats/meow/in-the-night"),
   pyjamas: breakPathIntoComponents("/cats/pyjamas"),
 } as const
 
@@ -100,7 +102,7 @@ describe("Prefix length", () => {
 })
 
 describe("Insert nodes", () => {
-  test("Insert one node", () => {
+  test("Insert first node", () => {
     const testTrie: Node<TestData> = CreateTrie<TestData>()
     InsertNodeIntoTrie<TestData>(testTrie, URIs.super, "SUPER")
 
@@ -116,7 +118,7 @@ describe("Insert nodes", () => {
     })
   })
 
-  test("Insert two nodes", () => {
+  test("Insert second node", () => {
     const testTrie: Node<TestData> = CreateTrie<TestData>()
     InsertNodeIntoTrie<TestData>(testTrie, URIs.super, "SUPER")
     InsertNodeIntoTrie<TestData>(testTrie, URIs.sucky, "SUCKY")
@@ -143,7 +145,7 @@ describe("Insert nodes", () => {
     })
   })
 
-  test("Insert three nodes", () => {
+  test("Insert third node", () => {
     const testTrie: Node<TestData> = CreateTrie<TestData>()
     InsertNodeIntoTrie<TestData>(testTrie, URIs.super, "SUPER")
     InsertNodeIntoTrie<TestData>(testTrie, URIs.sucky, "SUCKY")
@@ -182,7 +184,7 @@ describe("Insert nodes", () => {
     })
   })
 
-  test("Insert four nodes", () => {
+  test("Insert four node", () => {
     const testTrie: Node<TestData> = CreateTrie<TestData>()
     InsertNodeIntoTrie<TestData>(testTrie, URIs.super, "SUPER")
     InsertNodeIntoTrie<TestData>(testTrie, URIs.sucky, "SUCKY")
@@ -219,6 +221,70 @@ describe("Insert nodes", () => {
                   text: "/pyjamas",
                   data: "PJs!",
                   nodes: [],
+                },
+              ],
+            },
+          ],
+        },
+      ],
+    })
+  })
+
+  test("Insert extra nodes", () => {
+    const testTrie: Node<TestData> = CreateTrie<TestData>()
+    InsertNodeIntoTrie<TestData>(testTrie, URIs.super, "SUPER")
+    InsertNodeIntoTrie<TestData>(testTrie, URIs.sucky, "SUCKY")
+    InsertNodeIntoTrie<TestData>(testTrie, URIs.cats, "CATS")
+    InsertNodeIntoTrie<TestData>(testTrie, URIs.pyjamas, "PJs!")
+    InsertNodeIntoTrie<TestData>(testTrie, URIs.catsSay, "meow")
+    InsertNodeIntoTrie<TestData>(testTrie, URIs.catsWakeMe, "LOUD NOISES")
+
+    expect(testTrie).toEqual({
+      text: "",
+      nodes: [
+        {
+          text: "/",
+          nodes: [
+            {
+              text: "su",
+              data: undefined,
+              nodes: [
+                {
+                  text: "per",
+                  data: "SUPER",
+                  nodes: [],
+                },
+                {
+                  text: "cky",
+                  data: "SUCKY",
+                  nodes: [],
+                },
+              ],
+            },
+            {
+              text: "cats",
+              data: "CATS",
+              nodes: [
+                {
+                  text: "/",
+                  nodes: [
+                    {
+                      text: "pyjamas",
+                      data: "PJs!",
+                      nodes: [],
+                    },
+                    {
+                      text: "meow",
+                      data: "meow",
+                      nodes: [
+                        {
+                          text: "/in-the-night",
+                          data: "LOUD NOISES",
+                          nodes: [],
+                        },
+                      ],
+                    },
+                  ],
                 },
               ],
             },
