@@ -252,7 +252,6 @@ export function SearchTrie<Values>(
 export function RemoveNodeFromTrie<Values>(
   trie: Node<Values>,
   uri: URI,
-  parent?: Node<Values>,
 ): Node<Values> | void {
   if (!trie.nodes || !trie.nodes.length) return undefined
 
@@ -265,29 +264,24 @@ export function RemoveNodeFromTrie<Values>(
     const prefixLength = getPrefixLengthFromNode(node, uri.uri)
 
     if (prefixLength > 0) {
-      if (uri.uri.length - prefixLength === 0) {
-        trie.nodes.splice(nodeIndex, 1)
-
-        // If we only have 1 child, then we can
-        // compress this "trie".
-        console.log(trie.nodes.length)
-        if (trie.nodes.length === 1) {
-          if (parent) {
-            parent.text = parent.text + node.text.substr(prefixLength)
-          } else
-            console.warn(
-              "Opportunity to compress this trie, but no parent scope to merge nodes",
-            )
+      if (uri.uri.length === prefixLength) {
+        // If we only have 1 child; plus the one
+        // we're about to remove, then we can
+        // compress this trie.
+        if (trie.nodes.length === 2 && typeof trie.data === "undefined") {
+          const survivor = trie.nodes[!nodeIndex ? 1 : 0]
+          trie.text = trie.text + survivor.text
+          trie.nodes = []
+          trie.data = survivor.data
+        } else {
+          trie.nodes.splice(nodeIndex, 1)
         }
+
         break
       }
-      RemoveNodeFromTrie(
-        node,
-        {
-          uri: uri.uri.substr(prefixLength, uri.uri.length),
-        },
-        trie,
-      )
+      RemoveNodeFromTrie(node, {
+        uri: uri.uri.substr(prefixLength, uri.uri.length),
+      })
       break
     }
   }

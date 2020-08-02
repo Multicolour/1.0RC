@@ -351,7 +351,7 @@ describe("Delete from trie and recompress", () => {
   })
 })
 
-describe("lifecycle of a trie node", () => {
+describe("lifecycle of a trie", () => {
   const testTrie = CreateTrie<TestData>()
 
   InsertNodeIntoTrie<TestData>(testTrie, URIs.super, "SUPER")
