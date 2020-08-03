@@ -184,7 +184,7 @@ describe("Insert nodes", () => {
     })
   })
 
-  test("Insert four node", () => {
+  test("Insert fourth node", () => {
     const testTrie: Node<TestData> = CreateTrie<TestData>()
     InsertNodeIntoTrie<TestData>(testTrie, URIs.super, "SUPER")
     InsertNodeIntoTrie<TestData>(testTrie, URIs.sucky, "SUCKY")
@@ -417,7 +417,7 @@ describe("Delete from trie and recompress", () => {
   })
 })
 
-describe("lifecycle of a trie", () => {
+describe("lifecycle of a trie node", () => {
   const testTrie = CreateTrie<TestData>()
 
   InsertNodeIntoTrie<TestData>(testTrie, URIs.super, "SUPER")
@@ -474,5 +474,79 @@ describe("lifecycle of a trie", () => {
     text: "/super",
     data: "SUPER",
     nodes: [],
+  })
+})
+
+describe("real world setup", () => {
+  type Handler = (
+    request: Request,
+    response: Response,
+  ) => Promise<Record<string, string>>
+  const handler = jest.fn() as Handler
+  const testTrie = CreateTrie()
+  const routes: [string, Handler][] = [
+    ["/session", handler],
+    ["/session/facebook", handler],
+    ["/session/twitter", handler],
+    ["/user", handler],
+    ["/user/projects", handler],
+    ["/user/account", handler],
+  ]
+
+  routes.forEach((route) =>
+    InsertNodeIntoTrie(testTrie, { uri: route[0] }, route[1]),
+  )
+
+  expect(testTrie).toEqual({
+    text: "",
+    nodes: [
+      {
+        text: "/",
+        nodes: [
+          {
+            text: "session",
+            data: handler,
+            nodes: [
+              {
+                text: "/",
+                nodes: [
+                  {
+                    text: "facebook",
+                    data: handler,
+                    nodes: [],
+                  },
+                  {
+                    text: "twitter",
+                    data: handler,
+                    nodes: [],
+                  },
+                ],
+              },
+            ],
+          },
+          {
+            text: "user",
+            data: handler,
+            nodes: [
+              {
+                text: "/",
+                nodes: [
+                  {
+                    text: "projects",
+                    data: handler,
+                    nodes: [],
+                  },
+                  {
+                    text: "account",
+                    data: handler,
+                    nodes: [],
+                  },
+                ],
+              },
+            ],
+          },
+        ],
+      },
+    ],
   })
 })
