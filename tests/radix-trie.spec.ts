@@ -8,16 +8,22 @@ import {
   SearchTrie,
   URI,
   RemoveNodeFromTrie,
+  DefaultParams,
 } from "@lib/server/radix-trie"
 
+type Handler = (
+  request: Request,
+  response: Response,
+) => Promise<Record<string, string>>
 type TestData = string
-const URIs: Record<string, URI> = {
-  super: breakPathIntoComponents("/super"),
-  sucky: breakPathIntoComponents("/sucky"),
-  cats: breakPathIntoComponents("/cats"),
-  catsSay: breakPathIntoComponents("/cats/meow"),
-  catsWakeMe: breakPathIntoComponents("/cats/meow/in-the-night"),
-  pyjamas: breakPathIntoComponents("/cats/pyjamas"),
+const URIs: Record<string, URI<DefaultParams>> = {
+  super: breakPathIntoComponents<DefaultParams>("/super"),
+  sucky: breakPathIntoComponents<DefaultParams>("/sucky"),
+  cats: breakPathIntoComponents<DefaultParams>("/cats"),
+  catsSay: breakPathIntoComponents<DefaultParams>("/cats/meow"),
+  catsWakeMe: breakPathIntoComponents<DefaultParams>("/cats/meow/in-the-night"),
+  pyjamas: breakPathIntoComponents<DefaultParams>("/cats/pyjamas"),
+  animal: breakPathIntoComponents<DefaultParams>("/:animal/:says"),
 } as const
 
 describe("URI object", () => {
@@ -32,10 +38,7 @@ describe("URI object", () => {
     expect(breakPathIntoComponents("/:animal")).toEqual({
       uri: escape("/:animal"),
       params: {
-        animal: {
-          start: 1,
-          end: 6,
-        },
+        animal: null,
       },
     })
     expect(breakPathIntoComponents("/animal")).toEqual({
@@ -44,14 +47,8 @@ describe("URI object", () => {
     expect(breakPathIntoComponents("/:animal/:says")).toEqual({
       uri: escape("/:animal/:says"),
       params: {
-        animal: {
-          start: 1,
-          end: 6,
-        },
-        says: {
-          start: 9,
-          end: 12,
-        },
+        animal: null,
+        says: null,
       },
     })
   })
@@ -103,7 +100,7 @@ describe("Prefix length", () => {
 
 describe("Insert nodes", () => {
   test("Insert first node", () => {
-    const testTrie: Node<TestData> = CreateTrie<TestData>()
+    const testTrie = CreateTrie<TestData>()
     InsertNodeIntoTrie<TestData>(testTrie, URIs.super, "SUPER")
 
     expect(testTrie).toEqual({
@@ -119,7 +116,7 @@ describe("Insert nodes", () => {
   })
 
   test("Insert second node", () => {
-    const testTrie: Node<TestData> = CreateTrie<TestData>()
+    const testTrie = CreateTrie<TestData>()
     InsertNodeIntoTrie<TestData>(testTrie, URIs.super, "SUPER")
     InsertNodeIntoTrie<TestData>(testTrie, URIs.sucky, "SUCKY")
 
@@ -146,7 +143,7 @@ describe("Insert nodes", () => {
   })
 
   test("Insert third node", () => {
-    const testTrie: Node<TestData> = CreateTrie<TestData>()
+    const testTrie = CreateTrie<TestData>()
     InsertNodeIntoTrie<TestData>(testTrie, URIs.super, "SUPER")
     InsertNodeIntoTrie<TestData>(testTrie, URIs.sucky, "SUCKY")
     InsertNodeIntoTrie<TestData>(testTrie, URIs.cats, "CATS")
@@ -185,7 +182,7 @@ describe("Insert nodes", () => {
   })
 
   test("Insert fourth node", () => {
-    const testTrie: Node<TestData> = CreateTrie<TestData>()
+    const testTrie = CreateTrie<TestData>()
     InsertNodeIntoTrie<TestData>(testTrie, URIs.super, "SUPER")
     InsertNodeIntoTrie<TestData>(testTrie, URIs.sucky, "SUCKY")
     InsertNodeIntoTrie<TestData>(testTrie, URIs.cats, "CATS")
@@ -231,7 +228,7 @@ describe("Insert nodes", () => {
   })
 
   test("Insert extra nodes", () => {
-    const testTrie: Node<TestData> = CreateTrie<TestData>()
+    const testTrie = CreateTrie<TestData>()
     InsertNodeIntoTrie<TestData>(testTrie, URIs.super, "SUPER")
     InsertNodeIntoTrie<TestData>(testTrie, URIs.sucky, "SUCKY")
     InsertNodeIntoTrie<TestData>(testTrie, URIs.cats, "CATS")
@@ -295,8 +292,15 @@ describe("Insert nodes", () => {
   })
 })
 
+describe("Insert parametric route", () => {
+  const testTrie = CreateTrie<null>()
+
+  InsertNodeIntoTrie<null>(testTrie, URIs.animal, null)
+  console.log(JSON.stringify(testTrie, null, 2))
+})
+
 describe("Search trie", () => {
-  let testTrie: Node<TestData> = CreateTrie<TestData>()
+  let testTrie = CreateTrie<TestData>()
   /*naughtyStrings
   .getEmojiList()
   .filter(Boolean)
@@ -478,10 +482,6 @@ describe("lifecycle of a trie node", () => {
 })
 
 describe("real world setup", () => {
-  type Handler = (
-    request: Request,
-    response: Response,
-  ) => Promise<Record<string, string>>
   const handler = jest.fn() as Handler
   const testTrie = CreateTrie()
   const routes: [string, Handler][] = [

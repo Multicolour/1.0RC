@@ -1,25 +1,25 @@
-export interface Node<Values = Record<string, unknown>> {
+export interface Node<Values = Record<string, unknown>, Params = string> {
   text: string
-  nodes?: Node<Values>[]
+  nodes?: Node<Values, Params>[]
   data?: Values
-  params?: Record<string, Param>
+  params?: Params
 }
 
-export interface Param {
-  start: number
-  end: number
-  value?: string
-}
-export interface URI {
+export interface URI<Params = Record<string, string>> {
   uri: string
-  params?: Record<string, Param>
+  params?: Params
 }
+
+export type DefaultNodeValues = Record<string, unknown>
+export type DefaultParams = Record<string, string>
 
 const ADICT = new Set(
   "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789".split(""),
 )
 
-export function breakPathIntoComponents(path: string): URI {
+export function breakPathIntoComponents<T = URI["params"]>(
+  path: string,
+): URI<T> {
   if (typeof path !== "string") {
     return {
       uri: "",
@@ -28,22 +28,19 @@ export function breakPathIntoComponents(path: string): URI {
     path = "/" + path
   }
 
-  const uri: URI = {
+  const uri: URI<T> = {
     uri: escape(path),
   }
-  let currentParam: null | Param = null
+  let currentParam: T[keyof T] | null = null
 
-  for (let i = 0, max = path.length; i < max; i++) {
+  for (let i = 0, max = uri.uri.length; i < max; i++) {
     const char = path[i]
     let currentParamName
 
     if (!ADICT.has(char)) {
       if (char === ":" && !currentParam) {
         currentParamName = ""
-        currentParam = {
-          start: i,
-          end: i + 1,
-        }
+        currentParam = (null as unknown) as T[keyof T]
         let j = 1
         while (ADICT.has(path[i + j])) {
           currentParamName += path[i + j]
@@ -51,10 +48,9 @@ export function breakPathIntoComponents(path: string): URI {
         }
 
         i += (currentParamName as string).length - 1
-        currentParam.end = i
-        if (uri.params?.toString() !== "[object Object]") uri.params = {}
-        uri.params[currentParamName as string] = currentParam
-        currentParamName = ""
+        if (!uri.params) uri.params = {} as T
+        uri.params[currentParamName as keyof T] = currentParam
+        currentParamName = null
         currentParam = null
       }
     }
@@ -74,10 +70,10 @@ export function breakPathIntoComponents(path: string): URI {
  * @param {string} searchText that we're looking for.
  * @return {number} length of the prefix.
  */
-export function getPrefixLengthFromNode<Values = Record<string, unknown>>(
-  trieNode: Node<Values>,
-  searchTextUnescaped: string,
-): number {
+export function getPrefixLengthFromNode<
+  Values = DefaultNodeValues,
+  Params = DefaultParams
+>(trieNode: Node<Values, Params>, searchTextUnescaped: string): number {
   let result = 0
   const searchText = escape(searchTextUnescaped)
   if (!trieNode?.text) return 0
@@ -114,7 +110,9 @@ export function getPrefixLengthFromNode<Values = Record<string, unknown>>(
  * @param {string} root node text content.
  * @return {Node<Values>} Newly created trie.
  */
-export function CreateTrie<Values>(text = ""): Node<Values> {
+export function CreateTrie<Values, Params = DefaultParams>(
+  text = "",
+): Node<Values, Params> {
   return {
     text,
   }
@@ -128,12 +126,15 @@ export function CreateTrie<Values>(text = ""): Node<Values> {
  * @param {Values} data to assign to the node.
  * @return {Node<Values>} updated trie.
  */
-export function InsertNodeIntoTrie<Values = Record<string, unknown>>(
-  trie: Node<Values>,
-  uri: URI,
+export function InsertNodeIntoTrie<
+  Values = DefaultNodeValues,
+  Params = DefaultParams
+>(
+  trie: Node<Values, Params>,
+  uri: URI<Params>,
   data: Values,
-  nodes: Node<Values>[] = [],
-): Node<Values> {
+  nodes: Node<Values, Params>[] = [],
+): Node<Values, Params> {
   if (uri.uri.length === 0) return trie
   // If there's no nodes to insert to, safe to assume
   // we can just bung it in here and crack on. This is
@@ -155,7 +156,7 @@ export function InsertNodeIntoTrie<Values = Record<string, unknown>>(
   let insertSibling = false
 
   nodeLoop: for (const node of trie.nodes) {
-    const prefix = getPrefixLengthFromNode(node, uri.uri)
+    const prefix = getPrefixLengthFromNode<Values, Params>(node, uri.uri)
 
     if (prefix > 0) {
       // Split our text into (MATCH)(REMAINDER).
@@ -217,13 +218,13 @@ export function InsertNodeIntoTrie<Values = Record<string, unknown>>(
  * @param {string} search term to search trie for.
  * @return {Node<Values> | void} The final matching Node or undefined for no match.
  */
-export function SearchTrie<Values>(
-  trie: Node<Values>,
-  uri: URI,
-): Node<Values> | void {
+export function SearchTrie<Values = DefaultNodeValues, Params = DefaultParams>(
+  trie: Node<Values, Params>,
+  uri: URI<Params>,
+): Node<Values, Params> | void {
   if (!trie.nodes || !trie.nodes.length) return undefined
 
-  let result: Node<Values> | void
+  let result: Node<Values, Params> | void
   for (const node of trie.nodes) {
     const prefixLength = getPrefixLengthFromNode(node, uri.uri)
 
@@ -251,10 +252,10 @@ export function SearchTrie<Values>(
  * @param {Node<Values>} node to remove to the trie.
  * @return {Node<Values>} Updated and recompressed trie.
  */
-export function RemoveNodeFromTrie<Values>(
-  trie: Node<Values>,
-  uri: URI,
-): Node<Values> | void {
+export function RemoveNodeFromTrie<
+  Values = DefaultNodeValues,
+  Params = DefaultParams
+>(trie: Node<Values, Params>, uri: URI<Params>): Node<Values, Params> | void {
   if (!trie.nodes || !trie.nodes.length) return undefined
 
   for (
@@ -263,7 +264,7 @@ export function RemoveNodeFromTrie<Values>(
     nodeIndex++
   ) {
     const node = trie.nodes[nodeIndex]
-    const prefixLength = getPrefixLengthFromNode(node, uri.uri)
+    const prefixLength = getPrefixLengthFromNode<Values, Params>(node, uri.uri)
 
     if (prefixLength > 0) {
       if (uri.uri.length === prefixLength) {
