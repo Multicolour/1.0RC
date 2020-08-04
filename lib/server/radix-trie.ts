@@ -1,4 +1,10 @@
-export interface Node<Values = Record<string, unknown>, Params = string> {
+export type DefaultNodeValues = Record<string, unknown>
+export type DefaultParams = Record<string, string>
+
+export interface Node<
+  Values = Record<string, unknown>,
+  Params = DefaultParams
+> {
   text: string
   nodes?: Node<Values, Params>[]
   data?: Values
@@ -9,9 +15,6 @@ export interface URI<Params = Record<string, string>> {
   uri: string
   params?: Params
 }
-
-export type DefaultNodeValues = Record<string, unknown>
-export type DefaultParams = Record<string, string>
 
 const ADICT = new Set(
   "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789".split(""),
@@ -83,11 +86,20 @@ export function getPrefixLengthFromNode<
     result < maxCharIndex;
     result++
   ) {
-    if (trieNode.text[result] === ":") {
-      while (ADICT.has(searchText[result + 1])) {
-        result++
+    if (trieNode.text[result] === "%") {
+      const semi = `%${trieNode.text[result + 1]}${trieNode.text[result + 2]}`
+
+      if (semi === "%3A") {
+        while (ADICT.has(searchText[result])) {
+          process.stdout.write(result.toString())
+          result++
+        }
+        // We seem to go over by one each time so meh.
+        // @TODO: Work out why but not right now.
+        // WHEN: When code smell appears to be a problem.
+        // result -= 1
+        continue
       }
-      continue
     }
 
     if (trieNode.text[result] !== searchText[result]) {

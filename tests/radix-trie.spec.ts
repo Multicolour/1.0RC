@@ -292,13 +292,6 @@ describe("Insert nodes", () => {
   })
 })
 
-describe("Insert parametric route", () => {
-  const testTrie = CreateTrie<null>()
-
-  InsertNodeIntoTrie<null>(testTrie, URIs.animal, null)
-  console.log(JSON.stringify(testTrie, null, 2))
-})
-
 describe("Search trie", () => {
   let testTrie = CreateTrie<TestData>()
   /*naughtyStrings
@@ -549,4 +542,15 @@ describe("real world setup", () => {
       },
     ],
   })
+})
+
+describe("Parametric tests", () => {
+  const testTrie = CreateTrie<null>()
+
+  InsertNodeIntoTrie<null>(testTrie, URIs.animal, null)
+
+  expect(
+    getPrefixLengthFromNode<null>(CreateTrie<null>(URIs.animal.uri), "/doggo/boofs"),
+  ).toBe(6)
+  // console.log(JSON.stringify(SearchTrie<null>(testTrie, URIs.animal)))
 })
