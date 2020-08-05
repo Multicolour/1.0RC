@@ -76,28 +76,46 @@ export function breakPathIntoComponents<T = URI["params"]>(
 export function getPrefixLengthFromNode<
   Values = DefaultNodeValues,
   Params = DefaultParams
->(trieNode: Node<Values, Params>, searchTextUnescaped: string): number {
+>(trieNode: Node<Values, Params>, uri: URI<Params>): number {
   let result = 0
-  const searchText = escape(searchTextUnescaped)
-  if (!trieNode?.text) return 0
+  const searchText = uri.uri
+
+  // If there's nothing to search,
+  // exit with a 0.
+  if (!trieNode?.text?.length || !searchText?.length) return 0
 
   for (
     let maxCharIndex = trieNode.text.length;
     result < maxCharIndex;
     result++
   ) {
-    if (trieNode.text[result] === "%") {
+    if (trieNode.text[result] === "%" && trieNode.text[result - 1] !== "\\") {
       const semi = `%${trieNode.text[result + 1]}${trieNode.text[result + 2]}`
 
+      // We've found a parameter.
       if (semi === "%3A") {
-        while (ADICT.has(searchText[result])) {
-          process.stdout.write(result.toString())
-          result++
+        let parameterName = ""
+        let parameterValue = ""
+        let trieNodeTextOffset = result
+        let parameterValueOffset = result
+        // Get parameter name.
+        while (ADICT.has(trieNode.text[trieNodeTextOffset])) {
+          parameterName += trieNode.text[trieNodeTextOffset]
+          trieNodeTextOffset++
         }
-        // We seem to go over by one each time so meh.
-        // @TODO: Work out why but not right now.
-        // WHEN: When code smell appears to be a problem.
-        // result -= 1
+
+        // Get parameter value.
+        while (searchText[parameterValueOffset] !== "/") {
+          parameterValue += searchText[parameterValueOffset]
+          parameterValueOffset++
+        }
+
+        if (!uri.params) uri.params = {} as Params
+
+        uri.params[
+          parameterName as keyof Params
+        ] = (parameterValue as unknown) as Params[keyof Params]
+        result += trieNodeTextOffset
         continue
       }
     }
@@ -168,7 +186,7 @@ export function InsertNodeIntoTrie<
   let insertSibling = false
 
   nodeLoop: for (const node of trie.nodes) {
-    const prefix = getPrefixLengthFromNode<Values, Params>(node, uri.uri)
+    const prefix = getPrefixLengthFromNode<Values, Params>(node, uri)
 
     if (prefix > 0) {
       // Split our text into (MATCH)(REMAINDER).
@@ -238,7 +256,7 @@ export function SearchTrie<Values = DefaultNodeValues, Params = DefaultParams>(
 
   let result: Node<Values, Params> | void
   for (const node of trie.nodes) {
-    const prefixLength = getPrefixLengthFromNode(node, uri.uri)
+    const prefixLength = getPrefixLengthFromNode(node, uri)
 
     if (prefixLength > 0) {
       if (uri.uri.length - prefixLength === 0) {
@@ -276,7 +294,7 @@ export function RemoveNodeFromTrie<
     nodeIndex++
   ) {
     const node = trie.nodes[nodeIndex]
-    const prefixLength = getPrefixLengthFromNode<Values, Params>(node, uri.uri)
+    const prefixLength = getPrefixLengthFromNode<Values, Params>(node, uri)
 
     if (prefixLength > 0) {
       if (uri.uri.length === prefixLength) {

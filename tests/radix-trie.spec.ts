@@ -56,14 +56,22 @@ describe("URI object", () => {
 
 describe("Prefix length", () => {
   test("Basic Prefix lengths", () => {
-    expect(getPrefixLengthFromNode((null as unknown) as Node, "text")).toEqual(
-      0,
+    expect(
+      getPrefixLengthFromNode((null as unknown) as Node, { uri: "text" }),
+    ).toEqual(0)
+    expect(getPrefixLengthFromNode({ text: "text" }, { uri: "text" })).toEqual(
+      4,
     )
-    expect(getPrefixLengthFromNode({ text: "text" }, "text")).toEqual(4)
-    expect(getPrefixLengthFromNode({ text: "multicolour" }, "multi")).toEqual(5)
-    expect(getPrefixLengthFromNode({ text: "a.b.c.d" }, "a.b.c")).toEqual(5)
-    expect(getPrefixLengthFromNode({ text: "1" }, "1")).toEqual(1)
-    expect(getPrefixLengthFromNode({ text: "/a/cat" }, "/cat")).toEqual(1)
+    expect(
+      getPrefixLengthFromNode({ text: "multicolour" }, { uri: "multi" }),
+    ).toEqual(5)
+    expect(
+      getPrefixLengthFromNode({ text: "a.b.c.d" }, { uri: "a.b.c" }),
+    ).toEqual(5)
+    expect(getPrefixLengthFromNode({ text: "1" }, { uri: "1" })).toEqual(1)
+    expect(
+      getPrefixLengthFromNode({ text: "/a/cat" }, { uri: "/cat" }),
+    ).toEqual(1)
   })
 
   test("Naughty strings prefix check", () => {
@@ -72,9 +80,9 @@ describe("Prefix length", () => {
       .filter(Boolean)
       .map((naughtyString: string): void => {
         const text = escape(naughtyString)
-        expect(getPrefixLengthFromNode({ text }, naughtyString)).toEqual(
-          text.length,
-        )
+        expect(
+          getPrefixLengthFromNode({ text }, { uri: text }),
+        ).toEqual(text.length)
       })
   })
 
@@ -84,17 +92,10 @@ describe("Prefix length", () => {
       .filter(Boolean)
       .map((naughtyString: string): void => {
         const text = escape(naughtyString)
-        expect(getPrefixLengthFromNode({ text }, naughtyString)).toEqual(
+        expect(getPrefixLengthFromNode({ text }, { uri: text })).toEqual(
           text.length,
         )
       })
-  })
-
-  test("Parameterised prefix check", () => {
-    expect(getPrefixLengthFromNode({ text: "/a/:a" }, "/a/aanteater")).toEqual(
-      12,
-    )
-    expect(getPrefixLengthFromNode({ text: "/a/:animal" }, "/a/cat")).toEqual(6)
   })
 })
 
@@ -545,12 +546,20 @@ describe("real world setup", () => {
 })
 
 describe("Parametric tests", () => {
+  expect(
+    getPrefixLengthFromNode({ text: "/a/:a" }, { uri: "/a/aanteater" }),
+  ).toEqual(12)
+  expect(
+    getPrefixLengthFromNode({ text: "/a/:animal" }, { uri: "/a/cat" }),
+  ).toEqual(6)
   const testTrie = CreateTrie<null>()
 
   InsertNodeIntoTrie<null>(testTrie, URIs.animal, null)
 
   expect(
-    getPrefixLengthFromNode<null>(CreateTrie<null>(URIs.animal.uri), "/doggo/boofs"),
+    getPrefixLengthFromNode<null>(CreateTrie<null>(URIs.animal.uri), {
+      uri: "/doggo/boofs",
+    }),
   ).toBe(6)
   // console.log(JSON.stringify(SearchTrie<null>(testTrie, URIs.animal)))
 })
