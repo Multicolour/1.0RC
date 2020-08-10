@@ -74,17 +74,19 @@ describe("Prefix length", () => {
     ).toEqual(1)
   })
 
-  test("Naughty strings prefix check", () => {
-    naughtyStrings
-      .getNaughtyStringList()
-      .filter(Boolean)
-      .map((naughtyString: string): void => {
+  naughtyStrings
+    .getNaughtyStringList()
+    .filter(Boolean)
+    .map((naughtyString: string, index): void => {
+      test("Naughty strings prefix check " + index, () => {
         const text = escape(naughtyString)
-        expect(
-          getPrefixLengthFromNode({ text }, { uri: text }),
-        ).toEqual(text.length)
+        const prefixLength = getPrefixLengthFromNode({ text }, { uri: text })
+        const target = text.length
+        if (prefixLength !== target)
+          console.log(`fricken\n'%s'\n'%s'`, text, text.substr(0, prefixLength))
+        expect(prefixLength).toEqual(target)
       })
-  })
+    })
 
   test("Emoji string prefix check", () => {
     naughtyStrings
@@ -548,10 +550,10 @@ describe("real world setup", () => {
 describe("Parametric tests", () => {
   expect(
     getPrefixLengthFromNode({ text: "/a/:a" }, { uri: "/a/aanteater" }),
-  ).toEqual(12)
+  ).toEqual(5)
   expect(
     getPrefixLengthFromNode({ text: "/a/:animal" }, { uri: "/a/cat" }),
-  ).toEqual(6)
+  ).toEqual(10)
   const testTrie = CreateTrie<null>()
 
   InsertNodeIntoTrie<null>(testTrie, URIs.animal, null)
@@ -560,6 +562,6 @@ describe("Parametric tests", () => {
     getPrefixLengthFromNode<null>(CreateTrie<null>(URIs.animal.uri), {
       uri: "/doggo/boofs",
     }),
-  ).toBe(6)
+  ).toBe(14)
   // console.log(JSON.stringify(SearchTrie<null>(testTrie, URIs.animal)))
 })

@@ -92,37 +92,28 @@ export function getPrefixLengthFromNode<
     if (trieNode.text[result] === "%" && trieNode.text[result - 1] !== "\\") {
       const semi = `%${trieNode.text[result + 1]}${trieNode.text[result + 2]}`
 
-      // We've found a parameter.
+      // is checking for the : character which indicates
+      // we have started a parameter name.
       if (semi === "%3A") {
-        let parameterName = ""
-        let parameterValue = ""
-        let trieNodeTextOffset = result
-        let parameterValueOffset = result
-        // Get parameter name.
-        while (ADICT.has(trieNode.text[trieNodeTextOffset])) {
-          parameterName += trieNode.text[trieNodeTextOffset]
-          trieNodeTextOffset++
+        // Advance past this escaped semi-colon.
+        result += 2
+        // Advance the counter on the uri path.
+        // @NOTE: Right now, we dont care about the value here,
+        // prefix is calculated based on parameter name
+        // and not its value. We get the value later.
+        //
+        // @TODO: PERF Check whether this can be renamed to not
+        // appear as a side affect function and maybe we CAN
+        // grab param name and value here instead of another loop later.
+        while (ADICT.has(trieNode.text[result])) {
+          result++
         }
 
-        // Get parameter value.
-        while (searchText[parameterValueOffset] !== "/") {
-          parameterValue += searchText[parameterValueOffset]
-          parameterValueOffset++
-        }
-
-        if (!uri.params) uri.params = {} as Params
-
-        uri.params[
-          parameterName as keyof Params
-        ] = (parameterValue as unknown) as Params[keyof Params]
-        result += trieNodeTextOffset
         continue
       }
     }
 
-    if (trieNode.text[result] !== searchText[result]) {
-      break
-    }
+    if (trieNode.text[result] !== searchText[result]) break
   }
 
   return result
